@@ -2,7 +2,7 @@
   "country": "Bangladesh",
   "iso_code": "BGD",
   "currency": "BDT",
-  "source": "National Board of Revenue (NBR) Bangladesh, World Bank, UN Population Division",
+  "source": "National Board of Revenue (NBR), World Bank",
   "demographics": {
     "total_population": 173562364,
     "male_population": 85420000,
@@ -22,12 +22,8 @@
   },
   "tax_structure": {
     "standard_vat_pct": 15.0,
-    "corporate_tax_rates": {
-      "publicly_traded_companies": 20.0,
-      "non_publicly_traded_companies": 27.5,
-      "banks_and_financial_institutions": 37.5,
-      "one_person_companies": 22.5
-    },
+    "investment_rebate_pct": 15,
+    "max_rebate_pct_of_tax": 30,
     "individual_tax_brackets": [
       { "min": 0, "max": 350000, "rate": 0 },
       { "min": 350001, "max": 450000, "rate": 5 },
@@ -36,9 +32,11 @@
       { "min": 1150001, "max": 1650000, "rate": 20 },
       { "min": 1650001, "max": null, "rate": 25 }
     ],
-    "tax_free_allowance": 350000,
-    "investment_rebate_pct": 15,
-    "max_rebate_pct_of_tax": 30
+    "corporate_tax_rates": {
+      "public": 20,
+      "private": 27.5,
+      "bank": 37.5
+    }
   },
   "import_categories": [
     {"name": "Electronics & Smartphones", "duty_pct": 25.0, "vat_pct": 15.0, "ait_pct": 5.0},
