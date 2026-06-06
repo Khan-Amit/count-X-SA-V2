@@ -1,0 +1,83 @@
+{
+  "country": "India",
+  "iso_code": "IND",
+  "currency": "INR",
+  "source": "Central Board of Indirect Taxes and Customs (CBIC), World Bank, UN Population Division",
+  "demographics": {
+    "total_population": 1441981000,
+    "male_population": 743420000,
+    "female_population": 698561000,
+    "population_growth_annual_pct": 0.81,
+    "birth_rate_per_1000": 16.3,
+    "death_rate_per_1000": 7.1,
+    "life_expectancy_years": 70.2,
+    "urban_population_pct": 34.5,
+    "religions": {
+      "Hinduism": "79.8%",
+      "Islam": "14.2%",
+      "Christianity": "2.3%",
+      "Sikhism": "1.7%",
+      "Buddhism": "0.7%",
+      "Jainism": "0.4%",
+      "Others": "0.9%"
+    }
+  },
+  "tax_structure": {
+    "standard_gst_pct": 18.0,
+    "gst_slabs": [5.0, 12.0, 18.0, 28.0],
+    "corporate_tax_rates": {
+      "domestic_companies_new_regime": 22.0,
+      "new_manufacturing_companies": 15.0,
+      "foreign_companies": 40.0
+    },
+    "individual_tax_regime": "New Tax Regime (Default)",
+    "individual_tax_brackets": [
+      { "min": 0, "max": 300000, "rate": 0 },
+      { "min": 300001, "max": 600000, "rate": 5 },
+      { "min": 600001, "max": 900000, "rate": 10 },
+      { "min": 900001, "max": 1200000, "rate": 15 },
+      { "min": 1200001, "max": 1500000, "rate": 20 },
+      { "min": 1500001, "max": null, "rate": 30 }
+    ],
+    "old_regime_brackets": [
+      { "min": 0, "max": 250000, "rate": 0 },
+      { "min": 250001, "max": 500000, "rate": 5 },
+      { "min": 500001, "max": 1000000, "rate": 20 },
+      { "min": 1000001, "max": null, "rate": 30 }
+    ],
+    "tax_free_allowance": 300000,
+    "investment_deduction_section_80c": 150000
+  },
+  "import_categories": [
+    {"name": "Electronics & Smartphones", "duty_pct": 20.0, "vat_pct": 18.0, "ait_pct": 2.0},
+    {"name": "Laptops & Computer Hardware", "duty_pct": 0.0, "vat_pct": 18.0, "ait_pct": 0.0},
+    {"name": "Industrial Raw Materials", "duty_pct": 7.5, "vat_pct": 18.0, "ait_pct": 0.75},
+    {"name": "Cosmetics & Perfumes", "duty_pct": 20.0, "vat_pct": 18.0, "ait_pct": 2.0},
+    {"name": "Household Furniture", "duty_pct": 25.0, "vat_pct": 18.0, "ait_pct": 2.5},
+    {"name": "Packaged Food Products", "duty_pct": 30.0, "vat_pct": 12.0, "ait_pct": 3.0},
+    {"name": "Life-Saving Medicine", "duty_pct": 0.0, "vat_pct": 5.0, "ait_pct": 0.0},
+    {"name": "Woven & Knitted Textiles", "duty_pct": 20.0, "vat_pct": 12.0, "ait_pct": 2.0},
+    {"name": "Footwear & Leather Goods", "duty_pct": 25.0, "vat_pct": 18.0, "ait_pct": 2.5},
+    {"name": "Medical Equipment & Scanners", "duty_pct": 7.5, "vat_pct": 12.0, "ait_pct": 0.75},
+    {"name": "Automobiles (Passenger Cars)", "duty_pct": 60.0, "vat_pct": 28.0, "ait_pct": 6.0},
+    {"name": "Electric Vehicle Components", "duty_pct": 15.0, "vat_pct": 5.0, "ait_pct": 1.5},
+    {"name": "Solar Panels & Renewable Energy", "duty_pct": 40.0, "vat_pct": 12.0, "ait_pct": 4.0},
+    {"name": "Agricultural Machinery", "duty_pct": 7.5, "vat_pct": 12.0, "ait_pct": 0.75},
+    {"name": "Fertilizers & Pesticides", "duty_pct": 10.0, "vat_pct": 5.0, "ait_pct": 1.0},
+    {"name": "Iron and Non-Alloy Steel", "duty_pct": 7.5, "vat_pct": 18.0, "ait_pct": 0.75},
+    {"name": "Plastics & Raw Polymers", "duty_pct": 10.0, "vat_pct": 18.0, "ait_pct": 1.0},
+    {"name": "Organic & Inorganic Chemicals", "duty_pct": 7.5, "vat_pct": 18.0, "ait_pct": 0.75},
+    {"name": "Paper and Paperboard Products", "duty_pct": 10.0, "vat_pct": 12.0, "ait_pct": 1.0},
+    {"name": "Optical & Photography Gear", "duty_pct": 10.0, "vat_pct": 18.0, "ait_pct": 1.0},
+    {"name": "Toys & Sports Goods", "duty_pct": 60.0, "vat_pct": 18.0, "ait_pct": 6.0},
+    {"name": "Luxury Watches & Jewelry", "duty_pct": 20.0, "vat_pct": 3.0, "ait_pct": 2.0},
+    {"name": "Bicycles and Parts", "duty_pct": 30.0, "vat_pct": 12.0, "ait_pct": 3.0},
+    {"name": "Hand Tools & Power Drills", "duty_pct": 7.5, "vat_pct": 18.0, "ait_pct": 0.75},
+    {"name": "Air Conditioners & Fridges", "duty_pct": 15.0, "vat_pct": 28.0, "ait_pct": 1.5},
+    {"name": "Lighting & LED Fixtures", "duty_pct": 20.0, "vat_pct": 18.0, "ait_pct": 2.0},
+    {"name": "Construction Cement & Bricks", "duty_pct": 10.0, "vat_pct": 28.0, "ait_pct": 1.0},
+    {"name": "Dairy Products & Milk Powder", "duty_pct": 30.0, "vat_pct": 5.0, "ait_pct": 3.0},
+    {"name": "Pet Food Manufacturing", "duty_pct": 30.0, "vat_pct": 18.0, "ait_pct": 3.0},
+    {"name": "Printed Books & Journals", "duty_pct": 0.0, "vat_pct": 0.0, "ait_pct": 0.0}
+  ]
+}
