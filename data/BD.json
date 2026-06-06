@@ -1,0 +1,75 @@
+{
+  "country": "Bangladesh",
+  "iso_code": "BGD",
+  "currency": "BDT",
+  "source": "National Board of Revenue (NBR) Bangladesh, World Bank, UN Population Division",
+  "demographics": {
+    "total_population": 173562364,
+    "male_population": 85420000,
+    "female_population": 88142364,
+    "population_growth_annual_pct": 1.03,
+    "birth_rate_per_1000": 17.5,
+    "death_rate_per_1000": 5.8,
+    "life_expectancy_years": 73.2,
+    "urban_population_pct": 39.4,
+    "religions": {
+      "Islam": "90.4%",
+      "Hinduism": "8.5%",
+      "Buddhism": "0.6%",
+      "Christianity": "0.4%",
+      "Others": "0.1%"
+    }
+  },
+  "tax_structure": {
+    "standard_vat_pct": 15.0,
+    "corporate_tax_rates": {
+      "publicly_traded_companies": 20.0,
+      "non_publicly_traded_companies": 27.5,
+      "banks_and_financial_institutions": 37.5,
+      "one_person_companies": 22.5
+    },
+    "individual_tax_brackets": [
+      { "min": 0, "max": 350000, "rate": 0 },
+      { "min": 350001, "max": 450000, "rate": 5 },
+      { "min": 450001, "max": 750000, "rate": 10 },
+      { "min": 750001, "max": 1150000, "rate": 15 },
+      { "min": 1150001, "max": 1650000, "rate": 20 },
+      { "min": 1650001, "max": null, "rate": 25 }
+    ],
+    "tax_free_allowance": 350000,
+    "investment_rebate_pct": 15,
+    "max_rebate_pct_of_tax": 30
+  },
+  "import_categories": [
+    {"name": "Electronics & Smartphones", "duty_pct": 25.0, "vat_pct": 15.0, "ait_pct": 5.0},
+    {"name": "Laptops & Computer Hardware", "duty_pct": 5.0, "vat_pct": 15.0, "ait_pct": 0.0},
+    {"name": "Industrial Raw Materials", "duty_pct": 5.0, "vat_pct": 15.0, "ait_pct": 3.0},
+    {"name": "Cosmetics & Perfumes", "duty_pct": 25.0, "vat_pct": 15.0, "ait_pct": 10.0},
+    {"name": "Household Furniture", "duty_pct": 25.0, "vat_pct": 15.0, "ait_pct": 5.0},
+    {"name": "Packaged Food Products", "duty_pct": 25.0, "vat_pct": 15.0, "ait_pct": 5.0},
+    {"name": "Life-Saving Medicine", "duty_pct": 0.0, "vat_pct": 0.0, "ait_pct": 0.0},
+    {"name": "Woven & Knitted Textiles", "duty_pct": 25.0, "vat_pct": 15.0, "ait_pct": 5.0},
+    {"name": "Footwear & Leather Goods", "duty_pct": 25.0, "vat_pct": 15.0, "ait_pct": 5.0},
+    {"name": "Medical Equipment & Scanners", "duty_pct": 1.0, "vat_pct": 15.0, "ait_pct": 0.0},
+    {"name": "Automobiles (Passenger Cars)", "duty_pct": 25.0, "vat_pct": 15.0, "ait_pct": 5.0},
+    {"name": "Electric Vehicle Components", "duty_pct": 10.0, "vat_pct": 15.0, "ait_pct": 3.0},
+    {"name": "Solar Panels & Renewable Energy", "duty_pct": 0.0, "vat_pct": 0.0, "ait_pct": 0.0},
+    {"name": "Agricultural Machinery", "duty_pct": 1.0, "vat_pct": 0.0, "ait_pct": 0.0},
+    {"name": "Fertilizers & Pesticides", "duty_pct": 0.0, "vat_pct": 0.0, "ait_pct": 0.0},
+    {"name": "Iron and Non-Alloy Steel", "duty_pct": 5.0, "vat_pct": 15.0, "ait_pct": 5.0},
+    {"name": "Plastics & Raw Polymers", "duty_pct": 5.0, "vat_pct": 15.0, "ait_pct": 5.0},
+    {"name": "Organic & Inorganic Chemicals", "duty_pct": 5.0, "vat_pct": 15.0, "ait_pct": 3.0},
+    {"name": "Paper and Paperboard Products", "duty_pct": 15.0, "vat_pct": 15.0, "ait_pct": 5.0},
+    {"name": "Optical & Photography Gear", "duty_pct": 10.0, "vat_pct": 15.0, "ait_pct": 5.0},
+    {"name": "Toys & Sports Goods", "duty_pct": 25.0, "vat_pct": 15.0, "ait_pct": 5.0},
+    {"name": "Luxury Watches & Jewelry", "duty_pct": 25.0, "vat_pct": 15.0, "ait_pct": 10.0},
+    {"name": "Bicycles and Parts", "duty_pct": 25.0, "vat_pct": 15.0, "ait_pct": 5.0},
+    {"name": "Hand Tools & Power Drills", "duty_pct": 10.0, "vat_pct": 15.0, "ait_pct": 3.0},
+    {"name": "Air Conditioners & Fridges", "duty_pct": 25.0, "vat_pct": 15.0, "ait_pct": 5.0},
+    {"name": "Lighting & LED Fixtures", "duty_pct": 25.0, "vat_pct": 15.0, "ait_pct": 5.0},
+    {"name": "Construction Cement & Bricks", "duty_pct": 15.0, "vat_pct": 15.0, "ait_pct": 5.0},
+    {"name": "Dairy Products & Milk Powder", "duty_pct": 25.0, "vat_pct": 15.0, "ait_pct": 5.0},
+    {"name": "Pet Food Manufacturing", "duty_pct": 10.0, "vat_pct": 15.0, "ait_pct": 3.0},
+    {"name": "Printed Books & Journals", "duty_pct": 0.0, "vat_pct": 0.0, "ait_pct": 0.0}
+  ]
+}
