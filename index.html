@@ -292,12 +292,76 @@ function goBack() {
 
 function downloadCurrent() {
   if (!currentData) return;
-  const active = document.querySelector('.tab-panel.active').id;
-  const text = `COUNT IT REPORT\nCountry: ${currentData.country}\nDate: ${new Date()}\nTab: ${active}\n\nData: ${JSON.stringify(currentData, null, 2)}`;
-  const blob = new Blob([text], {type: 'text/plain'});
+  const activeTab = document.querySelector('.tab-panel.active').id;
+  const timestamp = new Date().toLocaleString();
+  
+  let exportContent = `COUNT IT REPORT
+Country: ${currentData.country}
+Currency: ${currentData.currency}
+Date: ${timestamp}
+Tab: ${activeTab}
+========================================\n\n`;
+  
+  if (activeTab === 'incomeTab') {
+    const income = document.getElementById('taxIncome')?.value || 0;
+    const investment = document.getElementById('taxInvestment')?.value || 0;
+    const grossTax = document.querySelector('#taxResults .rcell:first-child .rcell-value')?.innerText || '0';
+    const rebate = document.querySelector('#taxResults .rcell:nth-child(2) .rcell-value')?.innerText || '0';
+    const netTax = document.querySelector('#taxResults .rcell:last-child .rcell-value')?.innerText || '0';
+    
+    exportContent += `INCOME TAX CALCULATION
+----------------------------------------
+Annual Income: ${income} ${currentData.currency}
+Investment (Rebate Eligible): ${investment} ${currentData.currency}
+Gross Tax: ${grossTax}
+Rebate: ${rebate}
+NET TAX PAYABLE: ${netTax}
+========================================`;
+  } 
+  else if (activeTab === 'importTab') {
+    const category = document.getElementById('importCat')?.selectedOptions[0]?.text || '—';
+    const price = document.getElementById('importPrice')?.value || 0;
+    const qty = document.getElementById('importQty')?.value || 0;
+    const freight = document.getElementById('importFreight')?.value || 0;
+    
+    const cifElement = document.querySelector('#importResults .rcell:first-child .rcell-value');
+    const dutyElement = document.querySelector('#importResults .rcell:nth-child(2) .rcell-value');
+    const vatElement = document.querySelector('#importResults .rcell:nth-child(3) .rcell-value');
+    const aitElement = document.querySelector('#importResults .rcell:nth-child(4) .rcell-value');
+    const totalElement = document.querySelector('#importResults .rcell:last-child .rcell-value');
+    
+    exportContent += `IMPORT CALCULATION
+----------------------------------------
+Category: ${category}
+Unit Price: ${price} USD
+Quantity: ${qty}
+Freight: ${freight} USD
+Exchange Rate: ${document.getElementById('importRate')?.value || 110} ${currentData.currency}/USD
+----------------------------------------
+CIF Value: ${cifElement?.innerText || '0'}
+Duty: ${dutyElement?.innerText || '0'}
+VAT: ${vatElement?.innerText || '0'}
+AIT: ${aitElement?.innerText || '0'}
+TOTAL LANDED COST: ${totalElement?.innerText || '0'}
+========================================`;
+  }
+  else if (activeTab === 'demographicsTab') {
+    exportContent += `DEMOGRAPHICS DATA
+----------------------------------------
+Total Population: ${document.getElementById('demoPop')?.innerText || '—'}
+Gender Split: ${document.getElementById('demoGender')?.innerText || '—'}
+Population Growth: ${document.getElementById('demoGrowth')?.innerText || '—'}%
+Birth Rate: ${document.getElementById('demoBirth')?.innerText || '—'} (per 1000)
+Death Rate: ${document.getElementById('demoDeath')?.innerText || '—'} (per 1000)
+Life Expectancy: ${document.getElementById('demoLife')?.innerText || '—'} years
+Religions: ${document.getElementById('demoReligion')?.innerText || '—'}
+========================================`;
+  }
+  
+  const blob = new Blob([exportContent], {type: 'text/plain'});
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = `${currentCode}_${active}.txt`;
+  a.download = `${currentCode}_${activeTab}_${Date.now()}.txt`;
   a.click();
 }
 
