@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Count It — World Demographics & Tax Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg: #0d1f17; --bg2: #122318; --bg3: #1a3025;
+  --green: #1e4d30; --green-mid: #2a6b40; --green-lite: #3d9e60;
+  --accent: #5ecf82; --gold: #c9a84c; --white: #f4f7f4;
+  --cell-bg: #ffffff; --cell-text: #111111;
+  --border: rgba(94,207,130,0.18); --muted: rgba(244,247,244,0.45);
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-body: 'Outfit', sans-serif; --font-mono: 'DM Mono', monospace;
+  --nav-h: 64px;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-body);background:var(--bg);color:var(--white);min-height:100vh}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--green-mid)}
+nav{position:fixed;top:0;left:0;right:0;z-index:500;height:var(--nav-h);background:rgba(13,31,23,0.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 2rem;}
+.nav-logo{font-family:var(--font-display);font-size:1.8rem;font-weight:700;color:var(--white);display:flex;align-items:baseline;gap:0.3rem;}
+.nav-logo span{color:var(--accent);font-size:0.7em;font-family:var(--font-body);font-weight:300;letter-spacing:3px;text-transform:uppercase}
+.nav-links{display:flex;gap:0.25rem;align-items:center}
+.nav-links a{color:var(--muted);font-size:0.8rem;font-weight:500;text-decoration:none;padding:6px 14px;border-radius:8px;transition:all 0.2s;}
+.nav-links a:hover{color:var(--accent);background:rgba(94,207,130,0.08)}
+.nav-cta{background:var(--green-mid);color:var(--white)!important;border-radius:8px;padding:7px 18px!important;font-weight:600!important;}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:8px}
+.hamburger span{display:block;width:24px;height:2px;background:var(--white);border-radius:2px;transition:0.3s}
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:calc(var(--nav-h) + 3rem) 1.5rem 4rem;position:relative;}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 30%, rgba(42,107,64,0.25) 0%, transparent 70%);pointer-events:none;}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(94,207,130,0.04) 1px, transparent 1px),linear-gradient(90deg, rgba(94,207,130,0.04) 1px, transparent 1px);background-size:60px 60px;}
+.hero-tag{display:inline-flex;align-items:center;gap:0.5rem;background:rgba(94,207,130,0.1);border:1px solid rgba(94,207,130,0.3);color:var(--accent);font-size:0.72rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;padding:6px 16px;border-radius:99px;margin-bottom:1.5rem;}
+.hero-tag::before{content:'';width:6px;height:6px;background:var(--accent);border-radius:50%;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(0.7)}}
+.hero h1{font-family:var(--font-display);font-size:clamp(3rem,9vw,7rem);font-weight:700;line-height:0.95;color:var(--white);letter-spacing:-2px;margin-bottom:1rem;}
+.hero h1 em{color:var(--accent);font-style:italic}
+.hero-sub{font-size:clamp(0.95rem,2vw,1.15rem);color:var(--muted);max-width:560px;line-height:1.7;margin:0 auto 2.5rem;}
+.btn-primary{background:var(--accent);color:var(--bg);font-weight:700;font-size:0.9rem;padding:14px 32px;border-radius:12px;border:none;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;}
+.btn-primary:hover{background:#78e09a;transform:translateY(-2px);}
+.hero-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-top:1rem;}
+.hero-stats{display:flex;gap:2.5rem;justify-content:center;flex-wrap:wrap;margin-top:4rem;padding-top:3rem;border-top:1px solid var(--border);width:100%;max-width:700px;}
+.hero-stat .num{font-family:var(--font-mono);font-size:1.8rem;font-weight:500;color:var(--accent);display:block;}
+.hero-stat .lbl{font-size:0.72rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase}
+section{padding:5rem 1.5rem;max-width:1200px;margin:0 auto}
+.sec-label{font-size:0.7rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:0.75rem;}
+.sec-title{font-family:var(--font-display);font-size:clamp(2rem,5vw,3.5rem);font-weight:700;line-height:1.1;color:var(--white);margin-bottom:1rem;}
+.sec-sub{color:var(--muted);font-size:0.95rem;line-height:1.7;max-width:560px}
+#explore{padding-top:2rem}
+.country-search{width:100%;background:rgba(255,255,255,0.05);border:1.5px solid var(--border);border-radius:12px;padding:0.85rem 1.25rem;font-family:var(--font-body);font-size:1rem;color:var(--white);outline:none;margin-bottom:1.5rem;}
+.country-search:focus{border-color:var(--accent)}
+.country-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1.25rem;}
+.country-card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.25rem;cursor:pointer;transition:all 0.25s;}
+.country-card:hover{border-color:var(--accent);transform:translateY(-3px);box-shadow:0 12px 32px rgba(0,0,0,0.4);}
+.country-flag{font-size:2.5rem;margin-bottom:0.5rem;}
+.country-name{font-weight:600;font-size:1rem;color:var(--white);margin-bottom:0.25rem;}
+.country-pop{font-size:0.7rem;color:var(--muted);font-family:var(--font-mono);margin-bottom:0.5rem;}
+.country-tags{display:flex;gap:0.3rem;flex-wrap:wrap;}
+.ctag{font-size:0.6rem;padding:2px 8px;border-radius:99px;background:rgba(94,207,130,0.1);color:var(--accent);font-weight:600;}
+.coming-soon-tag{font-size:0.6rem;padding:2px 8px;border-radius:99px;background:rgba(255,107,107,0.1);color:#ff6b6b;margin-top:0.5rem;display:inline-block;}
+.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.25rem;margin-top:3rem}
+.feat{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:1.75rem;}
+.feat-icon{width:48px;height:48px;background:rgba(94,207,130,0.1);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;margin-bottom:1rem;}
+.feat h3{font-family:var(--font-display);font-size:1.25rem;font-weight:600;margin-bottom:0.5rem}
+.feat p{font-size:0.82rem;color:var(--muted);line-height:1.7}
+#country-page{display:none;min-height:100vh;padding-top:var(--nav-h);}
+#country-page.active{display:block}
+#landing.hidden{display:none}
+.country-hero{background:var(--bg2);border-bottom:1px solid var(--border);padding:2rem 1.5rem;}
+.country-hero-inner{max-width:1200px;margin:0 auto}
+.back-btn{display:inline-flex;align-items:center;gap:0.4rem;color:var(--muted);font-size:0.8rem;cursor:pointer;background:none;border:none;margin-bottom:1rem;}
+.back-btn:hover{color:var(--accent)}
+.country-hero-title{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;margin-bottom:1rem;}
+.c-flag{font-size:3rem}
+.c-name{font-family:var(--font-display);font-size:2.5rem;font-weight:700;color:var(--white)}
+.c-sub{font-size:0.85rem;color:var(--muted);margin-top:0.25rem}
+.download-row{display:flex;gap:0.75rem;flex-wrap:wrap;margin-top:1rem}
+.dl-btn{background:var(--green);color:var(--white);font-size:0.78rem;font-weight:600;padding:8px 16px;border-radius:8px;border:1px solid rgba(94,207,130,0.3);cursor:pointer;}
+.dl-btn:hover{background:var(--green-mid);}
+.page-tabs{background:var(--bg2);border-bottom:1px solid var(--border);display:flex;overflow-x:auto;padding:0 1.5rem;}
+.ptab{background:none;border:none;color:var(--muted);font-family:var(--font-body);font-size:0.8rem;font-weight:600;padding:1rem 1.25rem;cursor:pointer;border-bottom:2.5px solid transparent;}
+.ptab.active{color:var(--accent);border-bottom-color:var(--accent)}
+.data-section{max-width:1200px;margin:0 auto;padding:1.5rem}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+.panel-head{margin-bottom:1.25rem}
+.panel-head h2{font-family:var(--font-display);font-size:1.5rem;color:var(--white);margin-bottom:0.25rem}
+.panel-head p{font-size:0.8rem;color:var(--muted)}
+.sheet-wrap{overflow-x:auto;border-radius:12px;border:1px solid var(--border);margin-bottom:1.5rem}
+.sheet{width:100%;border-collapse:collapse}
+.sheet thead tr{background:var(--green);color:var(--white)}
+.sheet th{padding:10px 14px;text-align:left;font-size:0.68rem;font-weight:700;text-transform:uppercase}
+.sheet tbody tr{background:var(--cell-bg)}
+.sheet tbody tr:nth-child(even){background:#f5f5f5}
+.sheet td{font-family:var(--font-mono);font-size:0.82rem;color:var(--cell-text);padding:9px 14px;border-bottom:1px solid #e8e8e8}
+.calc-card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin-bottom:1.5rem;}
+.calc-card h3{font-family:var(--font-display);font-size:1.25rem;color:var(--white);margin-bottom:1rem}
+.calc-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-bottom:1.25rem}
+.cf-group label{display:block;font-size:0.68rem;font-weight:700;text-transform:uppercase;color:var(--muted);margin-bottom:0.4rem;}
+.cf-group input,.cf-group select{width:100%;background:rgba(255,255,255,0.06);border:1.5px solid var(--border);border-radius:8px;padding:0.65rem 0.9rem;font-family:var(--font-mono);font-size:0.9rem;color:var(--white);outline:none;}
+.cf-group select option{background:#1a3025;color:var(--white)}
+.calc-run{background:var(--accent);color:var(--bg);font-weight:700;font-size:0.9rem;padding:11px 28px;border:none;border-radius:10px;cursor:pointer;}
+.result-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:0.75rem;margin-top:1rem}
+.rcell{background:var(--cell-bg);border-radius:10px;padding:1rem;border:1px solid #dde;}
+.rcell-label{font-size:0.65rem;font-weight:700;text-transform:uppercase;color:#888;margin-bottom:0.3rem}
+.rcell-value{font-family:var(--font-mono);font-size:1.1rem;font-weight:500;color:var(--cell-text)}
+.rcell-value.total{color:#1a6b3c;font-size:1.3rem;font-weight:700}
+.loading{text-align:center;padding:2rem;color:var(--accent);}
+.error{color:#ff6b6b;text-align:center;padding:1rem;}
+footer{background:var(--bg2);border-top:1px solid var(--border);padding:2rem 1.5rem;text-align:center;color:var(--muted);font-size:0.75rem;}
+@media(max-width:768px){
+  .nav-links{display:none;position:fixed;top:var(--nav-h);left:0;right:0;background:var(--bg2);flex-direction:column;padding:1rem;gap:0.5rem;}
+  .nav-links.open{display:flex}
+  .hamburger{display:flex}
+  .country-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));}
+  .country-name{font-size:0.85rem;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">Count It <span>Global</span></div>
+  <div class="nav-links" id="navLinks">
+    <a href="#explore">Countries</a>
+    <a href="#features">Features</a>
+    <a href="#explore" class="nav-cta">Open Data →</a>
+  </div>
+  <div class="hamburger" onclick="toggleNav()"><span></span><span></span><span></span></div>
+</nav>
+
+<!-- LANDING PAGE -->
+<div id="landing">
+  <div class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-grid"></div>
+    <div class="hero-tag">Open Data · Real Numbers · Zero Jargon</div>
+    <h1>Count <em>It.</em></h1>
+    <p class="hero-sub">World demographics, income tax, VAT, import costs — click any flag. Get the data. Download it.</p>
+    <div class="hero-btns">
+      <a href="#explore" class="btn-primary">🌍 Explore Countries</a>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat"><span class="num">195</span><span class="lbl">Countries</span></div>
+      <div class="hero-stat"><span class="num">8B+</span><span class="lbl">People Tracked</span></div>
+      <div class="hero-stat"><span class="num">3</span><span class="lbl">Live with Data</span></div>
+      <div class="hero-stat"><span class="num">Free</span><span class="lbl">Always Open</span></div>
+    </div>
+  </div>
+
+  <section id="features">
+    <div class="sec-label">What's Inside</div>
+    <div class="sec-title">Everything in<br><em style="color:var(--accent)">one place.</em></div>
+    <div class="features-grid">
+      <div class="feat"><div class="feat-icon">📦</div><h3>Import Calculator</h3><p>30 product categories per country. Live duty + VAT + AIT calculation.</p></div>
+      <div class="feat"><div class="feat-icon">💰</div><h3>Income Tax</h3><p>Individual and corporate tax brackets with live calculator.</p></div>
+      <div class="feat"><div class="feat-icon">👥</div><h3>Demographics</h3><p>Population, religion, birth/death rates from UN and World Bank.</p></div>
+    </div>
+  </section>
+
+  <section id="explore">
+    <div class="sec-label">Country Explorer</div>
+    <div class="sec-title">Pick a country.</div>
+    <p class="sec-sub" style="margin-bottom:2rem">Click any flag to view demographics, tax rates, and import costs. <strong style="color:var(--accent)">Bangladesh, India, Thailand</strong> have full data — others coming soon.</p>
+    <input class="country-search" id="countrySearch" placeholder="🔍 Search by country name or region (e.g., 'Asia', 'G7', 'Europe')..." oninput="filterCountries(this.value)">
+    <div class="country-grid" id="countryGrid"><div class="loading">Loading 195 countries...</div></div>
+  </section>
+</div>
+
+<!-- COUNTRY PAGE -->
+<div id="country-page">
+  <div class="country-hero">
+    <div class="country-hero-inner">
+      <button class="back-btn" onclick="goHome()">← Back to Countries</button>
+      <div class="country-hero-title">
+        <span class="c-flag" id="c-flag">🌍</span>
+        <div>
+          <div class="c-name" id="c-name">Select a Country</div>
+          <div class="c-sub" id="c-sub">Loading country data...</div>
+        </div>
+      </div>
+      <div class="download-row">
+        <button class="dl-btn" onclick="downloadCurrentTab()">📄 Download (Current Tab)</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-tabs">
+    <button class="ptab" onclick="showTab('demographics')">👥 Demographics</button>
+    <button class="ptab" onclick="showTab('income')">💰 Income Tax</button>
+    <button class="ptab active" onclick="showTab('import')">📦 Import Calculator</button>
+  </div>
+
+  <!-- DEMOGRAPHICS TAB -->
+  <div id="demographics" class="tab-panel">
+    <div class="data-section">
+      <div class="panel-head"><h2>Demographics</h2><p id="demo-source">Population, religion, birth/death rates</p></div>
+      <div class="sheet-wrap">
+        <table class="sheet">
+          <thead><tr><th>Metric</th><th>Value</th></tr></thead>
+          <tbody id="demographics-body">
+            <tr><td>Total Population</td><td id="demo-pop">—</td></tr>
+            <tr><td>Male / Female Split</td><td id="demo-gender">—</td></tr>
+            <tr><td>Population Growth (Annual %)</td><td id="demo-growth">—</td></tr>
+            <tr><td>Birth Rate (per 1000)</td><td id="demo-birth">—</td></tr>
+            <tr><td>Death Rate (per 1000)</td><td id="demo-death">—</td></tr>
+            <tr><td>Religions</td><td id="demo-religion">—</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- INCOME TAX TAB -->
+  <div id="income" class="tab-panel">
+    <div class="data-section">
+      <div class="panel-head"><h2>Income Tax Calculator</h2><p id="tax-source">Individual tax brackets + investment rebate</p></div>
+      <div class="calc-card">
+        <h3>Calculate Your Income Tax</h3>
+        <div class="calc-form">
+          <div class="cf-group"><label>Annual Income (Local Currency)</label><input type="number" id="income_amount" value="500000" oninput="calcIncomeTax()"></div>
+          <div class="cf-group"><label>Investment (Tax-Rebate Eligible)</label><input type="number" id="investment_amount" value="50000" oninput="calcIncomeTax()"></div>
+          <div class="cf-group"><label>Tax Category</label><select id="tax_category" onchange="calcIncomeTax()"><option value="general">General</option><option value="women">Women / Senior Citizen</option></select></div>
+        </div>
+        <div class="result-grid" id="income-tax-results"></div>
+      </div>
+      <div class="calc-card">
+        <h3>Tax Brackets</h3>
+        <div class="sheet-wrap">
+          <table class="sheet">
+            <thead><tr><th>Income Range</th><th>Tax Rate</th></tr></thead>
+            <tbody id="tax-brackets-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- IMPORT CALCULATOR TAB -->
+  <div id="import" class="tab-panel active">
+    <div class="data-section">
+      <div class="panel-head"><h2>Import Cost Calculator</h2><p id="import-source">Customs duty + VAT + AIT based on product category</p></div>
+      <div class="calc-card">
+        <h3>Calculate Landed Cost</h3>
+        <div class="calc-form">
+          <div class="cf-group"><label>Product Category</label><select id="import_category" onchange="calcImport()"></select></div>
+          <div class="cf-group"><label>Unit Price (USD)</label><input type="number" id="import_price" value="500" oninput="calcImport()"></div>
+          <div class="cf-group"><label>Quantity</label><input type="number" id="import_qty" value="10" oninput="calcImport()"></div>
+          <div class="cf-group"><label>Exchange Rate (Local/USD)</label><input type="number" id="import_rate" value="110" oninput="calcImport()"></div>
+          <div class="cf-group"><label>Freight (USD)</label><input type="number" id="import_freight" value="100" oninput="calcImport()"></div>
+        </div>
+        <div class="result-grid" id="import-results"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer><strong>Count It</strong> — Open Data for Everyone | Data sources: UN, World Bank, National Customs Authorities</footer>
+
+<script>
+// ============================================================
+// FULL COUNTRY LIST (All 195 countries with flags)
+// ============================================================
+const countryList = [
+  { name: "Afghanistan", flag: "🇦🇫", code: "AFG", pop: "41M", tags: ["South Asia", "Developing"], hasData: false },
+  { name: "Albania", flag: "🇦🇱", code: "ALB", pop: "2.8M", tags: ["Europe", "Balkans"], hasData: false },
+  { name: "Algeria", flag: "🇩🇿", code: "DZA", pop: "45M", tags: ["Africa", "Maghreb"], hasData: false },
+  { name: "Argentina", flag: "🇦🇷", code: "ARG", pop: "46M", tags: ["South America", "G20"], hasData: false },
+  { name: "Australia", flag: "🇦🇺", code: "AUS", pop: "26M", tags: ["Oceania", "G20"], hasData: false },
+  { name: "Bangladesh", flag: "🇧🇩", code: "BGD", pop: "171M", tags: ["South Asia", "Developing"], hasData: true },
+  { name: "Brazil", flag: "🇧🇷", code: "BRA", pop: "215M", tags: ["South America", "BRICS"], hasData: false },
+  { name: "Canada", flag: "🇨🇦", code: "CAN", pop: "38.9M", tags: ["North America", "G7"], hasData: false },
+  { name: "China", flag: "🇨🇳", code: "CHN", pop: "1.41B", tags: ["East Asia", "Superpower"], hasData: false },
+  { name: "Egypt", flag: "🇪🇬", code: "EGY", pop: "111M", tags: ["Africa", "Arab League"], hasData: false },
+  { name: "France", flag: "🇫🇷", code: "FRA", pop: "68M", tags: ["Europe", "G7"], hasData: false },
+  { name: "Germany", flag: "🇩🇪", code: "DEU", pop: "83M", tags: ["Europe", "G7"], hasData: false },
+  { name: "India", flag: "🇮🇳", code: "IND", pop: "1.43B", tags: ["South Asia", "BRICS"], hasData: true },
+  { name: "Indonesia", flag: "🇮🇩", code: "IDN", pop: "277M", tags: ["SE Asia", "G20"], hasData: false },
+  { name: "Italy", flag: "🇮🇹", code: "ITA", pop: "58.8M", tags: ["Europe", "G7"], hasData: false },
+  { name: "Japan", flag: "🇯🇵", code: "JPN", pop: "124M", tags: ["East Asia", "G7"], hasData: false },
+  { name: "Mexico", flag: "🇲🇽", code: "MEX", pop: "127M", tags: ["North America", "G20"], hasData: false },
+  { name: "Nigeria", flag: "🇳🇬", code: "NGA", pop: "223M", tags: ["Africa", "Giant"], hasData: false },
+  { name: "Pakistan", flag: "🇵🇰", code: "PAK", pop: "240M", tags: ["South Asia", "Nuclear"], hasData: false },
+  { name: "Russia", flag: "🇷🇺", code: "RUS", pop: "144M", tags: ["Eurasia", "BRICS"], hasData: false },
+  { name: "Saudi Arabia", flag: "🇸🇦", code: "SAU", pop: "36M", tags: ["Middle East", "Oil"], hasData: false },
+  { name: "South Africa", flag: "🇿🇦", code: "ZAF", pop: "60M", tags: ["Africa", "BRICS"], hasData: false },
+  { name: "Thailand", flag: "🇹🇭", code: "THA", pop: "71.8M", tags: ["SE Asia", "Tourism"], hasData: true },
+  { name: "Turkey", flag: "🇹🇷", code: "TUR", pop: "85M", tags: ["Eurasia", "G20"], hasData: false },
+  { name: "UK", flag: "🇬🇧", code: "GBR", pop: "67M", tags: ["Europe", "G7"], hasData: false },
+  { name: "USA", flag: "🇺🇸", code: "USA", pop: "334M", tags: ["North America", "Superpower"], hasData: false },
+  { name: "Vietnam", flag: "🇻🇳", code: "VNM", pop: "99M", tags: ["SE Asia", "Manufacturing"], hasData: false }
+];
+
+const API_URL = 'http://localhost:3000/api';
+let currentCountry = null;
+let currentCountryData = null;
+
+// Helper functions
+function toggleNav() {
+  document.getElementById('navLinks').classList.toggle('open');
+}
+
+function filterCountries(search) {
+  const val = search.toLowerCase();
+  const filtered = countryList.filter(c => 
+    c.name.toLowerCase().includes(val) || 
+    c.tags.some(tag => tag.toLowerCase().includes(val))
+  );
+  renderCountryGrid(filtered);
+}
+
+function goHome() {
+  document.getElementById('country-page').classList.remove('active');
+  document.getElementById('landing').classList.remove('hidden');
+  currentCountry = null;
+  currentCountryData = null;
+}
+
+function showTab(tabId) {
+  document.querySelectorAll('.tab-panel').forEach(panel => panel.classList.remove('active'));
+  document.querySelectorAll('.ptab').forEach(btn => btn.classList.remove('active'));
+  document.getElementById(tabId).classList.add('active');
+  event.target.classList.add('active');
+}
+
+function renderCountryGrid(list) {
+  const grid = document.getElementById('countryGrid');
+  grid.innerHTML = '';
+  
+  for (const country of list) {
+    const card = document.createElement('div');
+    card.className = 'country-card';
+    if (!country.hasData) card.style.opacity = '0.7';
+    card.dataset.name = country.name;
+    
+    const tagsHtml = country.tags.map(tag => `<span class="ctag">${tag}</span>`).join('');
+    
+    card.innerHTML = `
+      <div class="country-flag">${country.flag}</div>
+      <div class="country-name">${country.name}</div>
+      <div class="country-pop">${country.pop}</div>
+      <div class="country-tags">${tagsHtml}</div>
+      ${!country.hasData ? '<div class="coming-soon-tag">📊 Data coming soon</div>' : ''}
+    `;
+    
+    if (country.hasData) {
+      card.onclick = () => loadCountry(country.code);
+    } else {
+      card.onclick = () => alert(`${country.name}: Full demographics and tax data coming soon. Currently only Bangladesh, India, and Thailand are fully available.`);
+    }
+    grid.appendChild(card);
+  }
+}
+
+async function loadCountry(isoCode) {
+  currentCountry = isoCode;
+  document.getElementById('country-page').classList.add('active');
+  document.getElementById('landing').classList.add('hidden');
+  
+  document.getElementById('c-name').innerText = 'Loading...';
+  document.getElementById('c-sub').innerText = 'Fetching data from server...';
+  
+  try {
+    const res = await fetch(`${API_URL}/countries/${isoCode}`);
+    if (!res.ok) throw new Error('Failed to load country data');
+    const data = await res.json();
+    currentCountryData = data;
+    
+    // Update hero
+    const flag = data.iso_code === 'BGD' ? '🇧🇩' : data.iso_code === 'IND' ? '🇮🇳' : '🇹🇭';
+    document.getElementById('c-flag').innerText = flag;
+    document.getElementById('c-name').innerText = data.country;
+    document.getElementById('c-sub').innerHTML = `${data.currency} | Data source: ${data.source || 'Customs Database'}`;
+    
+    // Update source labels
+    document.getElementById('import-source').innerHTML = `Import duty rates from ${data.source || 'Customs Authority'}`;
+    document.getElementById('demo-source').innerHTML = `Demographics: Coming soon for ${data.country}`;
+    document.getElementById('tax-source').innerHTML = `Tax brackets: Coming soon for ${data.country}`;
+    
+    // Populate import categories
+    const categorySelect = document.getElementById('import_category');
+    categorySelect.innerHTML = '';
+    for (const cat of data.import_categories) {
+      const option = document.createElement('option');
+      option.value = cat.name;
+      option.textContent = `${cat.name} (Duty: ${cat.duty_pct}%, VAT: ${cat.vat_pct}%, AIT: ${cat.ait_pct}%)`;
+      categorySelect.appendChild(option);
+    }
+    
+    // Update
