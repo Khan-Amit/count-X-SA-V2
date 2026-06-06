@@ -55,12 +55,14 @@ section{padding:5rem 1.5rem;max-width:1200px;margin:0 auto}
 .country-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1.25rem;}
 .country-card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.25rem;cursor:pointer;transition:all 0.25s;}
 .country-card:hover{border-color:var(--accent);transform:translateY(-3px);box-shadow:0 12px 32px rgba(0,0,0,0.4);}
+.country-card.disabled{opacity:0.6;cursor:not-allowed;}
+.country-card.disabled:hover{transform:none;border-color:var(--border);}
 .country-flag{font-size:2.5rem;margin-bottom:0.5rem;}
 .country-name{font-weight:600;font-size:1rem;color:var(--white);margin-bottom:0.25rem;}
 .country-pop{font-size:0.7rem;color:var(--muted);font-family:var(--font-mono);margin-bottom:0.5rem;}
 .country-tags{display:flex;gap:0.3rem;flex-wrap:wrap;}
 .ctag{font-size:0.6rem;padding:2px 8px;border-radius:99px;background:rgba(94,207,130,0.1);color:var(--accent);font-weight:600;}
-.coming-soon-tag{font-size:0.6rem;padding:2px 8px;border-radius:99px;background:rgba(255,107,107,0.1);color:#ff6b6b;margin-top:0.5rem;display:inline-block;}
+.coming-soon{font-size:0.6rem;padding:2px 8px;border-radius:99px;background:rgba(255,107,107,0.1);color:#ff6b6b;margin-top:0.5rem;display:inline-block;}
 .features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.25rem;margin-top:3rem}
 .feat{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:1.75rem;}
 .feat-icon{width:48px;height:48px;background:rgba(94,207,130,0.1);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;margin-bottom:1rem;}
@@ -81,8 +83,7 @@ section{padding:5rem 1.5rem;max-width:1200px;margin:0 auto}
 .dl-btn{background:var(--green);color:var(--white);font-size:0.78rem;font-weight:600;padding:8px 16px;border-radius:8px;border:1px solid rgba(94,207,130,0.3);cursor:pointer;}
 .dl-btn:hover{background:var(--green-mid);}
 .page-tabs{background:var(--bg2);border-bottom:1px solid var(--border);display:flex;overflow-x:auto;padding:0 1.5rem;}
-.page-tabs::-webkit-scrollbar{display:none}
-.ptab{background:none;border:none;color:var(--muted);font-family:var(--font-body);font-size:0.8rem;font-weight:600;padding:1rem 1.25rem;cursor:pointer;border-bottom:2.5px solid transparent;white-space:nowrap;}
+.ptab{background:none;border:none;color:var(--muted);font-family:var(--font-body);font-size:0.8rem;font-weight:600;padding:1rem 1.25rem;cursor:pointer;border-bottom:2.5px solid transparent;}
 .ptab.active{color:var(--accent);border-bottom-color:var(--accent)}
 .data-section{max-width:1200px;margin:0 auto;padding:1.5rem}
 .tab-panel{display:none}
@@ -93,8 +94,7 @@ section{padding:5rem 1.5rem;max-width:1200px;margin:0 auto}
 .sheet-wrap{overflow-x:auto;border-radius:12px;border:1px solid var(--border);margin-bottom:1.5rem}
 .sheet{width:100%;border-collapse:collapse}
 .sheet thead tr{background:var(--green);color:var(--white)}
-.sheet th{padding:10px 14px;text-align:left;font-size:0.68rem;font-weight:700;text-transform:uppercase;border-right:1px solid rgba(255,255,255,0.1);}
-.sheet th:last-child{border-right:none}
+.sheet th{padding:10px 14px;text-align:left;font-size:0.68rem;font-weight:700;text-transform:uppercase}
 .sheet tbody tr{background:var(--cell-bg)}
 .sheet tbody tr:nth-child(even){background:#f5f5f5}
 .sheet td{font-family:var(--font-mono);font-size:0.82rem;color:var(--cell-text);padding:9px 14px;border-bottom:1px solid #e8e8e8}
@@ -110,15 +110,14 @@ section{padding:5rem 1.5rem;max-width:1200px;margin:0 auto}
 .rcell-label{font-size:0.65rem;font-weight:700;text-transform:uppercase;color:#888;margin-bottom:0.3rem}
 .rcell-value{font-family:var(--font-mono);font-size:1.1rem;font-weight:500;color:var(--cell-text)}
 .rcell-value.total{color:#1a6b3c;font-size:1.3rem;font-weight:700}
-.loading{text-align:center;padding:2rem;color:var(--accent);}
+.loading{text-align:center;padding:2rem;color:var(--accent);font-family:var(--font-mono);}
 .error{color:#ff6b6b;text-align:center;padding:1rem;}
 footer{background:var(--bg2);border-top:1px solid var(--border);padding:2rem 1.5rem;text-align:center;color:var(--muted);font-size:0.75rem;}
 @media(max-width:768px){
-  .nav-links{display:none;position:fixed;top:var(--nav-h);left:0;right:0;background:var(--bg2);flex-direction:column;padding:1rem;gap:0.5rem;z-index:400;}
+  .nav-links{display:none;position:fixed;top:var(--nav-h);left:0;right:0;background:var(--bg2);flex-direction:column;padding:1rem;gap:0.5rem;}
   .nav-links.open{display:flex}
   .hamburger{display:flex}
   .country-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));}
-  .country-name{font-size:0.85rem;}
 }
 </style>
 </head>
@@ -141,7 +140,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:2rem 1.5
     <div class="hero-grid"></div>
     <div class="hero-tag">Open Data · Real Numbers · Zero Jargon</div>
     <h1>Count <em>It.</em></h1>
-    <p class="hero-sub">World demographics, income tax, VAT, import costs — click any flag. Get the data. Download it.</p>
+    <p class="hero-sub">Population, religion, birth/death rates from UN and World Bank.</p>
     <div class="hero-btns">
       <a href="#explore" class="btn-primary">🌍 Explore Countries</a>
     </div>
@@ -164,10 +163,10 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:2rem 1.5
   </section>
 
   <section id="explore">
-    <div class="sec-label">Country Explorer</div>
+    <div class="sec-label">COUNTRY EXPLORER</div>
     <div class="sec-title">Pick a country.</div>
-    <p class="sec-sub" style="margin-bottom:2rem">Click any flag to view demographics, tax rates, and import costs. <strong style="color:var(--accent)">Bangladesh, India, Thailand</strong> have full data — others coming soon.</p>
-    <input class="country-search" id="countrySearch" placeholder="🔍 Search by country name or region (e.g., 'Asia', 'G7', 'Europe')..." oninput="filterCountries(this.value)">
+    <p class="sec-sub">Click any flag to view demographics, tax rates, and import costs. <strong style="color:var(--accent)">Bangladesh, India, Thailand</strong> have full data — others coming soon.</p>
+    <input class="country-search" id="countrySearch" placeholder="🔍 Search by country name or region (e.g. 'India')..." oninput="filterCountries(this.value)">
     <div class="country-grid" id="countryGrid"></div>
   </section>
 </div>
@@ -209,6 +208,8 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:2rem 1.5
             <tr><td>Population Growth (Annual %)</td><td id="demo-growth">—</td></tr>
             <tr><td>Birth Rate (per 1000)</td><td id="demo-birth">—</td></tr>
             <tr><td>Death Rate (per 1000)</td><td id="demo-death">—</td></tr>
+            <tr><td>Life Expectancy (Years)</td><td id="demo-life">—</td></tr>
+            <tr><td>Urban Population (%)</td><td id="demo-urban">—</td></tr>
             <tr><td>Religions</td><td id="demo-religion">—</td></tr>
           </tbody>
         </table>
@@ -264,7 +265,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:2rem 1.5
 
 <script>
 // ============================================================
-// FULL COUNTRY LIST (All countries with flags)
+// FULL COUNTRY LIST (27 countries with flags)
 // ============================================================
 const countryList = [
   { name: "Afghanistan", flag: "🇦🇫", code: "AFG", pop: "41M", tags: ["South Asia", "Developing"], hasData: false },
@@ -296,22 +297,91 @@ const countryList = [
   { name: "Vietnam", flag: "🇻🇳", code: "VNM", pop: "99M", tags: ["SE Asia", "Manufacturing"], hasData: false }
 ];
 
-const API_URL = 'http://localhost:3000/api';
 let currentCountry = null;
 let currentCountryData = null;
 
-// Helper functions
-function toggleNav() {
-  document.getElementById('navLinks').classList.toggle('open');
+// ============================================================
+// RENDER COUNTRY GRID - This shows all countries with flags
+// ============================================================
+function renderCountryGrid() {
+  const grid = document.getElementById('countryGrid');
+  if (!grid) {
+    console.error('CountryGrid element not found!');
+    return;
+  }
+  
+  grid.innerHTML = '';
+  
+  for (const country of countryList) {
+    const card = document.createElement('div');
+    card.className = 'country-card';
+    if (!country.hasData) card.classList.add('disabled');
+    card.dataset.name = country.name;
+    
+    const tagsHtml = country.tags.map(tag => `<span class="ctag">${tag}</span>`).join('');
+    
+    card.innerHTML = `
+      <div class="country-flag">${country.flag}</div>
+      <div class="country-name">${country.name}</div>
+      <div class="country-pop">${country.pop}</div>
+      <div class="country-tags">${tagsHtml}</div>
+      ${!country.hasData ? '<div class="coming-soon">📊 Data coming soon</div>' : ''}
+    `;
+    
+    if (country.hasData) {
+      card.onclick = () => loadCountry(country.code);
+    } else {
+      card.onclick = () => alert(`${country.name}: Full demographics and tax data coming soon. Currently only Bangladesh, India, and Thailand are fully available.`);
+    }
+    grid.appendChild(card);
+  }
+  
+  console.log(`✅ Rendered ${countryList.length} countries`);
 }
 
+// ============================================================
+// FILTER COUNTRIES
+// ============================================================
 function filterCountries(search) {
   const val = search.toLowerCase();
   const filtered = countryList.filter(c => 
     c.name.toLowerCase().includes(val) || 
     c.tags.some(tag => tag.toLowerCase().includes(val))
   );
-  renderCountryGrid(filtered);
+  
+  const grid = document.getElementById('countryGrid');
+  grid.innerHTML = '';
+  
+  for (const country of filtered) {
+    const card = document.createElement('div');
+    card.className = 'country-card';
+    if (!country.hasData) card.classList.add('disabled');
+    
+    const tagsHtml = country.tags.map(tag => `<span class="ctag">${tag}</span>`).join('');
+    
+    card.innerHTML = `
+      <div class="country-flag">${country.flag}</div>
+      <div class="country-name">${country.name}</div>
+      <div class="country-pop">${country.pop}</div>
+      <div class="country-tags">${tagsHtml}</div>
+      ${!country.hasData ? '<div class="coming-soon">📊 Data coming soon</div>' : ''}
+    `;
+    
+    if (country.hasData) {
+      card.onclick = () => loadCountry(country.code);
+    } else {
+      card.onclick = () => alert(`${country.name}: Full demographics and tax data coming soon.`);
+    }
+    grid.appendChild(card);
+  }
+}
+
+// ============================================================
+// NAVIGATION FUNCTIONS
+// ============================================================
+function toggleNav() {
+  const navLinks = document.getElementById('navLinks');
+  if (navLinks) navLinks.classList.toggle('open');
 }
 
 function goHome() {
@@ -325,147 +395,107 @@ function showTab(tabId) {
   document.querySelectorAll('.tab-panel').forEach(panel => panel.classList.remove('active'));
   document.querySelectorAll('.ptab').forEach(btn => btn.classList.remove('active'));
   document.getElementById(tabId).classList.add('active');
-  event.target.classList.add('active');
+  if (event && event.target) event.target.classList.add('active');
 }
 
-function renderCountryGrid(list) {
-  const grid = document.getElementById('countryGrid');
-  if (!grid) {
-    console.error('CountryGrid element not found!');
-    return;
-  }
-  grid.innerHTML = '';
-  
-  for (const country of list) {
-    const card = document.createElement('div');
-    card.className = 'country-card';
-    if (!country.hasData) card.style.opacity = '0.7';
-    card.dataset.name = country.name;
-    
-    const tagsHtml = country.tags.map(tag => `<span class="ctag">${tag}</span>`).join('');
-    
-    card.innerHTML = `
-      <div class="country-flag">${country.flag}</div>
-      <div class="country-name">${country.name}</div>
-      <div class="country-pop">${country.pop}</div>
-      <div class="country-tags">${tagsHtml}</div>
-      ${!country.hasData ? '<div class="coming-soon-tag">📊 Data coming soon</div>' : ''}
-    `;
-    
-    if (country.hasData) {
-      card.onclick = () => loadCountry(country.code);
-    } else {
-      card.onclick = () => alert(`${country.name}: Full demographics and tax data coming soon. Currently only Bangladesh, India, and Thailand are fully available.`);
-    }
-    grid.appendChild(card);
-  }
-  
-  // Update search placeholder with count
-  const searchInput = document.getElementById('countrySearch');
-  if (searchInput && list.length === countryList.length) {
-    searchInput.placeholder = `🔍 Search ${countryList.length} countries by name or region...`;
-  }
-}
-
+// ============================================================
+// LOAD COUNTRY DATA FROM data/ FOLDER
+// ============================================================
 async function loadCountry(isoCode) {
   currentCountry = isoCode;
   document.getElementById('country-page').classList.add('active');
   document.getElementById('landing').classList.add('hidden');
   
   document.getElementById('c-name').innerText = 'Loading...';
-  document.getElementById('c-sub').innerText = 'Fetching data from server...';
+  document.getElementById('c-sub').innerText = 'Fetching data from data/ folder...';
   
   try {
-    const res = await fetch(`${API_URL}/countries/${isoCode}`);
-    if (!res.ok) throw new Error('Failed to load country data');
-    const data = await res.json();
+    const response = await fetch(`data/${isoCode}.json`);
+    if (!response.ok) throw new Error(`Could not load data/${isoCode}.json`);
+    const data = await response.json();
     currentCountryData = data;
     
-    // Update hero
-    const flagMap = { BGD: '🇧🇩', IND: '🇮🇳', THA: '🇹🇭' };
-    const flag = flagMap[data.iso_code] || '🌍';
+    // Update hero section
+    const flag = data.iso_code === 'BGD' ? '🇧🇩' : data.iso_code === 'IND' ? '🇮🇳' : '🇹🇭';
     document.getElementById('c-flag').innerText = flag;
     document.getElementById('c-name').innerText = data.country;
-    document.getElementById('c-sub').innerHTML = `${data.currency} | Data source: ${data.source || 'Customs Database'}`;
+    document.getElementById('c-sub').innerHTML = `${data.currency} | Source: ${data.source || 'Customs Database'}`;
     
-    // Update source labels
     document.getElementById('import-source').innerHTML = `Import duty rates from ${data.source || 'Customs Authority'}`;
     
-    // Populate import categories
-    const categorySelect = document.getElementById('import_category');
-    categorySelect.innerHTML = '';
-    for (const cat of data.import_categories) {
-      const option = document.createElement('option');
-      option.value = cat.name;
-      option.textContent = `${cat.name} (Duty: ${cat.duty_pct}%, VAT: ${cat.vat_pct}%, AIT: ${cat.ait_pct}%)`;
-      categorySelect.appendChild(option);
-    }
-    
-    // Update exchange rate label
-    const rateLabel = document.querySelector('#import .cf-group:nth-child(4) label');
-    if (rateLabel) rateLabel.innerHTML = `Exchange Rate (${data.currency}/USD)`;
-    
-    // Load demographics if available
+    // Populate Demographics
     if (data.demographics) {
       document.getElementById('demo-pop').innerHTML = data.demographics.total_population?.toLocaleString() || '—';
       const m = data.demographics.male_population || 0;
       const f = data.demographics.female_population || 0;
-      document.getElementById('demo-gender').innerHTML = m && f ? `♂ ${m.toLocaleString()} / ♀ ${f.toLocaleString()}` : '—';
+      document.getElementById('demo-gender').innerHTML = (m && f) ? `♂ ${m.toLocaleString()} / ♀ ${f.toLocaleString()}` : '—';
       document.getElementById('demo-growth').innerHTML = data.demographics.population_growth_annual_pct || '—';
       document.getElementById('demo-birth').innerHTML = data.demographics.birth_rate_per_1000 || '—';
       document.getElementById('demo-death').innerHTML = data.demographics.death_rate_per_1000 || '—';
+      document.getElementById('demo-life').innerHTML = data.demographics.life_expectancy_years || '—';
+      document.getElementById('demo-urban').innerHTML = data.demographics.urban_population_pct ? `${data.demographics.urban_population_pct}%` : '—';
+      
       if (data.demographics.religions) {
         let relHtml = '';
-        for (let [k, v] of Object.entries(data.demographics.religions)) {
+        for (const [k, v] of Object.entries(data.demographics.religions)) {
           relHtml += `${k}: ${v}<br>`;
         }
         document.getElementById('demo-religion').innerHTML = relHtml || '—';
       }
-      document.getElementById('demo-source').innerHTML = `Demographics for ${data.country} from UN/World Bank`;
-    } else {
-      document.getElementById('demo-source').innerHTML = `Demographics coming soon for ${data.country}`;
     }
     
-    // Load tax brackets if available
+    // Populate Tax Brackets
     if (data.tax_structure && data.tax_structure.individual_tax_brackets) {
       const brackets = data.tax_structure.individual_tax_brackets;
       const bracketsHtml = brackets.map(b => {
-        const maxStr = b.max === null ? 'and above' : `${b.max.toLocaleString()}`;
-        const minStr = b.min.toLocaleString();
-        return `<tr><td>${minStr} - ${maxStr}</td><td>${b.rate}%</td></tr>`;
+        const maxStr = b.max === null ? '∞' : b.max.toLocaleString();
+        return `<tr><td>${b.min.toLocaleString()} - ${maxStr}</td><td>${b.rate}%</td></tr>`;
       }).join('');
       document.getElementById('tax-brackets-body').innerHTML = bracketsHtml;
-      document.getElementById('tax-source').innerHTML = `Income tax brackets for ${data.country}`;
+      document.getElementById('tax-source').innerHTML = `Tax brackets for ${data.country} (${data.currency})`;
     } else {
-      document.getElementById('tax-brackets-body').innerHTML = '<tr><td colspan="2" style="text-align:center">Tax brackets coming soon</td></tr>';
+      document.getElementById('tax-brackets-body').innerHTML = '<tr><td colspan="2">Tax brackets coming soon</td></tr>';
     }
     
-    // Set default tax category
-    const taxCatSelect = document.getElementById('tax_category');
-    if (data.iso_code === 'IND') {
-      taxCatSelect.innerHTML = '<option value="new">New Regime (Default)</option><option value="old">Old Regime</option>';
-    } else if (data.iso_code === 'BGD') {
-      taxCatSelect.innerHTML = '<option value="general">General</option><option value="women">Women / Senior Citizen</option>';
-    } else {
-      taxCatSelect.innerHTML = '<option value="general">General</option>';
+    // Populate Import Categories
+    if (data.import_categories && data.import_categories.length) {
+      const categorySelect = document.getElementById('import_category');
+      categorySelect.innerHTML = '';
+      for (const cat of data.import_categories) {
+        const option = document.createElement('option');
+        option.value = cat.name;
+        option.textContent = `${cat.name} (Duty: ${cat.duty_pct}%, VAT: ${cat.vat_pct}%, AIT: ${cat.ait_pct}%)`;
+        categorySelect.appendChild(option);
+      }
+      
+      const rateLabel = document.querySelector('#import .cf-group:nth-child(4) label');
+      if (rateLabel) rateLabel.innerHTML = `Exchange Rate (${data.currency}/USD)`;
+      
+      const rateInput = document.getElementById('import_rate');
+      if (data.currency === 'BDT') rateInput.value = 110;
+      else if (data.currency === 'INR') rateInput.value = 83;
+      else if (data.currency === 'THB') rateInput.value = 34;
+      
+      calcImport();
     }
     
-    // Recalculate
-    calcImport();
     calcIncomeTax();
     
   } catch (error) {
     console.error('Error loading country:', error);
     document.getElementById('c-name').innerText = 'Error loading data';
-    document.getElementById('c-sub').innerText = 'Make sure backend server is running on port 3000';
+    document.getElementById('c-sub').innerHTML = `Make sure data/${isoCode}.json exists in the data/ folder`;
   }
 }
 
+// ============================================================
+// IMPORT CALCULATOR
+// ============================================================
 function calcImport() {
   if (!currentCountryData) return;
   
   const categoryName = document.getElementById('import_category').value;
-  const category = currentCountryData.import_categories.find(c => c.name === categoryName);
+  const category = currentCountryData.import_categories?.find(c => c.name === categoryName);
   if (!category) return;
   
   const priceUSD = parseFloat(document.getElementById('import_price').value) || 0;
@@ -493,51 +523,51 @@ function calcImport() {
   `;
 }
 
+// ============================================================
+// INCOME TAX CALCULATOR
+// ============================================================
 function calcIncomeTax() {
-  if (!currentCountryData) {
-    document.getElementById('income-tax-results').innerHTML = '<div class="rcell"><div class="rcell-label">Select a country first</div><div class="rcell-value">—</div></div>';
+  if (!currentCountryData || !currentCountryData.tax_structure) {
+    document.getElementById('income-tax-results').innerHTML = '<div class="rcell"><div class="rcell-label">Status</div><div class="rcell-value">Tax data coming soon</div></div>';
     return;
   }
   
   const income = parseFloat(document.getElementById('income_amount').value) || 0;
   const investment = parseFloat(document.getElementById('investment_amount').value) || 0;
-  const category = document.getElementById('tax_category').value;
+  const brackets = currentCountryData.tax_structure.individual_tax_brackets;
   
-  let tax = 0;
-  let brackets = [];
-  
-  if (currentCountryData.tax_structure && currentCountryData.tax_structure.individual_tax_brackets) {
-    brackets = currentCountryData.tax_structure.individual_tax_brackets;
-  } else {
-    document.getElementById('income-tax-results').innerHTML = `
-      <div class="rcell"><div class="rcell-label">Status</div><div class="rcell-value">Tax brackets coming soon</div></div>
-      <div class="rcell"><div class="rcell-label">Next Step</div><div class="rcell-value">Add tax brackets to ${currentCountryData.country} JSON</div></div>
-    `;
+  if (!brackets) {
+    document.getElementById('income-tax-results').innerHTML = '<div class="rcell"><div class="rcell-label">Status</div><div class="rcell-value">Tax brackets not available</div></div>';
     return;
   }
   
-  // Calculate tax based on brackets
+  let tax = 0;
   let remaining = income;
-  for (let bracket of brackets) {
+  for (const bracket of brackets) {
     if (remaining <= 0) break;
-    const taxable = Math.min(remaining, bracket.max === null ? remaining : bracket.max - bracket.min);
-    tax += taxable * (bracket.rate / 100);
-    remaining -= taxable;
+    const max = bracket.max === null ? remaining : bracket.max;
+    const taxable = Math.min(remaining, max - bracket.min);
+    if (taxable > 0) {
+      tax += taxable * (bracket.rate / 100);
+      remaining -= taxable;
+    }
   }
   
-  // Apply rebate (simplified)
-  const rebatePct = currentCountryData.tax_structure?.investment_rebate_pct || 0;
-  const maxRebatePct = currentCountryData.tax_structure?.max_rebate_pct_of_tax || 30;
+  const rebatePct = currentCountryData.tax_structure.investment_rebate_pct || 0;
+  const maxRebatePct = currentCountryData.tax_structure.max_rebate_pct_of_tax || 0;
   const rebate = Math.min(investment * (rebatePct / 100), tax * (maxRebatePct / 100));
   const finalTax = Math.max(0, tax - rebate);
   
   document.getElementById('income-tax-results').innerHTML = `
-    <div class="rcell"><div class="rcell-label">Gross Tax</div><div class="rcell-value">${tax.toFixed(2)} ${currentCountryData.currency}</div></div>
+    <div class="rcell"><div class="rcell-label">Gross Tax Payable</div><div class="rcell-value">${tax.toFixed(2)} ${currentCountryData.currency}</div></div>
     <div class="rcell"><div class="rcell-label">Investment Rebate (${rebatePct}%)</div><div class="rcell-value">${rebate.toFixed(2)} ${currentCountryData.currency}</div></div>
     <div class="rcell"><div class="rcell-label total">Net Tax Payable</div><div class="rcell-value total">${finalTax.toFixed(2)} ${currentCountryData.currency}</div></div>
   `;
 }
 
+// ============================================================
+// DOWNLOAD CURRENT TAB
+// ============================================================
 function downloadCurrentTab() {
   if (!currentCountryData) {
     alert('No country selected');
@@ -547,98 +577,79 @@ function downloadCurrentTab() {
   const activeTab = document.querySelector('.tab-panel.active').id;
   let content = '';
   const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
-  const flag = { BGD: '🇧🇩', IND: '🇮🇳', THA: '🇹🇭' }[currentCountryData.iso_code] || '🌍';
   
-  if (activeTab === 'import') {
-    const categoryName = document.getElementById('import_category').value;
-    const category = currentCountryData.import_categories.find(c => c.name === categoryName);
-    const priceUSD = document.getElementById('import_price').value;
-    const qty = document.getElementById('import_qty').value;
-    const exchangeRate = document.getElementById('import_rate').value;
-    const freightUSD = document.getElementById('import_freight').value;
-    
-    const totalUSD = parseFloat(priceUSD) * parseFloat(qty);
-    const totalLocal = totalUSD * parseFloat(exchangeRate);
-    const freightLocal = parseFloat(freightUSD) * parseFloat(exchangeRate);
-    const cifLocal = totalLocal + freightLocal;
-    const duty = cifLocal * (category.duty_pct / 100);
-    const vat = (cifLocal + duty) * (category.vat_pct / 100);
-    const ait = (cifLocal + duty + vat) * (category.ait_pct / 100);
-    const total = cifLocal + duty + vat + ait;
-    
-    content = `COUNT IT - IMPORT CALCULATION REPORT
+  if (activeTab === 'demographics') {
+    content = `COUNT IT - DEMOGRAPHICS REPORT
 Generated: ${new Date().toLocaleString()}
 
-${flag} ${currentCountryData.country} (${currentCountryData.iso_code})
+${currentCountryData.country} (${currentCountryData.iso_code})
 Currency: ${currentCountryData.currency}
-Data Source: ${currentCountryData.source || 'Customs Authority'}
 
---- INPUT VALUES ---
-Product Category: ${category.name}
-Unit Price (USD): ${priceUSD}
-Quantity: ${qty}
-Exchange Rate (${currentCountryData.currency}/USD): ${exchangeRate}
-Freight (USD): ${freightUSD}
+--- POPULATION ---
+Total Population: ${currentCountryData.demographics?.total_population?.toLocaleString() || '—'}
+Male: ${currentCountryData.demographics?.male_population?.toLocaleString() || '—'}
+Female: ${currentCountryData.demographics?.female_population?.toLocaleString() || '—'}
+Growth Rate: ${currentCountryData.demographics?.population_growth_annual_pct || '—'}%
 
---- TAX RATES ---
-Customs Duty Rate: ${category.duty_pct}%
-VAT Rate: ${category.vat_pct}%
-AIT Rate: ${category.ait_pct}%
+--- VITAL STATISTICS ---
+Birth Rate: ${currentCountryData.demographics?.birth_rate_per_1000 || '—'} per 1000
+Death Rate: ${currentCountryData.demographics?.death_rate_per_1000 || '—'} per 1000
+Life Expectancy: ${currentCountryData.demographics?.life_expectancy_years || '—'} years
+Urban Population: ${currentCountryData.demographics?.urban_population_pct || '—'}%
 
---- CALCULATED RESULTS ---
-CIF Value: ${cifLocal.toFixed(2)} ${currentCountryData.currency}
-Customs Duty: ${duty.toFixed(2)} ${currentCountryData.currency}
-VAT: ${vat.toFixed(2)} ${currentCountryData.currency}
-AIT: ${ait.toFixed(2)} ${currentCountryData.currency}
-TOTAL LANDED COST: ${total.toFixed(2)} ${currentCountryData.currency}
+--- RELIGIONS ---
+${Object.entries(currentCountryData.demographics?.religions || {}).map(([k, v]) => `${k}: ${v}`).join('\n')}
 
 ---
-Report generated by Count It (countit.global)
-`;
+Report generated by Count It (countit.global)`;
   } else if (activeTab === 'income') {
     const income = document.getElementById('income_amount').value;
     const investment = document.getElementById('investment_amount').value;
-    const tax = document.querySelector('#income-tax-results .rcell:first-child .rcell-value')?.innerText || '—';
+    const grossTax = document.querySelector('#income-tax-results .rcell:first-child .rcell-value')?.innerText || '—';
     const netTax = document.querySelector('#income-tax-results .rcell:last-child .rcell-value')?.innerText || '—';
     
     content = `COUNT IT - INCOME TAX REPORT
 Generated: ${new Date().toLocaleString()}
 
-${flag} ${currentCountryData.country} (${currentCountryData.iso_code})
+${currentCountryData.country} (${currentCountryData.iso_code})
 Currency: ${currentCountryData.currency}
 
 --- INPUT VALUES ---
 Annual Income: ${income} ${currentCountryData.currency}
-Investment (Rebate Eligible): ${investment} ${currentCountryData.currency}
+Investment: ${investment} ${currentCountryData.currency}
 
 --- CALCULATED RESULTS ---
-Gross Tax: ${tax}
+Gross Tax Payable: ${grossTax}
 Net Tax Payable: ${netTax}
 
 ---
-Report generated by Count It (countit.global)
-`;
-  } else {
-    content = `COUNT IT - DEMOGRAPHICS REPORT
+Report generated by Count It (countit.global)`;
+  } else if (activeTab === 'import') {
+    const category = document.getElementById('import_category').value;
+    const price = document.getElementById('import_price').value;
+    const qty = document.getElementById('import_qty').value;
+    const rate = document.getElementById('import_rate').value;
+    const freight = document.getElementById('import_freight').value;
+    const results = document.getElementById('import-results').innerText;
+    
+    content = `COUNT IT - IMPORT CALCULATION REPORT
 Generated: ${new Date().toLocaleString()}
 
-${flag} ${currentCountryData.country} (${currentCountryData.iso_code})
+${currentCountryData.country} (${currentCountryData.iso_code})
+Currency: ${currentCountryData.currency}
 
---- POPULATION ---
-Total: ${document.getElementById('demo-pop').innerText}
-Male/Female Split: ${document.getElementById('demo-gender').innerText}
+--- INPUT VALUES ---
+Product Category: ${category}
+Unit Price (USD): ${price}
+Quantity: ${qty}
+Exchange Rate (${currentCountryData.currency}/USD): ${rate}
+Freight (USD): ${freight}
 
---- VITAL STATISTICS ---
-Population Growth: ${document.getElementById('demo-growth').innerText}%
-Birth Rate: ${document.getElementById('demo-birth').innerText} per 1000
-Death Rate: ${document.getElementById('demo-death').innerText} per 1000
-
---- RELIGIONS ---
-${document.getElementById('demo-religion').innerText.replace(/<br>/g, '\n')}
+--- CALCULATED RESULTS ---
+${results}
 
 ---
-Report generated by Count It (countit.global)
-`;
+Report generated by Count It (countit.global)`;
   }
   
   const blob = new Blob([content], {type: 'text/plain'});
@@ -649,8 +660,10 @@ Report generated by Count It (countit.global)
   URL.revokeObjectURL(a.href);
 }
 
-// Initialize the page
-renderCountryGrid(countryList);
+// ============================================================
+// INITIALIZE PAGE
+// ============================================================
+renderCountryGrid();
 </script>
 </body>
 </html>
