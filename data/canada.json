@@ -1,0 +1,43 @@
+{
+  "country": "Canada",
+  "currency": "CAD",
+  "source": "Statistics Canada / CRA",
+  "region": "North America",
+  "exchange_rate": 1.35,
+  "demographics": {
+    "total_population": 38929000,
+    "male_population": 19254000,
+    "female_population": 19675000,
+    "population_growth_annual_pct": 0.85,
+    "birth_rate_per_1000": 9.8,
+    "death_rate_per_1000": 8.2,
+    "life_expectancy_years": 82.3,
+    "religions": {
+      "Christianity": "53.3%",
+      "No Religion": "34.6%",
+      "Islam": "4.9%",
+      "Hinduism": "2.3%",
+      "Sikhism": "2.1%",
+      "Buddhism": "1.0%",
+      "Judaism": "0.9%"
+    }
+  },
+  "tax_structure": {
+    "individual_tax_brackets": [
+      { "min": 0, "max": 53359, "rate": 15 },
+      { "min": 53359, "max": 106717, "rate": 20.5 },
+      { "min": 106717, "max": 165430, "rate": 26 },
+      { "min": 165430, "max": 235675, "rate": 29 },
+      { "min": 235675, "max": null, "rate": 33 }
+    ],
+    "investment_rebate_pct": 15,
+    "max_rebate_pct_of_tax": 25
+  },
+  "import_categories": [
+    { "name": "Electronics (HS 8517)", "duty_pct": 0, "gst_pct": 5, "ait_pct": 0 },
+    { "name": "Automotive Parts (HS 8708)", "duty_pct": 6.1, "gst_pct": 5, "ait_pct": 0 },
+    { "name": "Textiles & Apparel (HS 61-63)", "duty_pct": 18, "gst_pct": 5, "ait_pct": 0 },
+    { "name": "Pharmaceuticals (HS 30)", "duty_pct": 0, "gst_pct": 5, "ait_pct": 0 },
+    { "name": "Machinery (HS 84)", "duty_pct": 0, "gst_pct": 5, "ait_pct": 0 }
+  ]
+}
