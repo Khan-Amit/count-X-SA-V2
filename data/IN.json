@@ -1,8 +1,8 @@
 {
   "country": "India",
-  "iso_code": "IND",
   "currency": "INR",
-  "source": "CBIC, World Bank",
+  "source": "World Bank & CBIC",
+  "exchange_rate": 83,
   "demographics": {
     "total_population": 1441981000,
     "male_population": 743420000,
@@ -10,33 +10,26 @@
     "population_growth_annual_pct": 0.81,
     "birth_rate_per_1000": 16.3,
     "death_rate_per_1000": 7.1,
-    "life_expectancy_years": 70.2,
-    "urban_population_pct": 34.5,
+    "life_expectancy_years": 70.8,
     "religions": {
       "Hinduism": "79.8%",
       "Islam": "14.2%",
       "Christianity": "2.3%",
-      "Sikhism": "1.7%",
-      "Buddhism": "0.7%",
-      "Jainism": "0.4%",
-      "Others": "0.9%"
+      "Sikhism": "1.7%"
     }
   },
   "tax_structure": {
-    "standard_vat_pct": 18.0,
-    "investment_rebate_pct": 0,
-    "max_rebate_pct_of_tax": 0,
     "individual_tax_brackets": [
-      { "min": 0, "max": 300000, "rate": 0 },
-      { "min": 300001, "max": 600000, "rate": 5 },
-      { "min": 600001, "max": 900000, "rate": 10 },
-      { "min": 900001, "max": 1200000, "rate": 15 },
-      { "min": 1200001, "max": 1500000, "rate": 20 },
-      { "min": 1500001, "max": null, "rate": 30 }
-    ]
+      {"min": 0, "max": 250000, "rate": 0},
+      {"min": 250000, "max": 500000, "rate": 5},
+      {"min": 500000, "max": 1000000, "rate": 20},
+      {"min": 1000000, "max": null, "rate": 30}
+    ],
+    "investment_rebate_pct": 20,
+    "max_rebate_pct_of_tax": 25
   },
   "import_categories": [
-    {"name": "Electronics & Smartphones", "duty_pct": 20.0, "vat_pct": 18.0, "ait_pct": 2.0},
-    {"name": "Laptops & Computer Hardware", "duty_pct": 0.0, "vat_pct": 18.0, "ait_pct": 0.0}
+    {"name": "Smartphones", "duty_pct": 20, "gst_pct": 18, "ait_pct": 10},
+    {"name": "Laptops", "duty_pct": 0, "gst_pct": 18, "ait_pct": 0}
   ]
 }
