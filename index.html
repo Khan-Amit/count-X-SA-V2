@@ -39,9 +39,6 @@ button{background:#2a6b40;color:white;border:none;padding:8px 16px;border-radius
 .rcell-value{font-size:1.1rem;font-weight:600}
 .sheet{width:100%;border-collapse:collapse}
 .sheet td,.sheet th{padding:8px;border-bottom:1px solid #2a3a30;text-align:left}
-.loading-spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(94,207,130,0.3);border-radius:50%;border-top-color:#5ecf82;animation:spin 0.6s linear infinite;margin-right:8px}
-@keyframes spin{to{transform:rotate(360deg)}}
-.live-badge{background:#5ecf82;color:#0d1f17;font-size:0.6rem;padding:2px 6px;border-radius:4px;margin-left:8px}
 </style>
 </head>
 <body>
@@ -70,7 +67,7 @@ button{background:#2a6b40;color:white;border:none;padding:8px 16px;border-radius
       <span id="countryFlag" style="font-size:3rem">🌍</span>
       <div>
         <h1 id="countryName" style="font-size:2rem">Country</h1>
-        <p id="countrySub">Currency: — | Source: JSON Database</p>
+        <p id="countrySub">Currency: —</p>
       </div>
     </div>
     <button onclick="downloadCurrent()" style="margin-top:1rem">📄 Download Current Tab</button>
@@ -85,7 +82,7 @@ button{background:#2a6b40;color:white;border:none;padding:8px 16px;border-radius
   <!-- Demographics Tab -->
   <div id="demographicsTab" class="tab-panel">
     <div class="calc-card">
-      <h3>Demographics <span class="live-badge" id="dataSourceBadge">JSON DATABASE</span></h3>
+      <h3>Demographics</h3>
       <table class="sheet" id="demoTable">
         <tr><td style="width:40%">Total Population</td><td id="demoPop">—</td></tr>
         <tr><td>Male/Female Split</td><td id="demoGender">—</td></tr>
@@ -120,7 +117,7 @@ button{background:#2a6b40;color:white;border:none;padding:8px 16px;border-radius
         <div class="cf-group"><label>Product Category</label><select id="importCat" onchange="calcImport()"></select></div>
         <div class="cf-group"><label>Unit Price (USD)</label><input type="number" id="importPrice" value="500" oninput="calcImport()"></div>
         <div class="cf-group"><label>Quantity</label><input type="number" id="importQty" value="10" oninput="calcImport()"></div>
-        <div class="cf-group"><label>Exchange Rate</label><input type="number" id="importRate" value="1" oninput="calcImport()"></div>
+        <div class="cf-group"><label>Exchange Rate</label><input type="number" id="importRate" value="110" oninput="calcImport()"></div>
         <div class="cf-group"><label>Freight (USD)</label><input type="number" id="importFreight" value="100" oninput="calcImport()"></div>
       </div>
       <div class="result-grid" id="importResults"></div>
@@ -129,279 +126,191 @@ button{background:#2a6b40;color:white;border:none;padding:8px 16px;border-radius
 </div>
 
 <script>
-// DYNAMIC COUNTRY DATABASE - Will be populated from JSON files
-let COUNTRY_DATABASE = {};
-let COUNTRY_LIST = [];
-
-// Function to load a country JSON file dynamically
-async function loadCountryJSON(countryCode, jsonPath) {
-  try {
-    const response = await fetch(jsonPath);
-    if (!response.ok) throw new Error(`Failed to load ${jsonPath}`);
-    const data = await response.json();
-    
-    // Store in database
-    COUNTRY_DATABASE[countryCode] = data;
-    
-    // Add to country list
-    COUNTRY_LIST.push({
-      code: countryCode,
-      name: data.country || countryCode,
-      flag: getFlagEmoji(countryCode),
-      pop: formatPopulation(data.demographics?.total_population),
-      tags: data.tags || [data.region || "Global"],
-      hasData: true,
-      jsonPath: jsonPath
-    });
-    
-    console.log(`✅ Loaded: ${data.country} from ${jsonPath}`);
-    return true;
-  } catch (error) {
-    console.error(`❌ Failed to load ${jsonPath}:`, error);
-    return false;
-  }
-}
-
-// Helper: Get flag emoji from country code
-function getFlagEmoji(code) {
-  const flags = {
-    'BD': '🇧🇩', 'IN': '🇮🇳', 'TH': '🇹🇭', 
-    'CA': '🇨🇦', 'US': '🇺🇸', 'GB': '🇬🇧', 
-    'AU': '🇦🇺', 'DE': '🇩🇪', 'FR': '🇫🇷', 
-    'JP': '🇯🇵', 'CN': '🇨🇳', 'BR': '🇧🇷'
-  };
-  return flags[code] || '🌍';
-}
-
-// Helper: Format population for display
-function formatPopulation(population) {
-  if (!population) return "Loading...";
-  if (population >= 1000000000) return (population / 1000000000).toFixed(2) + "B";
-  if (population >= 1000000) return (population / 1000000).toFixed(1) + "M";
-  return population.toLocaleString();
-}
-
-// Load all country JSON files from a directory
-async function loadAllCountries() {
-  // Define your country JSON files here
-  // Add as many as you want - just put the JSON files in your data folder
-  const countryFiles = [
-    { code: "BD", path: "data/bangladesh.json" },      // Bangladesh
-    { code: "IN", path: "data/india.json" },           // India
-    { code: "TH", path: "data/thailand.json" },        // Thailand
-    // ADD CANADA HERE - Just uncomment and add your file:
-    // { code: "CA", path: "data/canada.json" },       // Canada
-    // Add more countries as you get their JSON files:
-    // { code: "US", path: "data/usa.json" },
-    // { code: "GB", path: "data/uk.json" },
-    // { code: "AU", path: "data/australia.json" },
-    // { code: "DE", path: "data/germany.json" },
-    // { code: "FR", path: "data/france.json" },
-    // { code: "JP", path: "data/japan.json" }
-  ];
-  
-  // Load all JSON files in parallel
-  const loadPromises = countryFiles.map(file => loadCountryJSON(file.code, file.path));
-  await Promise.all(loadPromises);
-  
-  // Also try to load any JSON files from localStorage (for user-added countries)
-  loadUserAddedCountries();
-  
-  // If no countries loaded, use fallback demo data
-  if (COUNTRY_LIST.length === 0) {
-    loadFallbackData();
-  }
-  
-  renderCountries();
-}
-
-// Load countries that user has added via file upload
-function loadUserAddedCountries() {
-  const savedCountries = localStorage.getItem('user_countries');
-  if (savedCountries) {
-    const userCountries = JSON.parse(savedCountries);
-    userCountries.forEach(country => {
-      if (!COUNTRY_DATABASE[country.code]) {
-        COUNTRY_DATABASE[country.code] = country.data;
-        COUNTRY_LIST.push({
-          code: country.code,
-          name: country.data.country,
-          flag: getFlagEmoji(country.code),
-          pop: formatPopulation(country.data.demographics?.total_population),
-          tags: ["Custom"],
-          hasData: true,
-          isUserAdded: true
-        });
+// ============================================
+// REAL JSON DATABASE - Bangladesh, India, Thailand
+// ============================================
+const REAL_DATABASE = {
+  "BD": {
+    country: "Bangladesh",
+    currency: "BDT",
+    source: "National Board of Revenue (NBR) & World Bank",
+    demographics: {
+      total_population: 173562364,
+      male_population: 85420000,
+      female_population: 88142364,
+      population_growth_annual_pct: 1.03,
+      birth_rate_per_1000: 17.5,
+      death_rate_per_1000: 5.8,
+      life_expectancy_years: 72.6,
+      religions: {
+        "Islam": "90.4%",
+        "Hinduism": "8.5%",
+        "Buddhism": "0.6%",
+        "Christianity": "0.4%",
+        "Others": "0.1%"
       }
-    });
-  }
-}
-
-// Fallback demo data (only used if no JSON files found)
-function loadFallbackData() {
-  const demoData = {
-    "BD": {
-      country: "Bangladesh",
-      currency: "BDT",
-      demographics: {
-        total_population: 173562364,
-        male_population: 85420000,
-        female_population: 88142364,
-        population_growth_annual_pct: 1.03,
-        birth_rate_per_1000: 17.5,
-        death_rate_per_1000: 5.8,
-        life_expectancy_years: 72.6,
-        religions: { "Islam": "90.4%", "Hinduism": "8.5%", "Buddhism": "0.6%" }
-      },
-      tax_structure: {
-        individual_tax_brackets: [
-          { min: 0, max: 350000, rate: 0 },
-          { min: 350000, max: 450000, rate: 5 },
-          { min: 450000, max: 750000, rate: 10 },
-          { min: 750000, max: 1150000, rate: 15 },
-          { min: 1150000, max: 1650000, rate: 20 },
-          { min: 1650000, max: null, rate: 25 }
-        ],
-        investment_rebate_pct: 15,
-        max_rebate_pct_of_tax: 30
-      },
-      import_categories: [
-        { name: "Smartphones (HS 8517.13.00)", duty_pct: 25, vat_pct: 15, ait_pct: 5 }
-      ]
-    }
-  };
-  
-  COUNTRY_DATABASE = demoData;
-  COUNTRY_LIST = [{
-    code: "BD", name: "Bangladesh", flag: "🇧🇩", 
-    pop: "173.6M", tags: ["Demo"], hasData: true
-  }];
-}
-
-// File upload handler - allows users to add their own JSON files
-function setupFileUpload() {
-  // Create file upload button dynamically
-  const uploadSection = document.createElement('div');
-  uploadSection.style.marginTop = "20px";
-  uploadSection.style.padding = "20px";
-  uploadSection.style.background = "rgba(94,207,130,0.1)";
-  uploadSection.style.borderRadius = "12px";
-  uploadSection.style.border = "1px dashed #5ecf82";
-  uploadSection.innerHTML = `
-    <h3 style="color:#5ecf82; font-size:0.9rem; margin-bottom:10px">📁 Add Your Own Country Data</h3>
-    <input type="file" id="jsonUpload" accept=".json" style="margin-bottom:10px">
-    <button onclick="uploadCountryJSON()" style="background:#5ecf82; color:#0d1f17">Upload JSON File</button>
-    <p style="font-size:0.7rem; margin-top:8px; color:#aaa">Upload any country JSON file following the standard format</p>
-  `;
-  
-  const heroSection = document.querySelector('.hero');
-  heroSection.parentNode.insertBefore(uploadSection, heroSection.nextSibling);
-  
-  // Add the script function globally
-  window.uploadCountryJSON = async function() {
-    const fileInput = document.getElementById('jsonUpload');
-    const file = fileInput.files[0];
-    if (!file) {
-      alert('Please select a JSON file first');
-      return;
-    }
-    
-    try {
-      const text = await file.text();
-      const jsonData = JSON.parse(text);
-      const countryCode = file.name.replace('.json', '').toUpperCase().substring(0, 2);
-      
-      // Validate JSON structure
-      if (!jsonData.country || !jsonData.demographics) {
-        alert('Invalid JSON format. Must contain "country" and "demographics" fields.');
-        return;
+    },
+    tax_structure: {
+      individual_tax_brackets: [
+        { min: 0, max: 350000, rate: 0 },
+        { min: 350000, max: 450000, rate: 5 },
+        { min: 450000, max: 750000, rate: 10 },
+        { min: 750000, max: 1150000, rate: 15 },
+        { min: 1150000, max: 1650000, rate: 20 },
+        { min: 1650000, max: null, rate: 25 }
+      ],
+      investment_rebate_pct: 15,
+      max_rebate_pct_of_tax: 30
+    },
+    import_categories: [
+      { name: "Smartphones (HS 8517.13.00)", duty_pct: 25, vat_pct: 15, ait_pct: 5 },
+      { name: "Laptops (HS 8471.30.00)", duty_pct: 5, vat_pct: 15, ait_pct: 0 },
+      { name: "Textiles & Apparel", duty_pct: 15, vat_pct: 15, ait_pct: 3 },
+      { name: "Electronics", duty_pct: 10, vat_pct: 15, ait_pct: 2 },
+      { name: "Pharmaceuticals", duty_pct: 7.5, vat_pct: 15, ait_pct: 0 }
+    ]
+  },
+  "IN": {
+    country: "India",
+    currency: "INR",
+    source: "Central Board of Indirect Taxes & Customs (CBIC)",
+    demographics: {
+      total_population: 1441981000,
+      male_population: 743420000,
+      female_population: 698561000,
+      population_growth_annual_pct: 0.81,
+      birth_rate_per_1000: 16.3,
+      death_rate_per_1000: 7.1,
+      life_expectancy_years: 70.8,
+      religions: {
+        "Hinduism": "79.8%",
+        "Islam": "14.2%",
+        "Christianity": "2.3%",
+        "Sikhism": "1.7%",
+        "Buddhism": "0.7%",
+        "Jainism": "0.4%",
+        "Others": "0.9%"
       }
-      
-      // Save to database
-      COUNTRY_DATABASE[countryCode] = jsonData;
-      
-      // Add to country list
-      const newCountry = {
-        code: countryCode,
-        name: jsonData.country,
-        flag: getFlagEmoji(countryCode),
-        pop: formatPopulation(jsonData.demographics?.total_population),
-        tags: ["Custom Upload"],
-        hasData: true,
-        isUserAdded: true
-      };
-      
-      COUNTRY_LIST.push(newCountry);
-      
-      // Save to localStorage for persistence
-      const savedCountries = JSON.parse(localStorage.getItem('user_countries') || '[]');
-      savedCountries.push({ code: countryCode, data: jsonData });
-      localStorage.setItem('user_countries', JSON.stringify(savedCountries));
-      
-      renderCountries();
-      alert(`✅ Successfully added ${jsonData.country}!`);
-      fileInput.value = '';
-      
-    } catch (error) {
-      alert(`Error parsing JSON: ${error.message}`);
-    }
-  };
-}
+    },
+    tax_structure: {
+      individual_tax_brackets: [
+        { min: 0, max: 250000, rate: 0 },
+        { min: 250000, max: 500000, rate: 5 },
+        { min: 500000, max: 1000000, rate: 20 },
+        { min: 1000000, max: null, rate: 30 }
+      ],
+      investment_rebate_pct: 20,
+      max_rebate_pct_of_tax: 25
+    },
+    import_categories: [
+      { name: "Smartphones (HS 8517.13.00)", duty_pct: 20, vat_pct: 18, ait_pct: 10 },
+      { name: "Laptops (HS 8471.30.00)", duty_pct: 0, vat_pct: 18, ait_pct: 0 },
+      { name: "Electronics", duty_pct: 15, vat_pct: 18, ait_pct: 5 },
+      { name: "Automotive Parts", duty_pct: 10, vat_pct: 28, ait_pct: 5 },
+      { name: "Pharmaceuticals", duty_pct: 5, vat_pct: 12, ait_pct: 0 }
+    ]
+  },
+  "TH": {
+    country: "Thailand",
+    currency: "THB",
+    source: "Thai Customs Department",
+    demographics: {
+      total_population: 71885000,
+      male_population: 35010000,
+      female_population: 36875000,
+      population_growth_annual_pct: -0.05,
+      birth_rate_per_1000: 7.6,
+      death_rate_per_1000: 9.3,
+      life_expectancy_years: 77.2,
+      religions: {
+        "Buddhism": "93.5%",
+        "Islam": "5.4%",
+        "Christianity": "1.1%",
+        "Others": "0.0%"
+      }
+    },
+    tax_structure: {
+      individual_tax_brackets: [
+        { min: 0, max: 150000, rate: 0 },
+        { min: 150000, max: 300000, rate: 5 },
+        { min: 300000, max: 500000, rate: 10 },
+        { min: 500000, max: 750000, rate: 15 },
+        { min: 750000, max: 1000000, rate: 20 },
+        { min: 1000000, max: 2000000, rate: 25 },
+        { min: 2000000, max: 5000000, rate: 30 },
+        { min: 5000000, max: null, rate: 35 }
+      ],
+      investment_rebate_pct: 10,
+      max_rebate_pct_of_tax: 20
+    },
+    import_categories: [
+      { name: "Smartphones (HS 8517.13.00)", duty_pct: 0, vat_pct: 7, ait_pct: 0 },
+      { name: "Laptops (HS 8471.30.00)", duty_pct: 0, vat_pct: 7, ait_pct: 0 },
+      { name: "Electronics", duty_pct: 5, vat_pct: 7, ait_pct: 0 },
+      { name: "Automotive Parts", duty_pct: 15, vat_pct: 7, ait_pct: 3 },
+      { name: "Agricultural Products", duty_pct: 20, vat_pct: 7, ait_pct: 5 }
+    ]
+  }
+};
+
+// COUNTRY LIST
+const countries = [
+  { name: "Bangladesh", flag: "🇧🇩", code: "BD", pop: "173.6M", tags: ["South Asia"], hasData: true },
+  { name: "India", flag: "🇮🇳", code: "IN", pop: "1.44B", tags: ["South Asia"], hasData: true },
+  { name: "Thailand", flag: "🇹🇭", code: "TH", pop: "71.9M", tags: ["SE Asia"], hasData: true },
+  { name: "Afghanistan", flag: "🇦🇫", code: "AF", pop: "41M", tags: ["South Asia"], hasData: false },
+  { name: "Pakistan", flag: "🇵🇰", code: "PK", pop: "240M", tags: ["South Asia"], hasData: false },
+  { name: "Sri Lanka", flag: "🇱🇰", code: "LK", pop: "22M", tags: ["South Asia"], hasData: false },
+  { name: "Nepal", flag: "🇳🇵", code: "NP", pop: "30M", tags: ["South Asia"], hasData: false },
+  { name: "USA", flag: "🇺🇸", code: "US", pop: "334M", tags: ["North America"], hasData: false },
+  { name: "UK", flag: "🇬🇧", code: "GB", pop: "67M", tags: ["Europe"], hasData: false },
+  { name: "Canada", flag: "🇨🇦", code: "CA", pop: "38.9M", tags: ["North America"], hasData: false }
+];
+
+let currentData = null;
+let currentCode = null;
 
 function renderCountries() {
   const search = document.getElementById('searchInput')?.value.toLowerCase() || '';
-  const filtered = COUNTRY_LIST.filter(c => 
-    c.name.toLowerCase().includes(search) || 
-    c.tags.some(t => t.toLowerCase().includes(search))
-  );
+  const filtered = countries.filter(c => c.name.toLowerCase().includes(search) || c.tags.some(t => t.toLowerCase().includes(search)));
   const grid = document.getElementById('countryGrid');
   if (!grid) return;
-  
-  if (filtered.length === 0) {
-    grid.innerHTML = '<div style="text-align:center; padding:40px">No countries found. Upload a JSON file to get started!</div>';
-    return;
-  }
-  
   grid.innerHTML = filtered.map(c => `
     <div class="country-card" onclick="loadCountry('${c.code}')">
       <div class="country-flag">${c.flag}</div>
       <div class="country-name">${c.name}</div>
       <div class="country-pop">${c.pop}</div>
       <div>${c.tags.map(t => `<span class="ctag">${t}</span>`).join('')}</div>
-      ${c.isUserAdded ? '<div class="ctag" style="background:rgba(94,207,130,0.2);">📁 CUSTOM</div>' : '<div class="ctag" style="background:rgba(94,207,130,0.2);">✅ READY</div>'}
+      ${!c.hasData ? '<div class="coming-soon">📊 Data coming soon</div>' : '<div class="ctag" style="background:rgba(94,207,130,0.2);">✅ LIVE DATA</div>'}
     </div>
   `).join('');
 }
 
-let currentData = null;
-let currentCode = null;
-
-async function loadCountry(code) {
-  currentCode = code;
-  currentData = COUNTRY_DATABASE[code];
-  
-  if (!currentData) {
-    alert(`No data found for ${code}. Please upload the JSON file.`);
+function loadCountry(code) {
+  if (!countries.find(c => c.code === code)?.hasData) {
+    alert('Data coming soon for this country');
     return;
   }
+  
+  currentCode = code;
+  currentData = REAL_DATABASE[code];
   
   document.getElementById('landing').style.display = 'none';
   document.getElementById('countryPage').style.display = 'block';
   
-  const flag = getFlagEmoji(code);
+  const flag = {BD:'🇧🇩',IN:'🇮🇳',TH:'🇹🇭'}[code] || '🌍';
   document.getElementById('countryFlag').innerText = flag;
-  document.getElementById('countryName').innerText = currentData.country || code;
-  document.getElementById('countrySub').innerHTML = `Currency: ${currentData.currency || 'Local'} | Source: JSON Database`;
-  document.getElementById('dataSourceBadge').innerText = currentData.source || 'JSON DATABASE';
+  document.getElementById('countryName').innerText = currentData.country;
+  document.getElementById('countrySub').innerHTML = `Currency: ${currentData.currency} | Source: ${currentData.source}`;
   
   // Demographics
   if (currentData.demographics) {
     document.getElementById('demoPop').innerText = currentData.demographics.total_population?.toLocaleString() || '—';
     document.getElementById('demoGender').innerHTML = `♂ ${currentData.demographics.male_population?.toLocaleString()} / ♀ ${currentData.demographics.female_population?.toLocaleString()}`;
-    document.getElementById('demoGrowth').innerHTML = currentData.demographics.population_growth_annual_pct + '%' || '—';
-    document.getElementById('demoBirth').innerHTML = currentData.demographics.birth_rate_per_1000 || '—';
-    document.getElementById('demoDeath').innerHTML = currentData.demographics.death_rate_per_1000 || '—';
-    document.getElementById('demoLife').innerHTML = currentData.demographics.life_expectancy_years || '—';
+    document.getElementById('demoGrowth').innerText = currentData.demographics.population_growth_annual_pct + '%' || '—';
+    document.getElementById('demoBirth').innerText = currentData.demographics.birth_rate_per_1000 || '—';
+    document.getElementById('demoDeath').innerText = currentData.demographics.death_rate_per_1000 || '—';
+    document.getElementById('demoLife').innerText = currentData.demographics.life_expectancy_years || '—';
     if (currentData.demographics.religions) {
       document.getElementById('demoReligion').innerHTML = Object.entries(currentData.demographics.religions).map(([k,v]) => `${k}: ${v}`).join('<br>');
     }
@@ -411,7 +320,7 @@ async function loadCountry(code) {
   if (currentData.tax_structure?.individual_tax_brackets) {
     const brackets = currentData.tax_structure.individual_tax_brackets;
     document.getElementById('bracketsTable').innerHTML = `
-      <tr><th>Income Range (${currentData.currency || 'local'})</th><th>Rate</th></tr>
+      <tr><th>Income Range (${currentData.currency})</th><th>Rate</th></tr>
       ${brackets.map(b => `<tr><td>${b.min.toLocaleString()} - ${b.max === null ? '∞' : b.max.toLocaleString()}</td><td>${b.rate}%</td></tr>`).join('')}
     `;
   }
@@ -420,13 +329,12 @@ async function loadCountry(code) {
   if (currentData.import_categories) {
     const select = document.getElementById('importCat');
     select.innerHTML = currentData.import_categories.map(cat => 
-      `<option value='${JSON.stringify(cat)}'>${cat.name} (Duty: ${cat.duty_pct}%, VAT: ${cat.vat_pct || cat.gst_pct || 0}%, AIT: ${cat.ait_pct || 0}%)</option>`
+      `<option value='${JSON.stringify(cat)}'>${cat.name} (Duty: ${cat.duty_pct}%, VAT: ${cat.vat_pct}%, AIT: ${cat.ait_pct}%)</option>`
     ).join('');
     
-    // Set exchange rate if available
-    if (currentData.exchange_rate) {
-      document.getElementById('importRate').value = currentData.exchange_rate;
-    }
+    if (currentData.currency === 'BDT') document.getElementById('importRate').value = 110;
+    else if (currentData.currency === 'INR') document.getElementById('importRate').value = 83;
+    else if (currentData.currency === 'THB') document.getElementById('importRate').value = 34;
   }
   
   calcImport();
@@ -443,16 +351,16 @@ function calcImport() {
   
   const cif = (price * qty + freight) * rate;
   const duty = cif * (cat.duty_pct / 100);
-  const vat = (cif + duty) * ((cat.vat_pct || cat.gst_pct || 0) / 100);
-  const ait = (cif + duty + vat) * ((cat.ait_pct || 0) / 100);
+  const vat = (cif + duty) * (cat.vat_pct / 100);
+  const ait = (cif + duty + vat) * (cat.ait_pct / 100);
   const total = cif + duty + vat + ait;
   
   document.getElementById('importResults').innerHTML = `
-    <div class="rcell"><div class="rcell-label">CIF Value</div><div class="rcell-value">${cif.toFixed(2)} ${currentData.currency || 'local'}</div></div>
+    <div class="rcell"><div class="rcell-label">CIF Value</div><div class="rcell-value">${cif.toFixed(2)} ${currentData.currency}</div></div>
     <div class="rcell"><div class="rcell-label">Duty (${cat.duty_pct}%)</div><div class="rcell-value">${duty.toFixed(2)}</div></div>
-    <div class="rcell"><div class="rcell-label">VAT (${cat.vat_pct || cat.gst_pct || 0}%)</div><div class="rcell-value">${vat.toFixed(2)}</div></div>
-    <div class="rcell"><div class="rcell-label">AIT (${cat.ait_pct || 0}%)</div><div class="rcell-value">${ait.toFixed(2)}</div></div>
-    <div class="rcell"><div class="rcell-label total">Total Landed</div><div class="rcell-value">${total.toFixed(2)} ${currentData.currency || 'local'}</div></div>
+    <div class="rcell"><div class="rcell-label">VAT (${cat.vat_pct}%)</div><div class="rcell-value">${vat.toFixed(2)}</div></div>
+    <div class="rcell"><div class="rcell-label">AIT (${cat.ait_pct}%)</div><div class="rcell-value">${ait.toFixed(2)}</div></div>
+    <div class="rcell"><div class="rcell-label total">Total Landed</div><div class="rcell-value">${total.toFixed(2)} ${currentData.currency}</div></div>
   `;
 }
 
@@ -481,12 +389,10 @@ function calcTax() {
   const rebate = Math.min(investment * rebatePct / 100, maxRebate);
   const finalTax = Math.max(0, tax - rebate);
   
-  const currency = currentData.currency || 'local';
-  
   document.getElementById('taxResults').innerHTML = `
-    <div class="rcell"><div class="rcell-label">Gross Tax</div><div class="rcell-value">${tax.toFixed(2)} ${currency}</div></div>
+    <div class="rcell"><div class="rcell-label">Gross Tax</div><div class="rcell-value">${tax.toFixed(2)} ${currentData.currency}</div></div>
     <div class="rcell"><div class="rcell-label">Rebate (${rebatePct}%)</div><div class="rcell-value">${rebate.toFixed(2)}</div></div>
-    <div class="rcell"><div class="rcell-label">Net Tax</div><div class="rcell-value">${finalTax.toFixed(2)} ${currency}</div></div>
+    <div class="rcell"><div class="rcell-label">Net Tax</div><div class="rcell-value">${finalTax.toFixed(2)} ${currentData.currency}</div></div>
   `;
 }
 
@@ -509,8 +415,8 @@ function downloadCurrent() {
   
   let exportContent = `COUNT IT REPORT
 Country: ${currentData.country}
-Currency: ${currentData.currency || 'local'}
-Source: ${currentData.source || 'JSON Database'}
+Currency: ${currentData.currency}
+Source: ${currentData.source}
 Date: ${timestamp}
 Tab: ${activeTab}
 ========================================\n\n`;
@@ -580,9 +486,7 @@ Religions: ${document.getElementById('demoReligion')?.innerText || '—'}
 
 function filterCountries() { renderCountries(); }
 
-// Initialize
-setupFileUpload();
-loadAllCountries();
+renderCountries();
 </script>
 </body>
 </html>
