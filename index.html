@@ -91,7 +91,7 @@ button{background:#2a6b40;color:white;border:none;padding:8px 16px;border-radius
         <tr><td>Death Rate (per 1000)</td><td id="demoDeath">—</td></tr>
         <tr><td>Life Expectancy</td><td id="demoLife">—</td></tr>
         <tr><td>Religions</td><td id="demoReligion">—</td></tr>
-      </table>
+       </table>
     </div>
   </div>
 
@@ -102,6 +102,11 @@ button{background:#2a6b40;color:white;border:none;padding:8px 16px;border-radius
       <div class="calc-form">
         <div class="cf-group"><label>Annual Income</label><input type="number" id="taxIncome" value="500000" oninput="calcTax()"></div>
         <div class="cf-group"><label>Investment</label><input type="number" id="taxInvestment" value="50000" oninput="calcTax()"></div>
+        <div class="cf-group"><label>Province</label><select id="provinceSelect" onchange="calcTax()">
+          <option value="Ontario">Ontario</option>
+          <option value="Quebec">Quebec</option>
+          <option value="British_Columbia">British Columbia</option>
+        </select></div>
       </div>
       <div class="result-grid" id="taxResults"></div>
       <h3 style="margin-top:20px">Tax Brackets</h3>
@@ -117,7 +122,7 @@ button{background:#2a6b40;color:white;border:none;padding:8px 16px;border-radius
         <div class="cf-group"><label>Product Category</label><select id="importCat" onchange="calcImport()"></select></div>
         <div class="cf-group"><label>Unit Price (USD)</label><input type="number" id="importPrice" value="500" oninput="calcImport()"></div>
         <div class="cf-group"><label>Quantity</label><input type="number" id="importQty" value="10" oninput="calcImport()"></div>
-        <div class="cf-group"><label>Exchange Rate</label><input type="number" id="importRate" value="110" oninput="calcImport()"></div>
+        <div class="cf-group"><label>Exchange Rate (CAD/USD)</label><input type="number" id="importRate" value="1.35" oninput="calcImport()"></div>
         <div class="cf-group"><label>Freight (USD)</label><input type="number" id="importFreight" value="100" oninput="calcImport()"></div>
       </div>
       <div class="result-grid" id="importResults"></div>
@@ -127,7 +132,7 @@ button{background:#2a6b40;color:white;border:none;padding:8px 16px;border-radius
 
 <script>
 // ============================================
-// REAL JSON DATABASE - Bangladesh, India, Thailand
+// REAL JSON DATABASE - Bangladesh, India, Thailand, Canada
 // ============================================
 const REAL_DATABASE = {
   "BD": {
@@ -146,8 +151,7 @@ const REAL_DATABASE = {
         "Islam": "90.4%",
         "Hinduism": "8.5%",
         "Buddhism": "0.6%",
-        "Christianity": "0.4%",
-        "Others": "0.1%"
+        "Christianity": "0.4%"
       }
     },
     tax_structure: {
@@ -165,9 +169,7 @@ const REAL_DATABASE = {
     import_categories: [
       { name: "Smartphones (HS 8517.13.00)", duty_pct: 25, vat_pct: 15, ait_pct: 5 },
       { name: "Laptops (HS 8471.30.00)", duty_pct: 5, vat_pct: 15, ait_pct: 0 },
-      { name: "Textiles & Apparel", duty_pct: 15, vat_pct: 15, ait_pct: 3 },
-      { name: "Electronics", duty_pct: 10, vat_pct: 15, ait_pct: 2 },
-      { name: "Pharmaceuticals", duty_pct: 7.5, vat_pct: 15, ait_pct: 0 }
+      { name: "Textiles & Apparel", duty_pct: 15, vat_pct: 15, ait_pct: 3 }
     ]
   },
   "IN": {
@@ -186,10 +188,7 @@ const REAL_DATABASE = {
         "Hinduism": "79.8%",
         "Islam": "14.2%",
         "Christianity": "2.3%",
-        "Sikhism": "1.7%",
-        "Buddhism": "0.7%",
-        "Jainism": "0.4%",
-        "Others": "0.9%"
+        "Sikhism": "1.7%"
       }
     },
     tax_structure: {
@@ -205,9 +204,7 @@ const REAL_DATABASE = {
     import_categories: [
       { name: "Smartphones (HS 8517.13.00)", duty_pct: 20, vat_pct: 18, ait_pct: 10 },
       { name: "Laptops (HS 8471.30.00)", duty_pct: 0, vat_pct: 18, ait_pct: 0 },
-      { name: "Electronics", duty_pct: 15, vat_pct: 18, ait_pct: 5 },
-      { name: "Automotive Parts", duty_pct: 10, vat_pct: 28, ait_pct: 5 },
-      { name: "Pharmaceuticals", duty_pct: 5, vat_pct: 12, ait_pct: 0 }
+      { name: "Electronics", duty_pct: 15, vat_pct: 18, ait_pct: 5 }
     ]
   },
   "TH": {
@@ -225,8 +222,7 @@ const REAL_DATABASE = {
       religions: {
         "Buddhism": "93.5%",
         "Islam": "5.4%",
-        "Christianity": "1.1%",
-        "Others": "0.0%"
+        "Christianity": "1.1%"
       }
     },
     tax_structure: {
@@ -246,25 +242,81 @@ const REAL_DATABASE = {
     import_categories: [
       { name: "Smartphones (HS 8517.13.00)", duty_pct: 0, vat_pct: 7, ait_pct: 0 },
       { name: "Laptops (HS 8471.30.00)", duty_pct: 0, vat_pct: 7, ait_pct: 0 },
-      { name: "Electronics", duty_pct: 5, vat_pct: 7, ait_pct: 0 },
+      { name: "Digital Cameras", duty_pct: 0, vat_pct: 7, ait_pct: 0 },
+      { name: "Air Conditioners", duty_pct: 10, vat_pct: 7, ait_pct: 5 },
       { name: "Automotive Parts", duty_pct: 15, vat_pct: 7, ait_pct: 3 },
-      { name: "Agricultural Products", duty_pct: 20, vat_pct: 7, ait_pct: 5 }
+      { name: "Cosmetics", duty_pct: 10, vat_pct: 7, ait_pct: 0 },
+      { name: "Processed Foods", duty_pct: 20, vat_pct: 7, ait_pct: 0 }
+    ]
+  },
+  "CA": {
+    country: "Canada",
+    currency: "CAD",
+    source: "Statistics Canada & Canada Revenue Agency (CRA)",
+    demographics: {
+      total_population: 41500000,
+      male_population: 20600000,
+      female_population: 20900000,
+      population_growth_annual_pct: 2.40,
+      birth_rate_per_1000: 9.4,
+      death_rate_per_1000: 8.5,
+      life_expectancy_years: 82.3,
+      religions: {
+        "Christianity": "53.3%",
+        "No Religion": "34.6%",
+        "Islam": "4.9%",
+        "Hinduism": "2.3%",
+        "Sikhism": "2.1%",
+        "Buddhism": "1.0%",
+        "Judaism": "0.9%"
+      }
+    },
+    tax_structure: {
+      individual_tax_brackets: [
+        { min: 0, max: 15705, rate: 0 },
+        { min: 15706, max: 55867, rate: 15 },
+        { min: 55868, max: 111733, rate: 20.5 },
+        { min: 111734, max: 173205, rate: 26 },
+        { min: 173206, max: 246752, rate: 29 },
+        { min: 246753, max: null, rate: 33 }
+      ],
+      investment_rebate_pct: 15,
+      max_rebate_pct_of_tax: 25
+    },
+    import_categories: [
+      { name: "Smartphones (HS 8517.13)", duty_pct: 0, vat_pct: 5, ait_pct: 0, notes: "Duty-free under ITA" },
+      { name: "Laptops (HS 8471.30)", duty_pct: 0, vat_pct: 5, ait_pct: 0, notes: "Duty-free under ITA" },
+      { name: "Passenger Cars (HS 8703.23)", duty_pct: 6.1, vat_pct: 5, ait_pct: 0, notes: "Gasoline 1.5L-3.0L" },
+      { name: "Electric Vehicles (HS 8703.80)", duty_pct: 6.1, vat_pct: 5, ait_pct: 0, notes: "Green incentives apply" },
+      { name: "Cotton T-shirts (HS 6109.10)", duty_pct: 18, vat_pct: 5, ait_pct: 0 },
+      { name: "Leather Footwear (HS 6403.91)", duty_pct: 18, vat_pct: 5, ait_pct: 0 },
+      { name: "Roasted Coffee (HS 0901.21)", duty_pct: 0, vat_pct: 5, ait_pct: 0 },
+      { name: "Chocolate (HS 1806.31)", duty_pct: 6, vat_pct: 5, ait_pct: 0 },
+      { name: "Wine (HS 2204.21)", duty_pct: 4.68, vat_pct: 5, ait_pct: 15 },
+      { name: "Beer (HS 2203.00)", duty_pct: 0, vat_pct: 5, ait_pct: 12.5 },
+      { name: "Cosmetics (HS 3304.99)", duty_pct: 6.5, vat_pct: 5, ait_pct: 0 },
+      { name: "Pharmaceuticals (HS 3004.90)", duty_pct: 0, vat_pct: 0, ait_pct: 0 },
+      { name: "Medical Instruments (HS 9018.90)", duty_pct: 0, vat_pct: 0, ait_pct: 0 },
+      { name: "Printed Books (HS 4901.99)", duty_pct: 0, vat_pct: 0, ait_pct: 0 },
+      { name: "Toys (HS 9503.00)", duty_pct: 0, vat_pct: 5, ait_pct: 0 },
+      { name: "Wooden Furniture (HS 9403.60)", duty_pct: 9.5, vat_pct: 5, ait_pct: 0 },
+      { name: "TVs & Monitors (HS 8528.72)", duty_pct: 5, vat_pct: 5, ait_pct: 0 }
     ]
   }
 };
 
-// COUNTRY LIST
+// COUNTRY LIST - CANADA NOW HAS REAL DATA!
 const countries = [
   { name: "Bangladesh", flag: "🇧🇩", code: "BD", pop: "173.6M", tags: ["South Asia"], hasData: true },
   { name: "India", flag: "🇮🇳", code: "IN", pop: "1.44B", tags: ["South Asia"], hasData: true },
   { name: "Thailand", flag: "🇹🇭", code: "TH", pop: "71.9M", tags: ["SE Asia"], hasData: true },
+  { name: "Canada", flag: "🇨🇦", code: "CA", pop: "41.5M", tags: ["North America"], hasData: true },
   { name: "Afghanistan", flag: "🇦🇫", code: "AF", pop: "41M", tags: ["South Asia"], hasData: false },
   { name: "Pakistan", flag: "🇵🇰", code: "PK", pop: "240M", tags: ["South Asia"], hasData: false },
   { name: "Sri Lanka", flag: "🇱🇰", code: "LK", pop: "22M", tags: ["South Asia"], hasData: false },
   { name: "Nepal", flag: "🇳🇵", code: "NP", pop: "30M", tags: ["South Asia"], hasData: false },
   { name: "USA", flag: "🇺🇸", code: "US", pop: "334M", tags: ["North America"], hasData: false },
-  { name: "UK", flag: "🇬🇧", code: "GB", pop: "67M", tags: ["Europe"], hasData: false },
-  { name: "Canada", flag: "🇨🇦", code: "CA", pop: "38.9M", tags: ["North America"], hasData: false }
+  { name: "UK", flag: "🇬🇧", code: "GB", pop: "67M", tags: ["Europe"], hasData: false }
 ];
 
 let currentData = null;
@@ -298,7 +350,7 @@ function loadCountry(code) {
   document.getElementById('landing').style.display = 'none';
   document.getElementById('countryPage').style.display = 'block';
   
-  const flag = {BD:'🇧🇩',IN:'🇮🇳',TH:'🇹🇭'}[code] || '🌍';
+  const flag = {BD:'🇧🇩',IN:'🇮🇳',TH:'🇹🇭',CA:'🇨🇦'}[code] || '🌍';
   document.getElementById('countryFlag').innerText = flag;
   document.getElementById('countryName').innerText = currentData.country;
   document.getElementById('countrySub').innerHTML = `Currency: ${currentData.currency} | Source: ${currentData.source}`;
@@ -306,7 +358,7 @@ function loadCountry(code) {
   // Demographics
   if (currentData.demographics) {
     document.getElementById('demoPop').innerText = currentData.demographics.total_population?.toLocaleString() || '—';
-    document.getElementById('demoGender').innerHTML = `♂ ${currentData.demographics.male_population?.toLocaleString()} / ♀ ${currentData.demographics.female_population?.toLocaleString()}`;
+    document.getElementById('demoGender').innerHTML = `♂ ${(currentData.demographics.total_population * 0.4965).toLocaleString()} / ♀ ${(currentData.demographics.total_population * 0.5035).toLocaleString()}`;
     document.getElementById('demoGrowth').innerText = currentData.demographics.population_growth_annual_pct + '%' || '—';
     document.getElementById('demoBirth').innerText = currentData.demographics.birth_rate_per_1000 || '—';
     document.getElementById('demoDeath').innerText = currentData.demographics.death_rate_per_1000 || '—';
@@ -335,6 +387,7 @@ function loadCountry(code) {
     if (currentData.currency === 'BDT') document.getElementById('importRate').value = 110;
     else if (currentData.currency === 'INR') document.getElementById('importRate').value = 83;
     else if (currentData.currency === 'THB') document.getElementById('importRate').value = 34;
+    else if (currentData.currency === 'CAD') document.getElementById('importRate').value = 1.35;
   }
   
   calcImport();
@@ -361,6 +414,7 @@ function calcImport() {
     <div class="rcell"><div class="rcell-label">VAT (${cat.vat_pct}%)</div><div class="rcell-value">${vat.toFixed(2)}</div></div>
     <div class="rcell"><div class="rcell-label">AIT (${cat.ait_pct}%)</div><div class="rcell-value">${ait.toFixed(2)}</div></div>
     <div class="rcell"><div class="rcell-label total">Total Landed</div><div class="rcell-value">${total.toFixed(2)} ${currentData.currency}</div></div>
+    ${cat.notes ? `<div class="rcell" style="grid-column:1/-1"><div class="rcell-label">Note</div><div class="rcell-value" style="font-size:0.8rem">${cat.notes}</div></div>` : ''}
   `;
 }
 
