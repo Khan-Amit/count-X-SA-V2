@@ -1,1 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Count It — World Demographics & Tax Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0d1f17;font-family:'Outfit',sans-serif;color:#f4f7f4}
+nav{position:fixed;top:0;left:0;right:0;height:64px;background:rgba(13,31,23,0.92);backdrop-filter:blur(16px);border-bottom:1px solid rgba(94,207,130,0.18);display:flex;align-items:center;justify-content:space-between;padding:0 2rem;z-index:100}
+.nav-logo{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:700}
+.nav-logo span{color:#5ecf82;font-size:0.7rem}
+.country-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;padding:1rem 0}
+.country-card{background:#122318;border:1px solid rgba(94,207,130,0.18);border-radius:14px;padding:1rem;cursor:pointer;transition:0.2s}
+.country-card:hover{border-color:#5ecf82;transform:translateY(-3px)}
+.country-flag{font-size:2rem}
+.country-name{font-weight:600}
+.country-pop{font-size:0.7rem;color:#aaa}
+.ctag{font-size:0.6rem;padding:2px 6px;border-radius:99px;background:rgba(94,207,130,0.1);color:#5ecf82;display:inline-block;margin-right:4px}
+.coming-soon{font-size:0.6rem;color:#ff6b6b;margin-top:4px;display:inline-block}
+.search{width:100%;padding:12px;background:rgba(255,255,255,0.05);border:1px solid rgba(94,207,130,0.18);border-radius:12px;color:white;margin-bottom:1rem}
+.hero{text-align:center;padding:120px 20px 60px}
+h1{font-family:'Cormorant Garamond',serif;font-size:4rem}
+.accent{color:#5ecf82}
+button{background:#2a6b40;color:white;border:none;padding:8px 16px;border-radius:8px;cursor:pointer}
+.page-tabs{display:flex;gap:0;background:#122318;border-bottom:1px solid rgba(94,207,130,0.18)}
+.ptab{padding:12px 20px;background:none;border:none;color:#aaa;cursor:pointer}
+.ptab.active{color:#5ecf82;border-bottom:2px solid #5ecf82}
+.tab-panel{display:none;padding:20px}
+.tab-panel.active{display:block}
+.calc-card{background:#122318;border-radius:14px;padding:20px;margin-top:20px}
+.calc-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:15px}
+.cf-group label{font-size:0.7rem;text-transform:uppercase;color:#aaa}
+.cf-group input,.cf-group select{width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(94,207,130,0.18);border-radius:8px;padding:10px;color:white}
+.result-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:20px}
+.rcell{background:#0d1f17;padding:12px;border-radius:10px}
+.rcell-label{font-size:0.6rem;color:#aaa}
+.rcell-value{font-size:1.1rem;font-weight:600}
+.sheet{width:100%;border-collapse:collapse}
+.sheet td,.sheet th{padding:8px;border-bottom:1px solid #2a3a30;text-align:left}
+</style>
+</head>
+<body>
 
+<nav>
+  <div class="nav-logo">Count It <span>Global</span></div>
+</nav>
+
+<div id="landing">
+  <div class="hero">
+    <h1>Count <span class="accent">It.</span></h1>
+    <p>Population, religion, birth/death rates from UN and World Bank.</p>
+  </div>
+
+  <section style="padding:0 2rem 4rem">
+    <h2 style="font-family:'Cormorant Garamond',serif;font-size:2rem">Pick a country.</h2>
+    <input type="text" id="searchInput" class="search" placeholder="🔍 Search country..." onkeyup="filterCountries()">
+    <div id="countryGrid" class="country-grid">Loading countries...</div>
+  </section>
+</div>
+
+<div id="countryPage" style="display:none">
+  <div style="background:#122318;padding:1.5rem">
+    <button onclick="goBack()">← Back</button>
+    <div style="display:flex;align-items:center;gap:1rem;margin-top:1rem">
+      <span id="countryFlag" style="font-size:3rem">🌍</span>
+      <div>
+        <h1 id="countryName" style="font-size:2rem">Country</h1>
+        <p id="countrySub">Currency: —</p>
+      </div>
+    </div>
+    <button onclick="downloadCurrent()" style="margin-top:1rem">📄 Download Current Tab</button>
+  </div>
+
+  <div class="page-tabs">
+    <button class="ptab" onclick="switchTab('demographics')">👥 Demographics</button>
+    <button class="ptab" onclick="switchTab('income')">💰 Income Tax</button>
+    <button class="ptab active" onclick="switchTab('import')">📦 Import Calculator</button>
+  </div>
+
+  <div id="demographicsTab" class="tab-panel">
+    <div class="calc-card">
+      <h3>Demographics <span id="lastUpdated" style="font-size:0.7rem;color:#5ecf82"></span></h3>
+      <table class="sheet">
+        <tr><td style="width:40%">Total Population</td><td id="demoPop">—</td></tr>
+        <tr><td>Male/Female Split</td><td id="demoGender">—</td></tr>
+        <tr><td>Population Growth</td><td id="demoGrowth">—</td></tr>
+        <tr><td>Birth Rate (per 1000)</td><td id="demoBirth">—</td></tr>
+        <tr><td>Death Rate (per 1000)</td><td id="demoDeath">—</td></tr>
+        <tr><td>Life Expectancy</td><td id="demoLife">—</td></tr>
+        <tr><td>Religions</td><td id="demoReligion">—</td></tr>
+       </table>
+    </div>
+  </div>
+
+  <div id="incomeTab" class="tab-panel">
+    <div class="calc-card">
+      <h3>Income Tax Calculator</h3>
+      <div class="calc-form">
+        <div class="cf-group"><label>Annual Income</label><input type="number" id="taxIncome" value="500000" oninput="calcTax()"></div>
+        <div class="cf-group"><label>Investment</label><input type="number" id="taxInvestment" value="50000" oninput="calcTax()"></div>
+      </div>
+      <div class="result-grid" id="taxResults"></div>
+      <h3 style="margin-top:20px">Tax Brackets</h3>
+      <table class="sheet" id="bracketsTable"><tr><td colspan="2">Select a country</td></tr></table>
+    </div>
+  </div>
+
+  <div id="importTab" class="tab-panel active">
+    <div class="calc-card">
+      <h3>Import Cost Calculator</h3>
+      <div class="calc-form">
+        <div class="cf-group"><label>Product Category</label><select id="importCat" onchange="calcImport()"></select></div>
+        <div class="cf-group"><label>Unit Price (USD)</label><input type="number" id="importPrice" value="500" oninput="calcImport()"></div>
+        <div class="cf-group"><label>Quantity</label><input type="number" id="importQty" value="10" oninput="calcImport()"></div>
+        <div class="cf-group"><label>Exchange Rate</label><input type="number" id="importRate" value="1" oninput="calcImport()"></div>
+        <div class="cf-group"><label>Freight (USD)</label><input type="number" id="importFreight" value="100" oninput="calcImport()"></div>
+      </div>
+      <div class="result-grid" id="importResults"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============================================
+// ALL DATA COMES FROM database.json - NOTHING HARDCODED
+// ============================================
+
+let DATABASE = null;
+let currentData = null;
+let currentCode = null;
+
+// Country list - only names and flags (data comes from database.json)
+const countries = [
+  { name: "Bangladesh", flag: "🇧🇩", code: "BD", tags: ["South Asia"] },
+  { name: "India", flag: "🇮🇳", code: "IN", tags: ["South Asia"] },
+  { name: "Thailand", flag: "🇹🇭", code: "TH", tags: ["SE Asia"] },
+  { name: "Canada", flag: "🇨🇦", code: "CA", tags: ["North America"] }
+];
+
+// Load database.json - THIS IS THE ONLY SOURCE OF DATA
+async function loadDatabase() {
+  try {
+    const response = await fetch('database.json');
+    DATABASE = await response.json();
+    console.log('✅ Database loaded:', Object.keys(DATABASE));
+    renderCountries();
+  } catch (error) {
+    console.error('❌ Failed to load database.json:', error);
+    document.getElementById('countryGrid').innerHTML = '<div style="color:red;padding:20px">Error: database.json not found. Run update_database.js first.</div>';
+  }
+}
+
+function renderCountries() {
+  const search = document.getElementById('searchInput')?.value.toLowerCase() || '';
+  const filtered = countries.filter(c => 
+    c.name.toLowerCase().includes(search) || c.tags.some(t => t.toLowerCase().includes(search))
+  );
+  const grid = document.getElementById('countryGrid');
+  if (!grid) return;
+  
+  grid.innerHTML = filtered.map(c => {
+    const data = DATABASE?.[c.code];
+    const pop = data?.demographics?.total_population;
+    const popDisplay = pop ? (pop >= 1000000000 ? (pop/1000000000).toFixed(2) + 'B' : (pop/1000000).toFixed(1) + 'M') : 'Loading...';
+    
+    return `
+      <div class="country-card" onclick="loadCountry('${c.code}')">
+        <div class="country-flag">${c.flag}</div>
+        <div class="country-name">${c.name}</div>
+        <div class="country-pop">${popDisplay}</div>
+        <div>${c.tags.map(t => `<span class="ctag">${t}</span>`).join('')}</div>
+        <div class="ctag" style="background:rgba(94,207,130,0.2);">✅ DATABASE</div>
+      </div>
+    `;
+  }).join('');
+}
+
+function loadCountry(code) {
+  currentCode = code;
+  currentData = DATABASE[code];
+  
+  if (!currentData) {
+    alert(`No data found for ${code}. Run update_database.js to fetch data.`);
+    return;
+  }
+  
+  document.getElementById('landing').style.display = 'none';
+  document.getElementById('countryPage').style.display = 'block';
+  
+  const flags = {BD:'🇧🇩',IN:'🇮🇳',TH:'🇹🇭',CA:'🇨🇦'};
+  document.getElementById('countryFlag').innerText = flags[code] || '🌍';
+  document.getElementById('countryName').innerText = currentData.country || code;
+  document.getElementById('countrySub').innerHTML = `Currency: ${currentData.currency} | Last Updated: ${currentData.last_updated?.slice(0,10) || 'Unknown'}`;
+  document.getElementById('lastUpdated').innerHTML = `📡 DB Updated: ${currentData.last_updated?.slice(0,10) || 'Unknown'}`;
+  
+  // Demographics - ALL from database.json
+  const demo = currentData.demographics;
+  if (demo) {
+    document.getElementById('demoPop').innerText = demo.total_population?.toLocaleString() || '—';
+    document.getElementById('demoGender').innerHTML = `♂ ${(demo.male_population || 0).toLocaleString()} / ♀ ${(demo.female_population || 0).toLocaleString()}`;
+    document.getElementById('demoGrowth').innerText = demo.population_growth_annual_pct + '%' || '—';
+    document.getElementById('demoBirth').innerText = demo.birth_rate_per_1000 || '—';
+    document.getElementById('demoDeath').innerText = demo.death_rate_per_1000 || '—';
+    document.getElementById('demoLife').innerText = demo.life_expectancy_years || '—';
+    if (demo.religions) {
+      document.getElementById('demoReligion').innerHTML = Object.entries(demo.religions).map(([k,v]) => `${k}: ${v}`).join('<br>');
+    }
+  }
+  
+  // Tax Brackets - ALL from database.json
+  const tax = currentData.tax_structure;
+  if (tax?.individual_tax_brackets) {
+    document.getElementById('bracketsTable').innerHTML = `
+      <tr><th>Income Range (${currentData.currency})</th><th>Rate</th></tr>
+      ${tax.individual_tax_brackets.map(b => `<tr><td>${b.min.toLocaleString()} - ${b.max === null ? '∞' : b.max.toLocaleString()}</td><td>${b.rate}%</td></tr>`).join('')}
+    `;
+  }
+  
+  // Import Categories - ALL from database.json
+  const imports = currentData.import_categories;
+  if (imports && imports.length > 0) {
+    const select = document.getElementById('importCat');
+    select.innerHTML = imports.map(cat => 
+      `<option value='${JSON.stringify(cat)}'>${cat.description || cat.name} (Duty: ${cat.duty_pct}%, VAT: ${cat.vat_pct}%, AIT: ${cat.ait_pct || 0}%)</option>`
+    ).join('');
+    document.getElementById('importRate').value = currentData.exchange_rate || 1;
+  }
+  
+  calcImport();
+  calcTax();
+}
+
+function calcImport() {
+  if (!currentData) return;
+  const cat = JSON.parse(document.getElementById('importCat').value || '{}');
+  const price = parseFloat(document.getElementById('importPrice').value) || 0;
+  const qty = parseFloat(document.getElementById('importQty').value) || 1;
+  const rate = parseFloat(document.getElementById('importRate').value) || 1;
+  const freight = parseFloat(document.getElementById('importFreight').value) || 0;
+  
+  const cif = (price * qty + freight) * rate;
+  const duty = cif * (cat.duty_pct / 100);
+  const vat = (cif + duty) * (cat.vat_pct / 100);
+  const ait = (cif + duty + vat) * ((cat.ait_pct || 0) / 100);
+  const total = cif + duty + vat + ait;
+  
+  document.getElementById('importResults').innerHTML = `
+    <div class="rcell"><div class="rcell-label">CIF Value</div><div class="rcell-value">${cif.toFixed(2)} ${currentData.currency}</div></div>
+    <div class="rcell"><div class="rcell-label">Duty (${cat.duty_pct}%)</div><div class="rcell-value">${duty.toFixed(2)}</div></div>
+    <div class="rcell"><div class="rcell-label">VAT (${cat.vat_pct}%)</div><div class="rcell-value">${vat.toFixed(2)}</div></div>
+    <div class="rcell"><div class="rcell-label">AIT (${cat.ait_pct || 0}%)</div><div class="rcell-value">${ait.toFixed(2)}</div></div>
+    <div class="rcell"><div class="rcell-label total">Total Landed</div><div class="rcell-value">${total.toFixed(2)} ${currentData.currency}</div></div>
+  `;
+}
+
+function calcTax() {
+  if (!currentData?.tax_structure?.individual_tax_brackets) return;
+  const income = parseFloat(document.getElementById('taxIncome').value) || 0;
+  const brackets = currentData.tax_structure.individual_tax_brackets;
+  
+  let tax = 0;
+  let remaining = income;
+  for (let i = 0; i < brackets.length; i++) {
+    const b = brackets[i];
+    if (remaining <= 0) break;
+    const prevMax = i > 0 ? brackets[i-1].max : 0;
+    const taxable = Math.min(remaining, b.max === null ? remaining : b.max - prevMax);
+    tax += taxable * (b.rate / 100);
+    remaining -= taxable;
+  }
+  
+  document.getElementById('taxResults').innerHTML = `
+    <div class="rcell"><div class="rcell-label">Gross Tax</div><div class="rcell-value">${tax.toFixed(2)} ${currentData.currency}</div></div>
+    <div class="rcell"><div class="rcell-label">Effective Rate</div><div class="rcell-value">${income > 0 ? ((tax/income)*100).toFixed(1) : 0}%</div></div>
+  `;
+}
+
+function switchTab(tab) {
+  document.querySelectorAll('.tab-panel').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.ptab').forEach(b => b.classList.remove('active'));
+  document.getElementById(tab + 'Tab').classList.add('active');
+  event.target.classList.add('active');
+}
+
+function goBack() {
+  document.getElementById('landing').style.display = 'block';
+  document.getElementById('countryPage').style.display = 'none';
+}
+
+function downloadCurrent() {
+  if (!currentData) return;
+  const content = `COUNT IT REPORT
+Country: ${currentData.country || currentCode}
+Currency: ${currentData.currency}
+Last Updated: ${currentData.last_updated}
+Date: ${new Date().toLocaleString()}
+========================================
+Data exported from Count It Global - Database Source`;
+  const blob = new Blob([content], {type: 'text/plain'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `${currentCode}_report.txt`;
+  a.click();
+}
+
+function filterCountries() { renderCountries(); }
+
+// Start: Load database.json
+loadDatabase();
+</script>
+</body>
+</html>
