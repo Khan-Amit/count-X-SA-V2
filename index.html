@@ -71,7 +71,7 @@ button{background:#2a6b40;color:white;border:none;padding:8px 16px;border-radius
         <p id="countrySub">Currency: —</p>
       </div>
     </div>
-    <button onclick="downloadCurrent()" style="margin-top:1rem">📄 Download Report (HTML)</button>
+    <button onclick="downloadCurrent()" style="margin-top:1rem">📄 Download Report</button>
   </div>
 
   <div class="page-tabs">
@@ -93,7 +93,7 @@ button{background:#2a6b40;color:white;border:none;padding:8px 16px;border-radius
         <tr><td>⚰️ Death Rate (per 1,000)</td><td id="demoDeath">—</td></tr>
         <tr><td>🕊️ Life Expectancy</td><td id="demoLife">—</td></tr>
         <tr><td>🕌 Religions</td><td id="demoReligion">—</td></tr>
-      </table>
+       </table>
       <p id="lastUpdatedInfo" style="font-size:0.7rem; color:#5ecf82; margin-top:10px"></p>
     </div>
   </div>
@@ -158,7 +158,7 @@ let currentCode = null;
 
 async function loadDatabase() {
   try {
-    const res = await fetch('database.json');
+    const res = await fetch('./database.json');
     DB = await res.json();
     console.log('✅ Database loaded:', Object.keys(DB));
     renderCountries();
@@ -213,7 +213,7 @@ function loadCountry(code) {
   const demo = c.demographics;
   document.getElementById('demoPop').innerText = demo.total_population?.toLocaleString() || '—';
   document.getElementById('demoGender').innerHTML = `♂ ${demo.male_percent}% / ♀ ${demo.female_percent}%`;
-  document.getElementById('demoGrowth').innerHTML = `<span class="${demo.population_growth_annual_pct > 0 ? 'highlight' : ''}">${demo.population_growth_annual_pct}%</span> (${demo.population_growth_annual_pct > 0 ? 'Growing' : 'Shrinking'})`;
+  document.getElementById('demoGrowth').innerHTML = `<span class="highlight">${demo.population_growth_annual_pct}%</span> (${demo.population_growth_annual_pct > 0 ? 'Growing' : 'Shrinking'})`;
   document.getElementById('demoBirth').innerText = demo.birth_rate_per_1000 || '—';
   document.getElementById('demoDeath').innerText = demo.death_rate_per_1000 || '—';
   document.getElementById('demoLife').innerText = demo.life_expectancy_years || '—';
@@ -343,7 +343,6 @@ function downloadCurrent() {
   const c = DB[currentCode];
   const activeTab = document.querySelector('.tab-panel.active').id;
   const timestamp = new Date().toLocaleString();
-  const dateStr = new Date().toISOString().slice(0,19).replace(/:/g, '-');
   
   let title = "";
   let content = "";
@@ -376,7 +375,6 @@ function downloadCurrent() {
         <tr><td>Inflation Rate</td><td>${c.economy.inflation_rate_percent}%</td></tr>
         <tr><td>Unemployment Rate</td><td>${c.economy.unemployment_rate_percent}%</td></tr>
       </table>
-      
       <h2>🏠 Household Income</h2>
       <table border="1" cellpadding="8" style="border-collapse:collapse; width:100%">
         <tr><th style="text-align:left">Metric</th><th style="text-align:left">Value</th></tr>
@@ -384,7 +382,6 @@ function downloadCurrent() {
         <tr><td>Median Monthly Income (USD)</td><td>$${c.household_income.median_monthly_income_usd?.toLocaleString()}</td></tr>
         <tr><td>Minimum Wage (USD/month)</td><td>$${c.household_income.minimum_wage_usd?.toLocaleString()}</td></tr>
       </table>
-      
       <h2>🏡 Living Cost</h2>
       <table border="1" cellpadding="8" style="border-collapse:collapse; width:100%">
         <tr><th style="text-align:left">Metric</th><th style="text-align:left">Value</th></tr>
@@ -410,7 +407,6 @@ function downloadCurrent() {
         <tr><td>Net Tax Payable</td><td>${finalTax}</td></tr>
         <tr><td>Effective Tax Rate</td><td>${effectiveRate}</td></tr>
       </table>
-      
       <h2>📋 Tax Brackets (${c.currency})</h2>
       <table border="1" cellpadding="8" style="border-collapse:collapse; width:100%">
         <tr><th>Income Range</th><th>Rate</th></tr>
@@ -445,14 +441,15 @@ function downloadCurrent() {
   <meta charset="UTF-8">
   <title>Count It Report - ${c.country} - ${title}</title>
   <style>
-    body { font-family: 'Segoe UI', Arial, sans-serif; padding: 30px; max-width: 1000px; margin: 0 auto; background: #f5f5f5; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; padding: 30px; max-width: 900px; margin: 0 auto; background: #f5f5f5; }
     .header { background: #0d1f17; color: white; padding: 20px; border-radius: 10px; margin-bottom: 20px; }
     .header h1 { margin: 0; color: #5ecf82; }
     .content { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
     h2 { color: #0d1f17; border-left: 4px solid #5ecf82; padding-left: 15px; margin-top: 25px; }
     table { width: 100%; border-collapse: collapse; margin: 15px 0; }
-    th, td { padding: 10px; text-align: left; border: 1px solid #ddd; }
-    th { background: #0d1f17; color: white; border: 1px solid #2a3a30; }
+    th, td { padding: 10px; text-align: left; border-bottom: 1px solid #ddd; }
+    th { background: #0d1f17; color: white; }
+    tr:hover { background: #f9f9f9; }
     .footer { text-align: center; margin-top: 30px; padding: 15px; color: #666; font-size: 12px; border-top: 1px solid #ddd; }
   </style>
 </head>
@@ -475,6 +472,7 @@ function downloadCurrent() {
   const blob = new Blob([html], {type: 'text/html'});
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
+  const dateStr = new Date().toISOString().slice(0,19).replace(/:/g, '-');
   a.download = `${currentCode}_${activeTab.replace('Tab', '')}_${dateStr}.html`;
   a.click();
 }
