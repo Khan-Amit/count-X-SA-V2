@@ -1,38 +1,345 @@
 {
   "BD": {
     "last_updated": "2025-06-11T10:00:00.000Z",
+    "source": "World Bank API & Bangladesh Bureau of Statistics",
+    "country": "Bangladesh",
+    "currency": "BDT",
+    "exchange_rate": 110,
+    "economy": {
+      "gdp_total_usd": 460000000000,
+      "gdp_per_capita_usd": 2700,
+      "gdp_per_capita_ppp": 12597,
+      "gdp_growth_percent": 6.5,
+      "inflation_rate_percent": 7.5,
+      "unemployment_rate_percent": 4.7
+    },
+    "household_income": {
+      "average_monthly_income_usd": 250,
+      "average_monthly_income_local": 27500,
+      "median_monthly_income_usd": 180,
+      "minimum_wage_usd": 85,
+      "minimum_wage_local": 9300
+    },
+    "living_cost": {
+      "cost_of_living_index": 29.5,
+      "rent_index": 8.2,
+      "groceries_index": 25.8,
+      "restaurant_index": 18.4,
+      "average_monthly_rent_1br_city_usd": 150,
+      "average_monthly_rent_1br_outside_usd": 80,
+      "utilities_monthly_usd": 50,
+      "internet_monthly_usd": 30,
+      "meal_inexpensive_restaurant_usd": 2.50
+    },
     "demographics": {
       "total_population": 173562364,
+      "male_percent": 49.2,
+      "female_percent": 50.8,
+      "population_growth_annual_pct": 1.2,
       "birth_rate_per_1000": 17.5,
       "death_rate_per_1000": 5.8,
-      "population_growth_annual_pct": 1.03
-    }
+      "life_expectancy_years": 73.2,
+      "religions": {
+        "Islam": "90.4%",
+        "Hinduism": "8.5%",
+        "Buddhism": "0.6%",
+        "Christianity": "0.4%",
+        "Others": "0.1%"
+      }
+    },
+    "tax_brackets": [
+      { "min": 0, "max": 350000, "rate": 0 },
+      { "min": 350001, "max": 450000, "rate": 5 },
+      { "min": 450001, "max": 750000, "rate": 10 },
+      { "min": 750001, "max": 1150000, "rate": 15 },
+      { "min": 1150001, "max": 1650000, "rate": 20 },
+      { "min": 1650001, "max": null, "rate": 25 }
+    ],
+    "products": [
+      { "name": "📱 Smartphones (HS 8517.13)", "duty": 25, "vat": 15, "ait": 5 },
+      { "name": "💻 Laptops (HS 8471.30)", "duty": 5, "vat": 15, "ait": 0 },
+      { "name": "🏭 Industrial Raw Materials", "duty": 5, "vat": 15, "ait": 3 },
+      { "name": "💄 Cosmetics & Perfumes", "duty": 25, "vat": 15, "ait": 10 },
+      { "name": "🪑 Household Furniture", "duty": 25, "vat": 15, "ait": 5 },
+      { "name": "🥫 Packaged Food Products", "duty": 25, "vat": 15, "ait": 5 },
+      { "name": "💊 Life-Saving Medicine", "duty": 0, "vat": 0, "ait": 0 },
+      { "name": "👕 Woven & Knitted Textiles", "duty": 25, "vat": 15, "ait": 5 },
+      { "name": "👞 Footwear & Leather Goods", "duty": 25, "vat": 15, "ait": 5 },
+      { "name": "🏥 Medical Equipment", "duty": 1, "vat": 15, "ait": 0 },
+      { "name": "🚗 Automobiles (Passenger Cars)", "duty": 25, "vat": 15, "ait": 5 },
+      { "name": "⚡ Electric Vehicle Components", "duty": 10, "vat": 15, "ait": 3 },
+      { "name": "☀️ Solar Panels", "duty": 0, "vat": 0, "ait": 0 },
+      { "name": "🚜 Agricultural Machinery", "duty": 1, "vat": 0, "ait": 0 },
+      { "name": "🌾 Fertilizers & Pesticides", "duty": 0, "vat": 0, "ait": 0 },
+      { "name": "🔩 Iron and Steel", "duty": 5, "vat": 15, "ait": 5 },
+      { "name": "🧴 Plastics & Polymers", "duty": 5, "vat": 15, "ait": 5 },
+      { "name": "🧪 Chemicals", "duty": 5, "vat": 15, "ait": 3 },
+      { "name": "📄 Paper Products", "duty": 15, "vat": 15, "ait": 5 },
+      { "name": "📷 Optical & Photography Gear", "duty": 10, "vat": 15, "ait": 5 },
+      { "name": "🧸 Toys & Sports Goods", "duty": 25, "vat": 15, "ait": 5 },
+      { "name": "⌚ Luxury Watches & Jewelry", "duty": 25, "vat": 15, "ait": 10 },
+      { "name": "🚲 Bicycles and Parts", "duty": 25, "vat": 15, "ait": 5 },
+      { "name": "🔧 Hand Tools", "duty": 10, "vat": 15, "ait": 3 },
+      { "name": "❄️ Air Conditioners & Fridges", "duty": 25, "vat": 15, "ait": 5 },
+      { "name": "💡 LED Fixtures", "duty": 25, "vat": 15, "ait": 5 },
+      { "name": "🏗️ Cement & Bricks", "duty": 15, "vat": 15, "ait": 5 },
+      { "name": "🥛 Dairy Products", "duty": 25, "vat": 15, "ait": 5 },
+      { "name": "🐕 Pet Food", "duty": 10, "vat": 15, "ait": 3 },
+      { "name": "📚 Printed Books", "duty": 0, "vat": 0, "ait": 0 }
+    ]
   },
   "IN": {
     "last_updated": "2025-06-11T10:00:00.000Z",
+    "source": "World Bank API & CBIC",
+    "country": "India",
+    "currency": "INR",
+    "exchange_rate": 83,
+    "economy": {
+      "gdp_total_usd": 3730000000000,
+      "gdp_per_capita_usd": 2600,
+      "gdp_per_capita_ppp": 12945,
+      "gdp_growth_percent": 7.0,
+      "inflation_rate_percent": 5.2,
+      "unemployment_rate_percent": 7.2
+    },
+    "household_income": {
+      "average_monthly_income_usd": 380,
+      "average_monthly_income_local": 31500,
+      "median_monthly_income_usd": 240,
+      "minimum_wage_usd": 110,
+      "minimum_wage_local": 9000
+    },
+    "living_cost": {
+      "cost_of_living_index": 26.7,
+      "rent_index": 8.5,
+      "groceries_index": 25.9,
+      "restaurant_index": 20.1,
+      "average_monthly_rent_1br_city_usd": 200,
+      "average_monthly_rent_1br_outside_usd": 110,
+      "utilities_monthly_usd": 45,
+      "internet_monthly_usd": 10,
+      "meal_inexpensive_restaurant_usd": 3.50
+    },
     "demographics": {
       "total_population": 1441981000,
+      "male_percent": 51.5,
+      "female_percent": 48.5,
+      "population_growth_annual_pct": 0.81,
       "birth_rate_per_1000": 16.3,
       "death_rate_per_1000": 6.7,
-      "population_growth_annual_pct": 0.81
-    }
+      "life_expectancy_years": 70.8,
+      "religions": {
+        "Hinduism": "79.8%",
+        "Islam": "14.2%",
+        "Christianity": "2.3%",
+        "Sikhism": "1.7%",
+        "Buddhism": "0.7%",
+        "Jainism": "0.4%"
+      }
+    },
+    "tax_brackets": [
+      { "min": 0, "max": 400000, "rate": 0 },
+      { "min": 400001, "max": 800000, "rate": 5 },
+      { "min": 800001, "max": 1200000, "rate": 10 },
+      { "min": 1200001, "max": 1600000, "rate": 15 },
+      { "min": 1600001, "max": 2000000, "rate": 20 },
+      { "min": 2000001, "max": 2400000, "rate": 25 },
+      { "min": 2400001, "max": null, "rate": 30 }
+    ],
+    "products": [
+      { "name": "📱 Smartphones (HS 8517.13)", "duty": 20, "vat": 18, "ait": 10, "sws": 10 },
+      { "name": "💻 Laptops (HS 8471.30)", "duty": 0, "vat": 18, "ait": 0, "sws": 0 },
+      { "name": "🥇 Gold (HS 7108.12)", "duty": 10, "vat": 3, "ait": 5, "sws": 0 },
+      { "name": "🥈 Silver (HS 7106.91)", "duty": 10, "vat": 3, "ait": 5, "sws": 0 },
+      { "name": "🚗 Motor cars (HS 8703.23)", "duty": 100, "vat": 28, "ait": 17, "sws": 10 },
+      { "name": "⚡ Electric vehicles (HS 8703.80)", "duty": 70, "vat": 5, "ait": 0, "sws": 10 },
+      { "name": "👕 Cotton T-shirts (HS 6109.10)", "duty": 25, "vat": 12, "ait": 0, "sws": 10 },
+      { "name": "👞 Leather Footwear (HS 6403.91)", "duty": 25, "vat": 18, "ait": 0, "sws": 10 },
+      { "name": "☕ Roasted Coffee (HS 0901.21)", "duty": 100, "vat": 0, "ait": 0, "sws": 10 },
+      { "name": "🍫 Chocolate (HS 1806.31)", "duty": 30, "vat": 18, "ait": 0, "sws": 10 },
+      { "name": "🍷 Wine (HS 2204.21)", "duty": 150, "vat": 0, "ait": 0, "sws": 0 },
+      { "name": "🍺 Beer (HS 2203.00)", "duty": 100, "vat": 0, "ait": 0, "sws": 10 },
+      { "name": "💄 Cosmetics (HS 3304.99)", "duty": 20, "vat": 18, "ait": 0, "sws": 10 },
+      { "name": "💊 Medicaments (HS 3004.90)", "duty": 10, "vat": 12, "ait": 0, "sws": 10 },
+      { "name": "🏥 Medical instruments (HS 9018.90)", "duty": 7.5, "vat": 12, "ait": 5, "sws": 10 },
+      { "name": "📚 Printed books (HS 4901.99)", "duty": 0, "vat": 0, "ait": 0, "sws": 0 },
+      { "name": "🧸 Toys (HS 9503.00)", "duty": 70, "vat": 18, "ait": 0, "sws": 10 },
+      { "name": "🪑 Wooden furniture (HS 9403.60)", "duty": 25, "vat": 18, "ait": 0, "sws": 10 },
+      { "name": "📺 Color TVs (HS 8528.72)", "duty": 20, "vat": 28, "ait": 0, "sws": 10 },
+      { "name": "🔊 Loudspeakers (HS 8518.22)", "duty": 15, "vat": 18, "ait": 0, "sws": 10 },
+      { "name": "🍽️ Plastic tableware (HS 3924.10)", "duty": 15, "vat": 18, "ait": 0, "sws": 10 },
+      { "name": "🥄 Stainless steel tableware (HS 7323.93)", "duty": 15, "vat": 18, "ait": 0, "sws": 10 },
+      { "name": "👜 Leather handbags (HS 4202.21)", "duty": 10, "vat": 18, "ait": 0, "sws": 10 },
+      { "name": "⌚ Wrist-watches (HS 9102.11)", "duty": 20, "vat": 18, "ait": 0, "sws": 10 },
+      { "name": "🧢 Hats & headgear (HS 6505.00)", "duty": 10, "vat": 18, "ait": 0, "sws": 10 },
+      { "name": "🧀 Hard cheeses (HS 0406.90)", "duty": 30, "vat": 12, "ait": 0, "sws": 10 }
+    ]
   },
   "TH": {
     "last_updated": "2025-06-11T10:00:00.000Z",
+    "source": "World Bank API & Thai Customs",
+    "country": "Thailand",
+    "currency": "THB",
+    "exchange_rate": 34,
+    "economy": {
+      "gdp_total_usd": 495000000000,
+      "gdp_per_capita_usd": 6900,
+      "gdp_per_capita_ppp": 32027,
+      "gdp_growth_percent": 3.8,
+      "inflation_rate_percent": 1.5,
+      "unemployment_rate_percent": 1.2
+    },
+    "household_income": {
+      "average_monthly_income_usd": 650,
+      "average_monthly_income_local": 22100,
+      "median_monthly_income_usd": 480,
+      "minimum_wage_usd": 10,
+      "minimum_wage_local": 340
+    },
+    "living_cost": {
+      "cost_of_living_index": 42.5,
+      "rent_index": 20.5,
+      "groceries_index": 40.2,
+      "restaurant_index": 27.8,
+      "average_monthly_rent_1br_city_usd": 400,
+      "average_monthly_rent_1br_outside_usd": 200,
+      "utilities_monthly_usd": 80,
+      "internet_monthly_usd": 20,
+      "meal_inexpensive_restaurant_usd": 2.00
+    },
     "demographics": {
       "total_population": 71885000,
+      "male_percent": 48.6,
+      "female_percent": 51.4,
+      "population_growth_annual_pct": -0.05,
       "birth_rate_per_1000": 7.6,
-      "death_rate_per_1000": 8.0,
-      "population_growth_annual_pct": -0.05
-    }
+      "death_rate_per_1000": 9.3,
+      "life_expectancy_years": 77.2,
+      "religions": {
+        "Buddhism": "92.5%",
+        "Islam": "5.4%",
+        "Christianity": "1.2%",
+        "Hinduism": "0.1%"
+      }
+    },
+    "tax_brackets": [
+      { "min": 0, "max": 150000, "rate": 0 },
+      { "min": 150001, "max": 300000, "rate": 5 },
+      { "min": 300001, "max": 500000, "rate": 10 },
+      { "min": 500001, "max": 750000, "rate": 15 },
+      { "min": 750001, "max": 1000000, "rate": 20 },
+      { "min": 1000001, "max": 2000000, "rate": 25 },
+      { "min": 2000001, "max": 5000000, "rate": 30 },
+      { "min": 5000001, "max": null, "rate": 35 }
+    ],
+    "products": [
+      { "name": "📱 Smartphones (HS 8517.13)", "duty": 0, "vat": 7, "ait": 0 },
+      { "name": "💻 Laptops (HS 8471.30)", "duty": 0, "vat": 7, "ait": 0 },
+      { "name": "🥇 Gold (HS 7108.12)", "duty": 0, "vat": 0, "ait": 0 },
+      { "name": "🥈 Silver (HS 7106.91)", "duty": 1, "vat": 7, "ait": 0 },
+      { "name": "🚗 Motor cars (HS 8703.23)", "duty": 80, "vat": 7, "ait": 30 },
+      { "name": "⚡ Electric vehicles (HS 8703.80)", "duty": 40, "vat": 7, "ait": 2 },
+      { "name": "👕 Cotton T-shirts (HS 6109.10)", "duty": 30, "vat": 7, "ait": 0 },
+      { "name": "👞 Leather footwear (HS 6403.91)", "duty": 30, "vat": 7, "ait": 0 },
+      { "name": "☕ Roasted coffee (HS 0901.21)", "duty": 90, "vat": 7, "ait": 0 },
+      { "name": "🍫 Chocolate (HS 1806.31)", "duty": 30, "vat": 7, "ait": 0 },
+      { "name": "🍷 Wine (HS 2204.21)", "duty": 54, "vat": 7, "ait": 10 },
+      { "name": "🍺 Beer (HS 2203.00)", "duty": 60, "vat": 7, "ait": 22 },
+      { "name": "💄 Cosmetics (HS 3304.99)", "duty": 30, "vat": 7, "ait": 0 },
+      { "name": "💊 Medicaments (HS 3004.90)", "duty": 10, "vat": 7, "ait": 0 },
+      { "name": "🏥 Medical instruments (HS 9018.90)", "duty": 0, "vat": 0, "ait": 0 },
+      { "name": "📚 Printed books (HS 4901.99)", "duty": 0, "vat": 0, "ait": 0 },
+      { "name": "🧸 Toys (HS 9503.00)", "duty": 20, "vat": 7, "ait": 0 },
+      { "name": "🪑 Wooden furniture (HS 9403.60)", "duty": 20, "vat": 7, "ait": 0 },
+      { "name": "📺 Color TVs (HS 8528.72)", "duty": 20, "vat": 7, "ait": 0 },
+      { "name": "🔊 Loudspeakers (HS 8518.22)", "duty": 10, "vat": 7, "ait": 0 },
+      { "name": "🍽️ Plastic tableware (HS 3924.10)", "duty": 30, "vat": 7, "ait": 0 },
+      { "name": "🥄 Stainless steel tableware (HS 7323.93)", "duty": 30, "vat": 7, "ait": 0 },
+      { "name": "👜 Leather handbags (HS 4202.21)", "duty": 20, "vat": 7, "ait": 0 },
+      { "name": "⌚ Wrist-watches (HS 9102.11)", "duty": 5, "vat": 7, "ait": 0 },
+      { "name": "🧢 Hats & headgear (HS 6505.00)", "duty": 30, "vat": 7, "ait": 0 },
+      { "name": "🧀 Hard cheeses (HS 0406.90)", "duty": 30, "vat": 7, "ait": 0 },
+      { "name": "🥩 Boneless beef (HS 0201.30)", "duty": 50, "vat": 7, "ait": 0 }
+    ]
   },
   "CA": {
     "last_updated": "2025-06-11T10:00:00.000Z",
+    "source": "Statistics Canada & World Bank",
+    "country": "Canada",
+    "currency": "CAD",
+    "exchange_rate": 1.35,
+    "economy": {
+      "gdp_total_usd": 2140000000000,
+      "gdp_per_capita_usd": 55000,
+      "gdp_per_capita_ppp": 64229,
+      "gdp_growth_percent": 1.8,
+      "inflation_rate_percent": 2.8,
+      "unemployment_rate_percent": 5.2
+    },
+    "household_income": {
+      "average_monthly_income_usd": 4800,
+      "average_monthly_income_local": 6500,
+      "median_monthly_income_usd": 4100,
+      "minimum_wage_usd": 11.85,
+      "minimum_wage_local": 16.00
+    },
+    "living_cost": {
+      "cost_of_living_index": 68.5,
+      "rent_index": 44.5,
+      "groceries_index": 66.2,
+      "restaurant_index": 65.8,
+      "average_monthly_rent_1br_city_usd": 1500,
+      "average_monthly_rent_1br_outside_usd": 1200,
+      "utilities_monthly_usd": 150,
+      "internet_monthly_usd": 70,
+      "meal_inexpensive_restaurant_usd": 20.00
+    },
     "demographics": {
       "total_population": 41500000,
+      "male_percent": 49.65,
+      "female_percent": 50.35,
+      "population_growth_annual_pct": 2.4,
       "birth_rate_per_1000": 9.4,
       "death_rate_per_1000": 8.5,
-      "population_growth_annual_pct": 2.40
-    }
+      "life_expectancy_years": 82.3,
+      "religions": {
+        "Christianity": "53.3%",
+        "No Religion": "34.6%",
+        "Islam": "4.9%",
+        "Hinduism": "2.3%",
+        "Sikhism": "2.1%",
+        "Buddhism": "1.0%"
+      }
+    },
+    "tax_brackets": [
+      { "min": 0, "max": 15705, "rate": 0 },
+      { "min": 15706, "max": 55867, "rate": 15 },
+      { "min": 55868, "max": 111733, "rate": 20.5 },
+      { "min": 111734, "max": 173205, "rate": 26 },
+      { "min": 173206, "max": 246752, "rate": 29 },
+      { "min": 246753, "max": null, "rate": 33 }
+    ],
+    "products": [
+      { "name": "📱 Smartphones (HS 8517.13)", "duty": 0, "vat": 5, "ait": 0 },
+      { "name": "💻 Laptops (HS 8471.30)", "duty": 0, "vat": 5, "ait": 0 },
+      { "name": "🥇 Gold (HS 7108.12)", "duty": 0, "vat": 0, "ait": 0 },
+      { "name": "🥈 Silver (HS 7106.91)", "duty": 0, "vat": 0, "ait": 0 },
+      { "name": "🚗 Passenger cars (HS 8703.23)", "duty": 6.1, "vat": 5, "ait": 0 },
+      { "name": "⚡ Electric vehicles (HS 8703.80)", "duty": 6.1, "vat": 5, "ait": 0 },
+      { "name": "👕 Cotton T-shirts (HS 6109.10)", "duty": 18, "vat": 5, "ait": 0 },
+      { "name": "👞 Leather footwear (HS 6403.91)", "duty": 18, "vat": 5, "ait": 0 },
+      { "name": "☕ Roasted coffee (HS 0901.21)", "duty": 0, "vat": 5, "ait": 0 },
+      { "name": "🍫 Chocolate (HS 1806.31)", "duty": 6, "vat": 5, "ait": 0 },
+      { "name": "🍷 Wine (HS 2204.21)", "duty": 4.68, "vat": 5, "ait": 15 },
+      { "name": "🍺 Beer (HS 2203.00)", "duty": 0, "vat": 5, "ait": 12.5 },
+      { "name": "💄 Cosmetics (HS 3304.99)", "duty": 6.5, "vat": 5, "ait": 0 },
+      { "name": "💊 Pharmaceuticals (HS 3004.90)", "duty": 0, "vat": 0, "ait": 0 },
+      { "name": "🏥 Medical instruments (HS 9018.90)", "duty": 0, "vat": 0, "ait": 0 },
+      { "name": "📚 Printed books (HS 4901.99)", "duty": 0, "vat": 0, "ait": 0 },
+      { "name": "🧸 Toys (HS 9503.00)", "duty": 0, "vat": 5, "ait": 0 },
+      { "name": "🪑 Wooden furniture (HS 9403.60)", "duty": 9.5, "vat": 5, "ait": 0 },
+      { "name": "📺 TVs & Monitors (HS 8528.72)", "duty": 5, "vat": 5, "ait": 0 },
+      { "name": "🔊 Loudspeakers (HS 8518.22)", "duty": 6.5, "vat": 5, "ait": 0 }
+    ]
   }
 }
