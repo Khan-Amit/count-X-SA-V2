@@ -1,67 +1,361 @@
-{
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Count It — World Demographics & Tax Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0d1f17;font-family:'Outfit',sans-serif;color:#f4f7f4}
+nav{position:fixed;top:0;left:0;right:0;height:64px;background:rgba(13,31,23,0.92);backdrop-filter:blur(16px);border-bottom:1px solid rgba(94,207,130,0.18);display:flex;align-items:center;justify-content:space-between;padding:0 2rem;z-index:100}
+.nav-logo{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:700}
+.nav-logo span{color:#5ecf82;font-size:0.7rem}
+.country-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;padding:1rem 0}
+.country-card{background:#122318;border:1px solid rgba(94,207,130,0.18);border-radius:14px;padding:1rem;cursor:pointer;transition:0.2s}
+.country-card:hover{border-color:#5ecf82;transform:translateY(-3px)}
+.country-flag{font-size:2rem}
+.country-name{font-weight:600}
+.country-pop{font-size:0.7rem;color:#aaa}
+.ctag{font-size:0.6rem;padding:2px 6px;border-radius:99px;background:rgba(94,207,130,0.1);color:#5ecf82;display:inline-block;margin-right:4px}
+.search{width:100%;padding:12px;background:rgba(255,255,255,0.05);border:1px solid rgba(94,207,130,0.18);border-radius:12px;color:white;margin-bottom:1rem}
+.hero{text-align:center;padding:120px 20px 60px}
+h1{font-family:'Cormorant Garamond',serif;font-size:4rem}
+.accent{color:#5ecf82}
+button{background:#2a6b40;color:white;border:none;padding:8px 16px;border-radius:8px;cursor:pointer}
+.page-tabs{display:flex;gap:0;background:#122318;border-bottom:1px solid rgba(94,207,130,0.18)}
+.ptab{padding:12px 20px;background:none;border:none;color:#aaa;cursor:pointer}
+.ptab.active{color:#5ecf82;border-bottom:2px solid #5ecf82}
+.tab-panel{display:none;padding:20px}
+.tab-panel.active{display:block}
+.calc-card{background:#122318;border-radius:14px;padding:20px;margin-top:20px}
+.calc-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:15px}
+.cf-group label{font-size:0.7rem;text-transform:uppercase;color:#aaa}
+.cf-group input,.cf-group select{width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(94,207,130,0.18);border-radius:8px;padding:10px;color:white}
+.result-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:20px}
+.rcell{background:#0d1f17;padding:12px;border-radius:10px}
+.rcell-label{font-size:0.6rem;color:#aaa}
+.rcell-value{font-size:1.1rem;font-weight:600}
+.sheet{width:100%;border-collapse:collapse}
+.sheet td,.sheet th{padding:8px;border-bottom:1px solid #2a3a30;text-align:left}
+.live-badge{background:#5ecf82;color:#0d1f17;font-size:0.6rem;padding:2px 6px;border-radius:4px;margin-left:8px}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">Count It <span>Global</span></div>
+</nav>
+
+<div id="landing">
+  <div class="hero">
+    <h1>Count <span class="accent">It.</span></h1>
+    <p>Population, religion, birth/death rates from UN, World Bank & IMF.</p>
+  </div>
+
+  <section style="padding:0 2rem 4rem">
+    <h2 style="font-family:'Cormorant Garamond',serif;font-size:2rem">Pick a country.</h2>
+    <input type="text" id="searchInput" class="search" placeholder="🔍 Search country..." onkeyup="filterCountries()">
+    <div id="countryGrid" class="country-grid">Loading...</div>
+  </section>
+</div>
+
+<div id="countryPage" style="display:none">
+  <div style="background:#122318;padding:1.5rem">
+    <button onclick="goBack()">← Back</button>
+    <div style="display:flex;align-items:center;gap:1rem;margin-top:1rem">
+      <span id="countryFlag" style="font-size:3rem">🌍</span>
+      <div>
+        <h1 id="countryName" style="font-size:2rem">Country</h1>
+        <p id="countrySub">Currency: —</p>
+      </div>
+    </div>
+    <button onclick="downloadCurrent()" style="margin-top:1rem">📄 Download Current Tab</button>
+  </div>
+
+  <div class="page-tabs">
+    <button class="ptab" onclick="switchTab('demographics')">👥 Demographics</button>
+    <button class="ptab" onclick="switchTab('income')">💰 Income Tax</button>
+    <button class="ptab active" onclick="switchTab('import')">📦 Import Calculator</button>
+  </div>
+
+  <div id="demographicsTab" class="tab-panel">
+    <div class="calc-card">
+      <h3>Demographics <span id="lastUpdatedBadge" class="live-badge">LIVE FROM WORLD BANK</span></h3>
+      <table class="sheet">
+        <tr><td style="width:40%">Total Population</td><td id="demoPop">—</td></tr>
+        <tr><td>Population Growth (Annual)</td><td id="demoGrowth">—</td></tr>
+        <tr><td>Birth Rate (per 1000)</td><td id="demoBirth">—</td></tr>
+        <tr><td>Death Rate (per 1000)</td><td id="demoDeath">—</td></tr>
+       </table>
+    </div>
+  </div>
+
+  <div id="incomeTab" class="tab-panel">
+    <div class="calc-card">
+      <h3>Income Tax Calculator</h3>
+      <div class="calc-form">
+        <div class="cf-group"><label>Annual Income</label><input type="number" id="taxIncome" value="500000" oninput="calcTax()"></div>
+      </div>
+      <div class="result-grid" id="taxResults"></div>
+      <h3 style="margin-top:20px">Tax Brackets</h3>
+      <table class="sheet" id="bracketsTable"></table>
+    </div>
+  </div>
+
+  <div id="importTab" class="tab-panel active">
+    <div class="calc-card">
+      <h3>Import Cost Calculator</h3>
+      <div class="calc-form">
+        <div class="cf-group"><label>Product Category</label><select id="importCat" onchange="calcImport()"></select></div>
+        <div class="cf-group"><label>Unit Price (USD)</label><input type="number" id="importPrice" value="500" oninput="calcImport()"></div>
+        <div class="cf-group"><label>Quantity</label><input type="number" id="importQty" value="10" oninput="calcImport()"></div>
+        <div class="cf-group"><label>Exchange Rate</label><input type="number" id="importRate" value="1" oninput="calcImport()"></div>
+        <div class="cf-group"><label>Freight (USD)</label><input type="number" id="importFreight" value="100" oninput="calcImport()"></div>
+      </div>
+      <div class="result-grid" id="importResults"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============================================
+// STATIC DATA (Tax brackets, Import products, Currency)
+// ============================================
+const STATIC_DATA = {
   "BD": {
-    "last_updated": "2025-06-11T10:00:00.000Z",
-    "source": "World Bank API (cached)",
-    "demographics": {
-      "total_population": 173562364,
-      "birth_rate_per_1000": 17.5,
-      "death_rate_per_1000": 5.8,
-      "population_growth_annual_pct": 1.03
-    }
+    name: "Bangladesh",
+    flag: "🇧🇩",
+    currency: "BDT",
+    exchange_rate: 110,
+    tax_brackets: [
+      { min: 0, max: 350000, rate: 0 },
+      { min: 350001, max: 450000, rate: 5 },
+      { min: 450001, max: 850000, rate: 10 },
+      { min: 850001, max: 1350000, rate: 15 },
+      { min: 1350001, max: 1850000, rate: 20 },
+      { min: 1850001, max: 3850000, rate: 25 },
+      { min: 3850001, max: null, rate: 30 }
+    ],
+    import_products: [
+      { name: "Smartphones (HS 8517.13)", duty: 25, vat: 15, ait: 5 },
+      { name: "Laptops (HS 8471.30)", duty: 5, vat: 15, ait: 0 },
+      { name: "Motor cars (HS 8703.23)", duty: 25, vat: 15, ait: 5 },
+      { name: "Gold (HS 7108.12)", duty: 5, vat: 15, ait: 4 }
+    ]
   },
   "IN": {
-    "last_updated": "2025-06-11T10:00:00.000Z",
-    "source": "World Bank API (cached)",
-    "demographics": {
-      "total_population": 1441981000,
-      "birth_rate_per_1000": 16.3,
-      "death_rate_per_1000": 7.1,
-      "population_growth_annual_pct": 0.81
-    }
+    name: "India",
+    flag: "🇮🇳",
+    currency: "INR",
+    exchange_rate: 83,
+    tax_brackets: [
+      { min: 0, max: 400000, rate: 0 },
+      { min: 400001, max: 800000, rate: 5 },
+      { min: 800001, max: 1200000, rate: 10 },
+      { min: 1200001, max: 1600000, rate: 15 },
+      { min: 1600001, max: 2000000, rate: 20 },
+      { min: 2000001, max: 2400000, rate: 25 },
+      { min: 2400001, max: null, rate: 30 }
+    ],
+    import_products: [
+      { name: "Smartphones (HS 8517.13)", duty: 20, vat: 18, ait: 10 },
+      { name: "Laptops (HS 8471.30)", duty: 0, vat: 18, ait: 0 },
+      { name: "Motor cars (HS 8703.23)", duty: 60, vat: 28, ait: 10 },
+      { name: "Gold (HS 7108.12)", duty: 10, vat: 3, ait: 5 }
+    ]
   },
   "TH": {
-    "last_updated": "2025-06-11T10:00:00.000Z",
-    "source": "World Bank API (cached)",
-    "demographics": {
-      "total_population": 71885000,
-      "birth_rate_per_1000": 7.6,
-      "death_rate_per_1000": 9.3,
-      "population_growth_annual_pct": -0.05
-    }
+    name: "Thailand",
+    flag: "🇹🇭",
+    currency: "THB",
+    exchange_rate: 34,
+    tax_brackets: [
+      { min: 0, max: 150000, rate: 0 },
+      { min: 150001, max: 300000, rate: 5 },
+      { min: 300001, max: 500000, rate: 10 },
+      { min: 500001, max: 750000, rate: 15 },
+      { min: 750001, max: 1000000, rate: 20 },
+      { min: 1000001, max: 2000000, rate: 25 },
+      { min: 2000001, max: 5000000, rate: 30 },
+      { min: 5000001, max: null, rate: 35 }
+    ],
+    import_products: [
+      { name: "Smartphones (HS 8517.13)", duty: 0, vat: 7, ait: 0 },
+      { name: "Laptops (HS 8471.30)", duty: 0, vat: 7, ait: 0 },
+      { name: "Motor cars (HS 8703.23)", duty: 80, vat: 7, ait: 30 },
+      { name: "Electric vehicles (HS 8703.80)", duty: 40, vat: 7, ait: 2 }
+    ]
   },
   "CA": {
-    "last_updated": "2025-06-11T10:00:00.000Z",
-    "source": "Statistics Canada (Live Data)",
-    "demographics": {
-      "total_population": 41500000,
-      "birth_rate_per_1000": 9.4,
-      "death_rate_per_1000": 8.5,
-      "population_growth_annual_pct": 2.40
-    },
-    "country": "Canada",
-    "currency": "CAD",
-    "exchange_rate": 1.35,
-    "tax_structure": {
-      "individual_tax_brackets": [
-        { "min": 0, "max": 15705, "rate": 0 },
-        { "min": 15706, "max": 55867, "rate": 15 },
-        { "min": 55868, "max": 111733, "rate": 20.5 },
-        { "min": 111734, "max": 173205, "rate": 26 },
-        { "min": 173206, "max": 246752, "rate": 29 },
-        { "min": 246753, "max": null, "rate": 33 }
-      ]
-    },
-    "import_categories": [
-      { "name": "Smartphones (HS 8517.13)", "duty_pct": 0, "vat_pct": 5, "ait_pct": 0 },
-      { "name": "Laptops (HS 8471.30)", "duty_pct": 0, "vat_pct": 5, "ait_pct": 0 },
-      { "name": "Passenger Cars (HS 8703.23)", "duty_pct": 6.1, "vat_pct": 5, "ait_pct": 0 },
-      { "name": "Electric Vehicles (HS 8703.80)", "duty_pct": 6.1, "vat_pct": 5, "ait_pct": 0 },
-      { "name": "Cotton T-shirts (HS 6109.10)", "duty_pct": 18, "vat_pct": 5, "ait_pct": 0 },
-      { "name": "Leather Footwear (HS 6403.91)", "duty_pct": 18, "vat_pct": 5, "ait_pct": 0 },
-      { "name": "Wine (HS 2204.21)", "duty_pct": 4.68, "vat_pct": 5, "ait_pct": 15 },
-      { "name": "Beer (HS 2203.00)", "duty_pct": 0, "vat_pct": 5, "ait_pct": 12.5 },
-      { "name": "Cosmetics (HS 3304.99)", "duty_pct": 6.5, "vat_pct": 5, "ait_pct": 0 },
-      { "name": "Pharmaceuticals (HS 3004.90)", "duty_pct": 0, "vat_pct": 0, "ait_pct": 0 }
+    name: "Canada",
+    flag: "🇨🇦",
+    currency: "CAD",
+    exchange_rate: 1.35,
+    tax_brackets: [
+      { min: 0, max: 15705, rate: 0 },
+      { min: 15706, max: 55867, rate: 15 },
+      { min: 55868, max: 111733, rate: 20.5 },
+      { min: 111734, max: 173205, rate: 26 },
+      { min: 173206, max: 246752, rate: 29 },
+      { min: 246753, max: null, rate: 33 }
+    ],
+    import_products: [
+      { name: "Smartphones (HS 8517.13)", duty: 0, vat: 5, ait: 0 },
+      { name: "Laptops (HS 8471.30)", duty: 0, vat: 5, ait: 0 },
+      { name: "Passenger cars (HS 8703.23)", duty: 6.1, vat: 5, ait: 0 },
+      { name: "Wine (HS 2204.21)", duty: 4.68, vat: 5, ait: 15 }
     ]
   }
+};
+
+let LIVE_DB = null;
+let currentCode = null;
+
+async function loadLiveDatabase() {
+  try {
+    const response = await fetch('database.json');
+    LIVE_DB = await response.json();
+    console.log('✅ Live data loaded');
+  } catch (e) {
+    console.warn('No database.json found, using fallback');
+    LIVE_DB = {};
+  }
+  renderCountries();
 }
+
+function renderCountries() {
+  const search = document.getElementById('searchInput')?.value.toLowerCase() || '';
+  const filtered = Object.keys(STATIC_DATA).filter(code => 
+    STATIC_DATA[code].name.toLowerCase().includes(search)
+  );
+  const grid = document.getElementById('countryGrid');
+  
+  grid.innerHTML = filtered.map(code => {
+    const staticData = STATIC_DATA[code];
+    const liveData = LIVE_DB?.[code]?.demographics || {};
+    const pop = liveData.total_population || 'Loading...';
+    const popDisplay = pop !== 'Loading...' ? (pop >= 1000000000 ? (pop/1000000000).toFixed(2) + 'B' : (pop/1000000).toFixed(1) + 'M') : 'Loading...';
+    
+    return `
+      <div class="country-card" onclick="loadCountry('${code}')">
+        <div class="country-flag">${staticData.flag}</div>
+        <div class="country-name">${staticData.name}</div>
+        <div class="country-pop">${popDisplay}</div>
+        <div><span class="ctag">${staticData.currency}</span></div>
+        <div class="ctag" style="background:rgba(94,207,130,0.2);">🌐 LIVE DEMO</div>
+      </div>
+    `;
+  }).join('');
+}
+
+function loadCountry(code) {
+  currentCode = code;
+  const staticData = STATIC_DATA[code];
+  const liveData = LIVE_DB?.[code]?.demographics || {};
+  const lastUpdated = LIVE_DB?.[code]?.last_updated || 'Unknown';
+  
+  document.getElementById('landing').style.display = 'none';
+  document.getElementById('countryPage').style.display = 'block';
+  
+  document.getElementById('countryFlag').innerText = staticData.flag;
+  document.getElementById('countryName').innerText = staticData.name;
+  document.getElementById('countrySub').innerHTML = `Currency: ${staticData.currency} | Last Updated: ${lastUpdated.slice(0,10)}`;
+  document.getElementById('lastUpdatedBadge').innerHTML = `📡 World Bank | ${lastUpdated.slice(0,10) || 'Today'}`;
+  
+  // Demographics (from database.json)
+  document.getElementById('demoPop').innerText = liveData.total_population?.toLocaleString() || '—';
+  document.getElementById('demoGrowth').innerText = liveData.population_growth_annual_pct ? liveData.population_growth_annual_pct + '%' : '—';
+  document.getElementById('demoBirth').innerText = liveData.birth_rate_per_1000 || '—';
+  document.getElementById('demoDeath').innerText = liveData.death_rate_per_1000 || '—';
+  
+  // Tax Brackets (from static)
+  const brackets = staticData.tax_brackets;
+  document.getElementById('bracketsTable').innerHTML = `
+    <tr><th>Income Range (${staticData.currency})</th><th>Rate</th></tr>
+    ${brackets.map(b => `<tr><td>${b.min.toLocaleString()} - ${b.max === null ? '∞' : b.max.toLocaleString()}</td><td>${b.rate}%</td></tr>`).join('')}
+  `;
+  
+  // Import Products (from static)
+  const select = document.getElementById('importCat');
+  select.innerHTML = staticData.import_products.map(p => 
+    `<option value='${JSON.stringify(p)}'>${p.name} (Duty: ${p.duty}%, VAT: ${p.vat}%, AIT: ${p.ait}%)</option>`
+  ).join('');
+  document.getElementById('importRate').value = staticData.exchange_rate;
+  
+  calcImport();
+  calcTax();
+}
+
+function calcImport() {
+  const cat = JSON.parse(document.getElementById('importCat').value);
+  const price = parseFloat(document.getElementById('importPrice').value) || 0;
+  const qty = parseFloat(document.getElementById('importQty').value) || 1;
+  const rate = parseFloat(document.getElementById('importRate').value) || 1;
+  const freight = parseFloat(document.getElementById('importFreight').value) || 0;
+  const currency = STATIC_DATA[currentCode].currency;
+  
+  const cif = (price * qty + freight) * rate;
+  const duty = cif * (cat.duty / 100);
+  const vat = (cif + duty) * (cat.vat / 100);
+  const ait = (cif + duty + vat) * (cat.ait / 100);
+  const total = cif + duty + vat + ait;
+  
+  document.getElementById('importResults').innerHTML = `
+    <div class="rcell"><div class="rcell-label">CIF Value</div><div class="rcell-value">${cif.toFixed(2)} ${currency}</div></div>
+    <div class="rcell"><div class="rcell-label">Duty (${cat.duty}%)</div><div class="rcell-value">${duty.toFixed(2)}</div></div>
+    <div class="rcell"><div class="rcell-label">VAT (${cat.vat}%)</div><div class="rcell-value">${vat.toFixed(2)}</div></div>
+    <div class="rcell"><div class="rcell-label">AIT (${cat.ait}%)</div><div class="rcell-value">${ait.toFixed(2)}</div></div>
+    <div class="rcell"><div class="rcell-label total">Total Landed</div><div class="rcell-value">${total.toFixed(2)} ${currency}</div></div>
+  `;
+}
+
+function calcTax() {
+  const income = parseFloat(document.getElementById('taxIncome').value) || 0;
+  const brackets = STATIC_DATA[currentCode].tax_brackets;
+  const currency = STATIC_DATA[currentCode].currency;
+  
+  let tax = 0;
+  let remaining = income;
+  for (let i = 0; i < brackets.length; i++) {
+    const b = brackets[i];
+    if (remaining <= 0) break;
+    const prevMax = i > 0 ? brackets[i-1].max : 0;
+    const taxable = Math.min(remaining, b.max === null ? remaining : b.max - prevMax);
+    tax += taxable * (b.rate / 100);
+    remaining -= taxable;
+  }
+  
+  document.getElementById('taxResults').innerHTML = `
+    <div class="rcell"><div class="rcell-label">Gross Tax</div><div class="rcell-value">${tax.toFixed(2)} ${currency}</div></div>
+    <div class="rcell"><div class="rcell-label">Effective Rate</div><div class="rcell-value">${income > 0 ? ((tax/income)*100).toFixed(1) : 0}%</div></div>
+  `;
+}
+
+function switchTab(tab) {
+  document.querySelectorAll('.tab-panel').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.ptab').forEach(b => b.classList.remove('active'));
+  document.getElementById(tab + 'Tab').classList.add('active');
+  event.target.classList.add('active');
+}
+
+function goBack() {
+  document.getElementById('landing').style.display = 'block';
+  document.getElementById('countryPage').style.display = 'none';
+}
+
+function downloadCurrent() {
+  const content = `COUNT IT REPORT\nCountry: ${STATIC_DATA[currentCode].name}\nDate: ${new Date().toLocaleString()}`;
+  const blob = new Blob([content], {type: 'text/plain'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `${currentCode}_report.txt`;
+  a.click();
+}
+
+function filterCountries() { renderCountries(); }
+
+loadLiveDatabase();
+</script>
+</body>
+</html>
