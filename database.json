@@ -1,37 +1,38 @@
-// save as update.js and run with: node update.js
-const fs = require('fs');
-
-async function fetchWB(country, indicator) {
-  const url = `https://api.worldbank.org/v2/country/${country}/indicator/${indicator}?format=json`;
-  try {
-    const res = await fetch(url);
-    const data = await res.json();
-    return data[1]?.[0]?.value || null;
-  } catch(e) { return null; }
-}
-
-async function update() {
-  const db = JSON.parse(fs.readFileSync('database.json', 'utf8'));
-  
-  const wbCodes = { BD: 'BGD', IN: 'IND', TH: 'THA', CA: 'CAN' };
-  
-  for (const [code, wbCode] of Object.entries(wbCodes)) {
-    console.log(`Updating ${code}...`);
-    const pop = await fetchWB(wbCode, 'SP.POP.TOTL');
-    const birth = await fetchWB(wbCode, 'SP.DYN.CBRT.IN');
-    const death = await fetchWB(wbCode, 'SP.DYN.CDRT.IN');
-    const growth = await fetchWB(wbCode, 'SP.POP.GROW');
-    
-    if (pop) db[code].demographics.total_population = pop;
-    if (birth) db[code].demographics.birth_rate_per_1000 = birth;
-    if (death) db[code].demographics.death_rate_per_1000 = death;
-    if (growth) db[code].demographics.population_growth_annual_pct = growth;
-    
-    db[code].last_updated = new Date().toISOString();
+{
+  "BD": {
+    "last_updated": "2025-06-11T10:00:00.000Z",
+    "demographics": {
+      "total_population": 173562364,
+      "birth_rate_per_1000": 17.5,
+      "death_rate_per_1000": 5.8,
+      "population_growth_annual_pct": 1.03
+    }
+  },
+  "IN": {
+    "last_updated": "2025-06-11T10:00:00.000Z",
+    "demographics": {
+      "total_population": 1441981000,
+      "birth_rate_per_1000": 16.3,
+      "death_rate_per_1000": 6.7,
+      "population_growth_annual_pct": 0.81
+    }
+  },
+  "TH": {
+    "last_updated": "2025-06-11T10:00:00.000Z",
+    "demographics": {
+      "total_population": 71885000,
+      "birth_rate_per_1000": 7.6,
+      "death_rate_per_1000": 8.0,
+      "population_growth_annual_pct": -0.05
+    }
+  },
+  "CA": {
+    "last_updated": "2025-06-11T10:00:00.000Z",
+    "demographics": {
+      "total_population": 41500000,
+      "birth_rate_per_1000": 9.4,
+      "death_rate_per_1000": 8.5,
+      "population_growth_annual_pct": 2.40
+    }
   }
-  
-  fs.writeFileSync('database.json', JSON.stringify(db, null, 2));
-  console.log('✅ database.json updated!');
 }
-
-update();
