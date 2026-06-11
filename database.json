@@ -1,0 +1,11 @@
+{
+  "BD": {
+    "last_updated": "2025-06-11T10:00:00.000Z",
+    "demographics": {
+      "total_population": 173562364,
+      "birth_rate_per_1000": 17.5,
+      "death_rate_per_1000": 5.8,
+      "population_growth_annual_pct": 1.03
+    }
+  }
+}
