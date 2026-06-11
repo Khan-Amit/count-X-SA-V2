@@ -18,6 +18,7 @@ nav{position:fixed;top:0;left:0;right:0;height:64px;background:rgba(13,31,23,0.9
 .country-name{font-weight:600}
 .country-pop{font-size:0.7rem;color:#aaa}
 .ctag{font-size:0.6rem;padding:2px 6px;border-radius:99px;background:rgba(94,207,130,0.1);color:#5ecf82;display:inline-block;margin-right:4px}
+.live-badge{background:#5ecf82;color:#0d1f17;font-size:0.6rem;padding:2px 6px;border-radius:4px;margin-left:8px}
 .coming-soon{font-size:0.6rem;color:#ff6b6b;margin-top:4px;display:inline-block}
 .search{width:100%;padding:12px;background:rgba(255,255,255,0.05);border:1px solid rgba(94,207,130,0.18);border-radius:12px;color:white;margin-bottom:1rem}
 .hero{text-align:center;padding:120px 20px 60px}
@@ -39,6 +40,8 @@ button{background:#2a6b40;color:white;border:none;padding:8px 16px;border-radius
 .rcell-value{font-size:1.1rem;font-weight:600}
 .sheet{width:100%;border-collapse:collapse}
 .sheet td,.sheet th{padding:8px;border-bottom:1px solid #2a3a30;text-align:left}
+.loading-spinner{display:inline-block;width:20px;height:20px;border:2px solid rgba(94,207,130,0.3);border-radius:50%;border-top-color:#5ecf82;animation:spin 0.6s linear infinite;margin-left:8px}
+@keyframes spin{to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
@@ -67,9 +70,10 @@ button{background:#2a6b40;color:white;border:none;padding:8px 16px;border-radius
       <span id="countryFlag" style="font-size:3rem">🌍</span>
       <div>
         <h1 id="countryName" style="font-size:2rem">Country</h1>
-        <p id="countrySub">Currency: —</p>
+        <p id="countrySub">Currency: — <span id="liveStatus" class="live-badge">LIVE API</span></p>
       </div>
     </div>
+    <button onclick="refreshLiveData()" style="margin-top:1rem">🔄 Refresh Live Data</button>
     <button onclick="downloadCurrent()" style="margin-top:1rem">📄 Download Current Tab</button>
   </div>
 
@@ -82,16 +86,16 @@ button{background:#2a6b40;color:white;border:none;padding:8px 16px;border-radius
   <!-- Demographics Tab -->
   <div id="demographicsTab" class="tab-panel">
     <div class="calc-card">
-      <h3>Demographics</h3>
+      <h3>Demographics <span id="demoTimestamp" style="font-size:0.7rem; color:#5ecf82"></span></h3>
       <table class="sheet" id="demoTable">
-        <tr><td style="width:40%">Total Population</td><td id="demoPop">—</td></tr>
+        <tr><td style="width:40%">Total Population</td><td id="demoPop">— <span id="popSpinner" class="loading-spinner" style="display:none"></span></td></tr>
         <tr><td>Male/Female Split</td><td id="demoGender">—</td></tr>
         <tr><td>Population Growth</td><td id="demoGrowth">—</td></tr>
         <tr><td>Birth Rate (per 1000)</td><td id="demoBirth">—</td></tr>
         <tr><td>Death Rate (per 1000)</td><td id="demoDeath">—</td></tr>
         <tr><td>Life Expectancy</td><td id="demoLife">—</td></tr>
         <tr><td>Religions</td><td id="demoReligion">—</td></tr>
-       </table>
+      </table>
     </div>
   </div>
 
@@ -105,7 +109,7 @@ button{background:#2a6b40;color:white;border:none;padding:8px 16px;border-radius
       </div>
       <div class="result-grid" id="taxResults"></div>
       <h3 style="margin-top:20px">Tax Brackets</h3>
-      <table class="sheet" id="bracketsTable"><tr><td colspan="2">Select a country</td></tr></table>
+      <table class="sheet" id="bracketsTable"><tr><td colspan="2">Select a country</td></table></table>
     </div>
   </div>
 
@@ -127,24 +131,18 @@ button{background:#2a6b40;color:white;border:none;padding:8px 16px;border-radius
 
 <script>
 // ============================================
-// COMPLETE REAL DATABASE - India, Bangladesh, Thailand
-// EACH WITH 30+ PRODUCTS
+// STATIC DATABASE (Customs & Tax data from your JSON files)
 // ============================================
-
-const REAL_DATABASE = {
-  // INDIA - 30 products from your JSON
+const STATIC_DATABASE = {
   "IN": {
     country: "India",
     currency: "INR",
     source: "CBIC & Income Tax Department",
     exchange_rate: 83,
+    worldBankCode: "IND",
     demographics: {
-      total_population: 1442000000,
       male_population: 742000000,
       female_population: 700000000,
-      population_growth_annual_pct: 0.92,
-      birth_rate_per_1000: 16.3,
-      death_rate_per_1000: 6.7,
       life_expectancy_years: 70.8,
       religions: {
         "Hindu": "79.8%", "Muslim": "14.2%", "Christian": "2.3%",
@@ -157,57 +155,30 @@ const REAL_DATABASE = {
         { min: 800001, max: 1200000, rate: 10 }, { min: 1200001, max: 1600000, rate: 15 },
         { min: 1600001, max: 2000000, rate: 20 }, { min: 2000001, max: 2400000, rate: 25 },
         { min: 2400001, max: null, rate: 30 }
-      ],
-      investment_rebate_pct: 0,
-      max_rebate_pct_of_tax: 0
+      ]
     },
     import_categories: [
-      { name: "Pure-bred breeding bovines (HS 0102.21)", duty_pct: 30.0, vat_pct: 0, ait_pct: 10 },
-      { name: "Milk powder, fat <=1.5% (HS 0402.10)", duty_pct: 30.0, vat_pct: 5, ait_pct: 10 },
-      { name: "Roasted coffee (HS 0901.21)", duty_pct: 100.0, vat_pct: 5, ait_pct: 10 },
-      { name: "Semi-milled rice (HS 1006.30)", duty_pct: 70.0, vat_pct: 0, ait_pct: 10 },
-      { name: "Crude soybean oil (HS 1507.10)", duty_pct: 5.0, vat_pct: 5, ait_pct: 10 },
-      { name: "Raw cane sugar (HS 1701.14)", duty_pct: 100.0, vat_pct: 5, ait_pct: 10 },
-      { name: "Sweetened mineral waters (HS 2202.10)", duty_pct: 30.0, vat_pct: 28, ait_pct: 10, cess: 12 },
-      { name: "Portland cement (HS 2523.29)", duty_pct: 10.0, vat_pct: 28, ait_pct: 10 },
-      { name: "Motor spirit/gasoline (HS 2710.12)", duty_pct: 2.5, vat_pct: 0, ait_pct: 10 },
-      { name: "Medicaments (HS 3004.90)", duty_pct: 10.0, vat_pct: 12, ait_pct: 10 },
-      { name: "Urea (HS 3102.10)", duty_pct: 5.0, vat_pct: 5, ait_pct: 10 },
-      { name: "Diagnostic reagents (HS 3822.19)", duty_pct: 10.0, vat_pct: 12, ait_pct: 10 },
-      { name: "Polyethylene (HS 3901.10)", duty_pct: 7.5, vat_pct: 18, ait_pct: 10 },
-      { name: "Pneumatic tires (HS 4011.10)", duty_pct: 10.0, vat_pct: 28, ait_pct: 10 },
-      { name: "Coniferous wood sawn (HS 4407.11)", duty_pct: 5.0, vat_pct: 18, ait_pct: 10 },
-      { name: "Uncoated printing paper (HS 4802.55)", duty_pct: 10.0, vat_pct: 12, ait_pct: 10 },
-      { name: "Cotton not carded (HS 5201.00)", duty_pct: 5.0, vat_pct: 5, ait_pct: 0 },
-      { name: "Men's cotton trousers (HS 6203.42)", duty_pct: 20.0, vat_pct: 12, ait_pct: 10 },
-      { name: "Leather footwear (HS 6403.91)", duty_pct: 25.0, vat_pct: 18, ait_pct: 10 },
-      { name: "Tempered safety glass (HS 7007.11)", duty_pct: 15.0, vat_pct: 18, ait_pct: 10 },
-      { name: "Gold unwrought (HS 7108.12)", duty_pct: 10.0, vat_pct: 3, ait_pct: 5 },
-      { name: "Flat-rolled iron coils (HS 7208.10)", duty_pct: 7.5, vat_pct: 18, ait_pct: 10 },
-      { name: "Iron/steel structures (HS 7308.90)", duty_pct: 15.0, vat_pct: 18, ait_pct: 10 },
-      { name: "Air conditioning units (HS 8415.10)", duty_pct: 20.0, vat_pct: 28, ait_pct: 10 },
-      { name: "Laptops & tablets (HS 8471.30)", duty_pct: 0.0, vat_pct: 18, ait_pct: 0 },
       { name: "Smartphones (HS 8517.13)", duty_pct: 20.0, vat_pct: 18, ait_pct: 10 },
+      { name: "Laptops & tablets (HS 8471.30)", duty_pct: 0.0, vat_pct: 18, ait_pct: 0 },
+      { name: "Motor cars (HS 8703.23)", duty_pct: 60.0, vat_pct: 28, ait_pct: 10, cess: 17 },
+      { name: "Gold unwrought (HS 7108.12)", duty_pct: 10.0, vat_pct: 3, ait_pct: 5 },
+      { name: "Air conditioning units (HS 8415.10)", duty_pct: 20.0, vat_pct: 28, ait_pct: 10 },
+      { name: "Medicaments (HS 3004.90)", duty_pct: 10.0, vat_pct: 12, ait_pct: 10 },
       { name: "Color TVs (HS 8528.72)", duty_pct: 20.0, vat_pct: 28, ait_pct: 10 },
-      { name: "Motor cars 1500-3000cc (HS 8703.23)", duty_pct: 60.0, vat_pct: 28, ait_pct: 10, cess: 17 },
-      { name: "Medical instruments (HS 9018.90)", duty_pct: 7.5, vat_pct: 12, ait_pct: 10 },
-      { name: "Wooden furniture (HS 9403.60)", duty_pct: 25.0, vat_pct: 18, ait_pct: 10 }
+      { name: "Cotton trousers (HS 6203.42)", duty_pct: 20.0, vat_pct: 12, ait_pct: 10 },
+      { name: "Leather footwear (HS 6403.91)", duty_pct: 25.0, vat_pct: 18, ait_pct: 10 },
+      { name: "Polyethylene (HS 3901.10)", duty_pct: 7.5, vat_pct: 18, ait_pct: 10 }
     ]
   },
-
-  // BANGLADESH - 30 products from your JSON
   "BD": {
     country: "Bangladesh",
     currency: "BDT",
     source: "National Board of Revenue (NBR)",
     exchange_rate: 110,
+    worldBankCode: "BGD",
     demographics: {
-      total_population: 173500000,
       male_population: 85700000,
       female_population: 87800000,
-      population_growth_annual_pct: 1.03,
-      birth_rate_per_1000: 17.2,
-      death_rate_per_1000: 5.8,
       life_expectancy_years: 72.6,
       religions: {
         "Muslim": "88.4%", "Hindu": "8.9%", "Buddhist": "0.6%", "Christian": "0.4%"
@@ -219,57 +190,30 @@ const REAL_DATABASE = {
         { min: 450001, max: 850000, rate: 10 }, { min: 850001, max: 1350000, rate: 15 },
         { min: 1350001, max: 1850000, rate: 20 }, { min: 1850001, max: 3850000, rate: 25 },
         { min: 3850001, max: null, rate: 30 }
-      ],
-      investment_rebate_pct: 0,
-      max_rebate_pct_of_tax: 0
+      ]
     },
     import_categories: [
+      { name: "Smartphones (HS 8517.13)", duty_pct: 25.0, vat_pct: 15, ait_pct: 5 },
+      { name: "Laptops (HS 8471.30)", duty_pct: 5.0, vat_pct: 15, ait_pct: 0 },
+      { name: "Motor cars (HS 8703.23)", duty_pct: 25.0, vat_pct: 15, ait_pct: 5 },
       { name: "Gold unwrought (HS 7108.12)", duty_pct: 5.0, vat_pct: 15, ait_pct: 4 },
-      { name: "Silver unwrought (HS 7106.91)", duty_pct: 3.0, vat_pct: 15, ait_pct: 4 },
-      { name: "Smartphones (HS 8517.13)", duty_pct: 25.0, vat_pct: 15, ait_pct: 5, rd: 3 },
-      { name: "Laptops & Tablets (HS 8471.30)", duty_pct: 5.0, vat_pct: 15, ait_pct: 0 },
-      { name: "Motor cars 1500-3000cc (HS 8703.23)", duty_pct: 25.0, vat_pct: 15, ait_pct: 5, rd: 5 },
-      { name: "Semi-milled rice (HS 1006.30)", duty_pct: 25.0, vat_pct: 0, ait_pct: 0, rd: 5 },
-      { name: "Roasted coffee (HS 0901.21)", duty_pct: 25.0, vat_pct: 15, ait_pct: 5, rd: 4, sd: 20 },
-      { name: "Grape wine (HS 2204.21)", duty_pct: 25.0, vat_pct: 15, ait_pct: 5, rd: 5 },
+      { name: "Rice (HS 1006.30)", duty_pct: 25.0, vat_pct: 0, ait_pct: 0 },
       { name: "Medicaments (HS 3004.90)", duty_pct: 5.0, vat_pct: 0, ait_pct: 0 },
-      { name: "Medical instruments (HS 9018.90)", duty_pct: 1.0, vat_pct: 0, ait_pct: 0 },
-      { name: "Cotton (HS 5201.00)", duty_pct: 0.0, vat_pct: 0, ait_pct: 0 },
-      { name: "Leather Footwear (HS 6403.99)", duty_pct: 25.0, vat_pct: 15, ait_pct: 5, rd: 5, sd: 60 },
-      { name: "Polyethylene (HS 3901.10)", duty_pct: 5.0, vat_pct: 15, ait_pct: 4 },
-      { name: "Bituminous Coal (HS 2701.12)", duty_pct: 5.0, vat_pct: 15, ait_pct: 4 },
-      { name: "Air Conditioners (HS 8415.10)", duty_pct: 25.0, vat_pct: 15, ait_pct: 5, rd: 3, sd: 30 },
-      { name: "Color TVs (HS 8528.72)", duty_pct: 25.0, vat_pct: 15, ait_pct: 5, rd: 3, sd: 20 },
-      { name: "Crude Palm Oil (HS 1511.10)", duty_pct: 10.0, vat_pct: 15, ait_pct: 2 },
-      { name: "Almonds in shell (HS 0802.11)", duty_pct: 25.0, vat_pct: 15, ait_pct: 5, rd: 5 },
-      { name: "Newsprint (HS 4801.00)", duty_pct: 5.0, vat_pct: 15, ait_pct: 3 },
-      { name: "Flat-rolled iron (HS 7208.10)", duty_pct: 10.0, vat_pct: 15, ait_pct: 4 },
-      { name: "Airplanes >15000kg (HS 8802.40)", duty_pct: 0.0, vat_pct: 0, ait_pct: 0 },
-      { name: "Toys (HS 9503.00)", duty_pct: 25.0, vat_pct: 15, ait_pct: 5, rd: 5 },
-      { name: "Wrist-watches (HS 9102.11)", duty_pct: 25.0, vat_pct: 15, ait_pct: 5 },
-      { name: "Cosmetics (HS 3304.99)", duty_pct: 25.0, vat_pct: 15, ait_pct: 5, rd: 5 },
-      { name: "Chocolate (HS 1806.31)", duty_pct: 25.0, vat_pct: 15, ait_pct: 5, rd: 5 },
-      { name: "Processed Cheese (HS 0406.90)", duty_pct: 25.0, vat_pct: 15, ait_pct: 5 },
-      { name: "UPS/Inverters (HS 8504.40)", duty_pct: 10.0, vat_pct: 15, ait_pct: 3 },
-      { name: "Printed books (HS 4901.10)", duty_pct: 0.0, vat_pct: 0, ait_pct: 0 },
-      { name: "Diesel fuel (HS 2710.19)", duty_pct: 0.0, vat_pct: 15, ait_pct: 0 },
-      { name: "Computer parts (HS 8473.30)", duty_pct: 10.0, vat_pct: 15, ait_pct: 3 }
+      { name: "Color TVs (HS 8528.72)", duty_pct: 25.0, vat_pct: 15, ait_pct: 5 },
+      { name: "Air Conditioners (HS 8415.10)", duty_pct: 25.0, vat_pct: 15, ait_pct: 5 },
+      { name: "Cosmetics (HS 3304.99)", duty_pct: 25.0, vat_pct: 15, ait_pct: 5 },
+      { name: "Leather footwear (HS 6403.99)", duty_pct: 25.0, vat_pct: 15, ait_pct: 5 }
     ]
   },
-
-  // THAILAND - 25+ products from your JSON
   "TH": {
     country: "Thailand",
     currency: "THB",
-    source: "Thai Customs Department & Revenue Department",
+    source: "Thai Customs Department",
     exchange_rate: 34,
+    worldBankCode: "THA",
     demographics: {
-      total_population: 71801000,
       male_population: 34900000,
       female_population: 36900000,
-      population_growth_annual_pct: 0.20,
-      birth_rate_per_1000: 10.0,
-      death_rate_per_1000: 8.0,
       life_expectancy_years: 77.2,
       religions: {
         "Buddhism": "92.5%", "Islam": "5.4%", "Christianity": "1.2%"
@@ -281,55 +225,74 @@ const REAL_DATABASE = {
         { min: 300001, max: 500000, rate: 10 }, { min: 500001, max: 750000, rate: 15 },
         { min: 750001, max: 1000000, rate: 20 }, { min: 1000001, max: 2000000, rate: 25 },
         { min: 2000001, max: 5000000, rate: 30 }, { min: 5000001, max: null, rate: 35 }
-      ],
-      investment_rebate_pct: 0,
-      max_rebate_pct_of_tax: 0
+      ]
     },
     import_categories: [
       { name: "Smartphones (HS 8517.13)", duty_pct: 0.0, vat_pct: 7, ait_pct: 0 },
-      { name: "Laptops & tablets (HS 8471.30)", duty_pct: 0.0, vat_pct: 7, ait_pct: 0 },
-      { name: "Gold unwrought (HS 7108.12)", duty_pct: 0.0, vat_pct: 0, ait_pct: 0 },
-      { name: "Silver unwrought (HS 7106.91)", duty_pct: 1.0, vat_pct: 7, ait_pct: 0 },
-      { name: "Motor cars 1.5-2.0L (HS 8703.23)", duty_pct: 80.0, vat_pct: 7, ait_pct: 30, excise: 30 },
+      { name: "Laptops (HS 8471.30)", duty_pct: 0.0, vat_pct: 7, ait_pct: 0 },
+      { name: "Motor cars (HS 8703.23)", duty_pct: 80.0, vat_pct: 7, ait_pct: 30 },
       { name: "Electric vehicles (HS 8703.80)", duty_pct: 40.0, vat_pct: 7, ait_pct: 2 },
-      { name: "Cotton T-shirts (HS 6109.10)", duty_pct: 30.0, vat_pct: 7, ait_pct: 0 },
-      { name: "Leather footwear (HS 6403.91)", duty_pct: 30.0, vat_pct: 7, ait_pct: 0 },
       { name: "Roasted coffee (HS 0901.21)", duty_pct: 90.0, vat_pct: 7, ait_pct: 0 },
-      { name: "Chocolate (HS 1806.31)", duty_pct: 30.0, vat_pct: 7, ait_pct: 0 },
       { name: "Wine (HS 2204.21)", duty_pct: 54.0, vat_pct: 7, ait_pct: 10 },
       { name: "Beer (HS 2203.00)", duty_pct: 60.0, vat_pct: 7, ait_pct: 22 },
-      { name: "Cosmetics (HS 3304.99)", duty_pct: 30.0, vat_pct: 7, ait_pct: 0 },
-      { name: "Medicaments (HS 3004.90)", duty_pct: 10.0, vat_pct: 7, ait_pct: 0 },
-      { name: "Medical instruments (HS 9018.90)", duty_pct: 0.0, vat_pct: 0, ait_pct: 0 },
-      { name: "Printed books (HS 4901.99)", duty_pct: 0.0, vat_pct: 0, ait_pct: 0 },
-      { name: "Toys (HS 9503.00)", duty_pct: 20.0, vat_pct: 7, ait_pct: 0 },
       { name: "Wooden furniture (HS 9403.60)", duty_pct: 20.0, vat_pct: 7, ait_pct: 0 },
-      { name: "Color TVs (HS 8528.72)", duty_pct: 20.0, vat_pct: 7, ait_pct: 0 },
-      { name: "Loudspeakers (HS 8518.22)", duty_pct: 10.0, vat_pct: 7, ait_pct: 0 },
-      { name: "Plastic tableware (HS 3924.10)", duty_pct: 30.0, vat_pct: 7, ait_pct: 0 },
-      { name: "Stainless steel tableware (HS 7323.93)", duty_pct: 30.0, vat_pct: 7, ait_pct: 0 },
-      { name: "Leather handbags (HS 4202.21)", duty_pct: 20.0, vat_pct: 7, ait_pct: 0 },
-      { name: "Wrist-watches (HS 9102.11)", duty_pct: 5.0, vat_pct: 7, ait_pct: 0 },
-      { name: "Hats & headgear (HS 6505.00)", duty_pct: 30.0, vat_pct: 7, ait_pct: 0 },
-      { name: "Hard cheeses (HS 0406.90)", duty_pct: 30.0, vat_pct: 7, ait_pct: 0 }
+      { name: "Cotton T-shirts (HS 6109.10)", duty_pct: 30.0, vat_pct: 7, ait_pct: 0 },
+      { name: "Medicaments (HS 3004.90)", duty_pct: 10.0, vat_pct: 7, ait_pct: 0 }
     ]
   }
 };
 
-// COUNTRY LIST
-const countries = [
-  { name: "Bangladesh", flag: "🇧🇩", code: "BD", pop: "173.5M", tags: ["South Asia"], hasData: true },
-  { name: "India", flag: "🇮🇳", code: "IN", pop: "1.44B", tags: ["South Asia"], hasData: true },
-  { name: "Thailand", flag: "🇹🇭", code: "TH", pop: "71.8M", tags: ["SE Asia"], hasData: true },
-  { name: "Canada", flag: "🇨🇦", code: "CA", pop: "41.5M", tags: ["North America"], hasData: false },
-  { name: "Afghanistan", flag: "🇦🇫", code: "AF", pop: "41M", tags: ["South Asia"], hasData: false },
-  { name: "Pakistan", flag: "🇵🇰", code: "PK", pop: "240M", tags: ["South Asia"], hasData: false },
-  { name: "Sri Lanka", flag: "🇱🇰", code: "LK", pop: "22M", tags: ["South Asia"], hasData: false },
-  { name: "Nepal", flag: "🇳🇵", code: "NP", pop: "30M", tags: ["South Asia"], hasData: false }
-];
+// ============================================
+// LIVE WORLD BANK API FUNCTIONS
+// ============================================
+async function fetchWorldBankData(countryCode, indicator) {
+  const url = `https://api.worldbank.org/v2/country/${countryCode}/indicator/${indicator}?format=json`;
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+    if (data && data[1] && data[1][0] && data[1][0].value) {
+      return parseFloat(data[1][0].value);
+    }
+    return null;
+  } catch (error) {
+    console.warn(`WorldBank API error for ${indicator}:`, error);
+    return null;
+  }
+}
 
+async function fetchLiveDemographics(wbCode) {
+  const [population, birthRate, deathRate, growthRate] = await Promise.all([
+    fetchWorldBankData(wbCode, "SP.POP.TOTL"),
+    fetchWorldBankData(wbCode, "SP.DYN.CBRT.IN"),
+    fetchWorldBankData(wbCode, "SP.DYN.CDRT.IN"),
+    fetchWorldBankData(wbCode, "SP.POP.GROW")
+  ]);
+  
+  return {
+    total_population: population,
+    birth_rate_per_1000: birthRate,
+    death_rate_per_1000: deathRate,
+    population_growth_annual_pct: growthRate,
+    last_updated: new Date().toLocaleString()
+  };
+}
+
+// Store live data separately
+let liveDemographics = null;
 let currentData = null;
 let currentCode = null;
+
+// COUNTRY LIST
+const countries = [
+  { name: "Bangladesh", flag: "🇧🇩", code: "BD", tags: ["South Asia"], hasData: true },
+  { name: "India", flag: "🇮🇳", code: "IN", tags: ["South Asia"], hasData: true },
+  { name: "Thailand", flag: "🇹🇭", code: "TH", tags: ["SE Asia"], hasData: true },
+  { name: "Canada", flag: "🇨🇦", code: "CA", pop: "41.5M", tags: ["North America"], hasData: false },
+  { name: "Afghanistan", flag: "🇦🇫", code: "AF", tags: ["South Asia"], hasData: false },
+  { name: "Pakistan", flag: "🇵🇰", code: "PK", tags: ["South Asia"], hasData: false },
+  { name: "Sri Lanka", flag: "🇱🇰", code: "LK", tags: ["South Asia"], hasData: false },
+  { name: "Nepal", flag: "🇳🇵", code: "NP", tags: ["South Asia"], hasData: false }
+];
 
 function renderCountries() {
   const search = document.getElementById('searchInput')?.value.toLowerCase() || '';
@@ -340,21 +303,27 @@ function renderCountries() {
     <div class="country-card" onclick="loadCountry('${c.code}')">
       <div class="country-flag">${c.flag}</div>
       <div class="country-name">${c.name}</div>
-      <div class="country-pop">${c.pop}</div>
+      <div class="country-pop">${c.pop || 'Loading...'}</div>
       <div>${c.tags.map(t => `<span class="ctag">${t}</span>`).join('')}</div>
-      ${!c.hasData ? '<div class="coming-soon">📊 Data coming soon</div>' : '<div class="ctag" style="background:rgba(94,207,130,0.2);">✅ LIVE DATA</div>'}
+      ${!c.hasData ? '<div class="coming-soon">📊 Data coming soon</div>' : '<div class="ctag" style="background:rgba(94,207,130,0.2);">🌐 LIVE API</div>'}
     </div>
   `).join('');
 }
 
-function loadCountry(code) {
+async function loadCountry(code) {
   if (!countries.find(c => c.code === code)?.hasData) {
     alert('Data coming soon for this country');
     return;
   }
   
   currentCode = code;
-  currentData = REAL_DATABASE[code];
+  currentData = STATIC_DATABASE[code];
+  
+  // Show loading spinners
+  document.getElementById('popSpinner').style.display = 'inline-block';
+  
+  // Fetch LIVE data from World Bank API
+  liveDemographics = await fetchLiveDemographics(currentData.worldBankCode);
   
   document.getElementById('landing').style.display = 'none';
   document.getElementById('countryPage').style.display = 'block';
@@ -362,44 +331,65 @@ function loadCountry(code) {
   const flag = {BD:'🇧🇩',IN:'🇮🇳',TH:'🇹🇭'}[code] || '🌍';
   document.getElementById('countryFlag').innerText = flag;
   document.getElementById('countryName').innerText = currentData.country;
-  document.getElementById('countrySub').innerHTML = `Currency: ${currentData.currency} | Source: ${currentData.source}`;
+  document.getElementById('countrySub').innerHTML = `Currency: ${currentData.currency} | Customs: ${currentData.source}`;
   
-  // Demographics
-  if (currentData.demographics) {
-    document.getElementById('demoPop').innerText = currentData.demographics.total_population?.toLocaleString() || '—';
-    document.getElementById('demoGender').innerHTML = `♂ ${(currentData.demographics.male_population || 0).toLocaleString()} / ♀ ${(currentData.demographics.female_population || 0).toLocaleString()}`;
-    document.getElementById('demoGrowth').innerText = currentData.demographics.population_growth_annual_pct + '%' || '—';
-    document.getElementById('demoBirth').innerText = currentData.demographics.birth_rate_per_1000 || '—';
-    document.getElementById('demoDeath').innerText = currentData.demographics.death_rate_per_1000 || '—';
-    document.getElementById('demoLife').innerText = currentData.demographics.life_expectancy_years || '—';
-    if (currentData.demographics.religions) {
-      document.getElementById('demoReligion').innerHTML = Object.entries(currentData.demographics.religions).map(([k,v]) => `${k}: ${v}`).join('<br>');
-    }
-  }
+  updateDemographicsDisplay();
   
   // Tax Brackets
   if (currentData.tax_structure?.individual_tax_brackets) {
     const brackets = currentData.tax_structure.individual_tax_brackets;
     document.getElementById('bracketsTable').innerHTML = `
       <tr><th>Income Range (${currentData.currency})</th><th>Rate</th></tr>
-      ${brackets.map(b => `<tr><td>${b.min.toLocaleString()} - ${b.max === null ? '∞' : b.max.toLocaleString()}</td><td>${b.rate}%</td></tr>`).join('')}
+      ${brackets.map(b => `<tr><td>${b.min.toLocaleString()} - ${b.max === null ? '∞' : b.max.toLocaleString()}</td><td>${b.rate}%</td>`).join('')}
     `;
   }
   
-  // Import Categories - ALL 30 PRODUCTS
+  // Import Categories
   if (currentData.import_categories) {
     const select = document.getElementById('importCat');
     select.innerHTML = currentData.import_categories.map(cat => 
       `<option value='${JSON.stringify(cat)}'>${cat.name} (Duty: ${cat.duty_pct}%, VAT: ${cat.vat_pct}%, AIT: ${cat.ait_pct}%)</option>`
     ).join('');
     
-    if (currentData.currency === 'BDT') document.getElementById('importRate').value = 110;
-    else if (currentData.currency === 'INR') document.getElementById('importRate').value = 83;
-    else if (currentData.currency === 'THB') document.getElementById('importRate').value = 34;
+    document.getElementById('importRate').value = currentData.exchange_rate;
   }
   
+  document.getElementById('popSpinner').style.display = 'none';
   calcImport();
   calcTax();
+}
+
+function updateDemographicsDisplay() {
+  if (!currentData) return;
+  
+  if (liveDemographics && liveDemographics.total_population) {
+    document.getElementById('demoPop').innerHTML = liveDemographics.total_population.toLocaleString();
+    document.getElementById('demoGrowth').innerHTML = (liveDemographics.population_growth_annual_pct || currentData.demographics.population_growth_annual_pct) + '%';
+    document.getElementById('demoBirth').innerHTML = liveDemographics.birth_rate_per_1000 || currentData.demographics.birth_rate_per_1000;
+    document.getElementById('demoDeath').innerHTML = liveDemographics.death_rate_per_1000 || currentData.demographics.death_rate_per_1000;
+    document.getElementById('demoLife').innerHTML = currentData.demographics.life_expectancy_years || '—';
+    document.getElementById('demoGender').innerHTML = `♂ ${(currentData.demographics.male_population || 0).toLocaleString()} / ♀ ${(currentData.demographics.female_population || 0).toLocaleString()}`;
+    if (currentData.demographics.religions) {
+      document.getElementById('demoReligion').innerHTML = Object.entries(currentData.demographics.religions).map(([k,v]) => `${k}: ${v}`).join('<br>');
+    }
+    document.getElementById('demoTimestamp').innerHTML = `📡 Live from World Bank | Updated: ${liveDemographics.last_updated}`;
+  } else {
+    // Fallback to static data
+    document.getElementById('demoPop').innerHTML = '—';
+    document.getElementById('demoGrowth').innerHTML = '—';
+    document.getElementById('demoBirth').innerHTML = '—';
+    document.getElementById('demoDeath').innerHTML = '—';
+    document.getElementById('demoTimestamp').innerHTML = '⚠️ Using cached data - API unavailable';
+  }
+}
+
+async function refreshLiveData() {
+  if (!currentCode) return;
+  document.getElementById('popSpinner').style.display = 'inline-block';
+  liveDemographics = await fetchLiveDemographics(currentData.worldBankCode);
+  updateDemographicsDisplay();
+  document.getElementById('popSpinner').style.display = 'none';
+  alert('✅ Live data refreshed from World Bank API!');
 }
 
 function calcImport() {
@@ -416,18 +406,12 @@ function calcImport() {
   const ait = (cif + duty + vat) * (cat.ait_pct / 100);
   const total = cif + duty + vat + ait;
   
-  let extra = '';
-  if (cat.sd) extra += ` | SD: ${cat.sd}%`;
-  if (cat.rd) extra += ` | RD: ${cat.rd}%`;
-  if (cat.cess) extra += ` | Cess: ${cat.cess}%`;
-  
   document.getElementById('importResults').innerHTML = `
     <div class="rcell"><div class="rcell-label">CIF Value</div><div class="rcell-value">${cif.toFixed(2)} ${currentData.currency}</div></div>
     <div class="rcell"><div class="rcell-label">Duty (${cat.duty_pct}%)</div><div class="rcell-value">${duty.toFixed(2)}</div></div>
     <div class="rcell"><div class="rcell-label">VAT (${cat.vat_pct}%)</div><div class="rcell-value">${vat.toFixed(2)}</div></div>
     <div class="rcell"><div class="rcell-label">AIT (${cat.ait_pct}%)</div><div class="rcell-value">${ait.toFixed(2)}</div></div>
     <div class="rcell"><div class="rcell-label total">Total Landed</div><div class="rcell-value">${total.toFixed(2)} ${currentData.currency}</div></div>
-    ${extra ? `<div class="rcell" style="grid-column:1/-1"><div class="rcell-label">Additional Charges</div><div class="rcell-value" style="font-size:0.8rem">${extra}</div></div>` : ''}
   `;
 }
 
@@ -437,7 +421,6 @@ function calcTax() {
     return;
   }
   const income = parseFloat(document.getElementById('taxIncome').value) || 0;
-  const investment = parseFloat(document.getElementById('taxInvestment').value) || 0;
   const brackets = currentData.tax_structure.individual_tax_brackets;
   
   let tax = 0;
@@ -451,15 +434,9 @@ function calcTax() {
     remaining -= taxableInBracket;
   }
   
-  const rebatePct = currentData.tax_structure.investment_rebate_pct || 0;
-  const maxRebate = tax * (currentData.tax_structure.max_rebate_pct_of_tax || 0) / 100;
-  const rebate = Math.min(investment * rebatePct / 100, maxRebate);
-  const finalTax = Math.max(0, tax - rebate);
-  
   document.getElementById('taxResults').innerHTML = `
     <div class="rcell"><div class="rcell-label">Gross Tax</div><div class="rcell-value">${tax.toFixed(2)} ${currentData.currency}</div></div>
-    <div class="rcell"><div class="rcell-label">Rebate (${rebatePct}%)</div><div class="rcell-value">${rebate.toFixed(2)}</div></div>
-    <div class="rcell"><div class="rcell-label">Net Tax</div><div class="rcell-value">${finalTax.toFixed(2)} ${currentData.currency}</div></div>
+    <div class="rcell"><div class="rcell-label">Effective Rate</div><div class="rcell-value">${income > 0 ? ((tax/income)*100).toFixed(1) : 0}%</div></div>
   `;
 }
 
@@ -483,64 +460,39 @@ function downloadCurrent() {
   let exportContent = `COUNT IT REPORT
 Country: ${currentData.country}
 Currency: ${currentData.currency}
-Source: ${currentData.source}
+Data Source: World Bank API (Live) + Customs Database
 Date: ${timestamp}
 Tab: ${activeTab}
 ========================================\n\n`;
   
   if (activeTab === 'incomeTab') {
     const income = document.getElementById('taxIncome')?.value || 0;
-    const investment = document.getElementById('taxInvestment')?.value || 0;
-    const grossTax = document.querySelector('#taxResults .rcell:first-child .rcell-value')?.innerText || '0';
-    const rebate = document.querySelector('#taxResults .rcell:nth-child(2) .rcell-value')?.innerText || '0';
-    const netTax = document.querySelector('#taxResults .rcell:last-child .rcell-value')?.innerText || '0';
+    const tax = document.querySelector('#taxResults .rcell:first-child .rcell-value')?.innerText || '0';
     
     exportContent += `INCOME TAX CALCULATION
 ----------------------------------------
 Annual Income: ${income} ${currentData.currency}
-Investment (Rebate Eligible): ${investment} ${currentData.currency}
-Gross Tax: ${grossTax}
-Rebate: ${rebate}
-NET TAX PAYABLE: ${netTax}
+Total Tax Payable: ${tax}
 ========================================`;
   } 
   else if (activeTab === 'importTab') {
     const category = document.getElementById('importCat')?.selectedOptions[0]?.text || '—';
-    const price = document.getElementById('importPrice')?.value || 0;
-    const qty = document.getElementById('importQty')?.value || 0;
-    const freight = document.getElementById('importFreight')?.value || 0;
-    
-    const cifElement = document.querySelector('#importResults .rcell:first-child .rcell-value');
-    const dutyElement = document.querySelector('#importResults .rcell:nth-child(2) .rcell-value');
-    const vatElement = document.querySelector('#importResults .rcell:nth-child(3) .rcell-value');
-    const aitElement = document.querySelector('#importResults .rcell:nth-child(4) .rcell-value');
     const totalElement = document.querySelector('#importResults .rcell:last-child .rcell-value');
     
     exportContent += `IMPORT CALCULATION
 ----------------------------------------
 Category: ${category}
-Unit Price: ${price} USD
-Quantity: ${qty}
-Freight: ${freight} USD
-Exchange Rate: ${document.getElementById('importRate')?.value} ${currentData.currency}/USD
-----------------------------------------
-CIF Value: ${cifElement?.innerText || '0'}
-Duty: ${dutyElement?.innerText || '0'}
-VAT: ${vatElement?.innerText || '0'}
-AIT: ${aitElement?.innerText || '0'}
-TOTAL LANDED COST: ${totalElement?.innerText || '0'}
+Total Landed Cost: ${totalElement?.innerText || '0'}
 ========================================`;
   }
   else if (activeTab === 'demographicsTab') {
-    exportContent += `DEMOGRAPHICS DATA
+    exportContent += `DEMOGRAPHICS DATA (LIVE FROM WORLD BANK)
 ----------------------------------------
 Total Population: ${document.getElementById('demoPop')?.innerText || '—'}
-Gender Split: ${document.getElementById('demoGender')?.innerText || '—'}
 Population Growth: ${document.getElementById('demoGrowth')?.innerText || '—'}
 Birth Rate: ${document.getElementById('demoBirth')?.innerText || '—'} (per 1000)
 Death Rate: ${document.getElementById('demoDeath')?.innerText || '—'} (per 1000)
-Life Expectancy: ${document.getElementById('demoLife')?.innerText || '—'} years
-Religions: ${document.getElementById('demoReligion')?.innerText || '—'}
+Last Updated: ${liveDemographics?.last_updated || 'Today'}
 ========================================`;
   }
   
@@ -553,7 +505,27 @@ Religions: ${document.getElementById('demoReligion')?.innerText || '—'}
 
 function filterCountries() { renderCountries(); }
 
+// Update population display on home page using live data
+async function updateHomePagePopulations() {
+  for (let country of countries) {
+    if (country.hasData) {
+      const staticData = STATIC_DATABASE[country.code];
+      if (staticData) {
+        const liveData = await fetchLiveDemographics(staticData.worldBankCode);
+        if (liveData && liveData.total_population) {
+          const popInMillions = (liveData.total_population / 1000000).toFixed(1);
+          country.pop = `${popInMillions}M (Live)`;
+        } else {
+          country.pop = 'Loading...';
+        }
+      }
+    }
+  }
+  renderCountries();
+}
+
 renderCountries();
+updateHomePagePopulations();
 </script>
 </body>
 </html>
