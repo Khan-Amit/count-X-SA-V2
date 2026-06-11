@@ -1,11 +1,67 @@
 {
   "BD": {
     "last_updated": "2025-06-11T10:00:00.000Z",
+    "source": "World Bank API (cached)",
     "demographics": {
       "total_population": 173562364,
       "birth_rate_per_1000": 17.5,
       "death_rate_per_1000": 5.8,
       "population_growth_annual_pct": 1.03
     }
+  },
+  "IN": {
+    "last_updated": "2025-06-11T10:00:00.000Z",
+    "source": "World Bank API (cached)",
+    "demographics": {
+      "total_population": 1441981000,
+      "birth_rate_per_1000": 16.3,
+      "death_rate_per_1000": 7.1,
+      "population_growth_annual_pct": 0.81
+    }
+  },
+  "TH": {
+    "last_updated": "2025-06-11T10:00:00.000Z",
+    "source": "World Bank API (cached)",
+    "demographics": {
+      "total_population": 71885000,
+      "birth_rate_per_1000": 7.6,
+      "death_rate_per_1000": 9.3,
+      "population_growth_annual_pct": -0.05
+    }
+  },
+  "CA": {
+    "last_updated": "2025-06-11T10:00:00.000Z",
+    "source": "Statistics Canada (Live Data)",
+    "demographics": {
+      "total_population": 41500000,
+      "birth_rate_per_1000": 9.4,
+      "death_rate_per_1000": 8.5,
+      "population_growth_annual_pct": 2.40
+    },
+    "country": "Canada",
+    "currency": "CAD",
+    "exchange_rate": 1.35,
+    "tax_structure": {
+      "individual_tax_brackets": [
+        { "min": 0, "max": 15705, "rate": 0 },
+        { "min": 15706, "max": 55867, "rate": 15 },
+        { "min": 55868, "max": 111733, "rate": 20.5 },
+        { "min": 111734, "max": 173205, "rate": 26 },
+        { "min": 173206, "max": 246752, "rate": 29 },
+        { "min": 246753, "max": null, "rate": 33 }
+      ]
+    },
+    "import_categories": [
+      { "name": "Smartphones (HS 8517.13)", "duty_pct": 0, "vat_pct": 5, "ait_pct": 0 },
+      { "name": "Laptops (HS 8471.30)", "duty_pct": 0, "vat_pct": 5, "ait_pct": 0 },
+      { "name": "Passenger Cars (HS 8703.23)", "duty_pct": 6.1, "vat_pct": 5, "ait_pct": 0 },
+      { "name": "Electric Vehicles (HS 8703.80)", "duty_pct": 6.1, "vat_pct": 5, "ait_pct": 0 },
+      { "name": "Cotton T-shirts (HS 6109.10)", "duty_pct": 18, "vat_pct": 5, "ait_pct": 0 },
+      { "name": "Leather Footwear (HS 6403.91)", "duty_pct": 18, "vat_pct": 5, "ait_pct": 0 },
+      { "name": "Wine (HS 2204.21)", "duty_pct": 4.68, "vat_pct": 5, "ait_pct": 15 },
+      { "name": "Beer (HS 2203.00)", "duty_pct": 0, "vat_pct": 5, "ait_pct": 12.5 },
+      { "name": "Cosmetics (HS 3304.99)", "duty_pct": 6.5, "vat_pct": 5, "ait_pct": 0 },
+      { "name": "Pharmaceuticals (HS 3004.90)", "duty_pct": 0, "vat_pct": 0, "ait_pct": 0 }
+    ]
   }
 }
