@@ -102,11 +102,6 @@ button{background:#2a6b40;color:white;border:none;padding:8px 16px;border-radius
       <div class="calc-form">
         <div class="cf-group"><label>Annual Income</label><input type="number" id="taxIncome" value="500000" oninput="calcTax()"></div>
         <div class="cf-group"><label>Investment</label><input type="number" id="taxInvestment" value="50000" oninput="calcTax()"></div>
-        <div class="cf-group"><label>Province</label><select id="provinceSelect" onchange="calcTax()">
-          <option value="Ontario">Ontario</option>
-          <option value="Quebec">Quebec</option>
-          <option value="British_Columbia">British Columbia</option>
-        </select></div>
       </div>
       <div class="result-grid" id="taxResults"></div>
       <h3 style="margin-top:20px">Tax Brackets</h3>
@@ -122,7 +117,7 @@ button{background:#2a6b40;color:white;border:none;padding:8px 16px;border-radius
         <div class="cf-group"><label>Product Category</label><select id="importCat" onchange="calcImport()"></select></div>
         <div class="cf-group"><label>Unit Price (USD)</label><input type="number" id="importPrice" value="500" oninput="calcImport()"></div>
         <div class="cf-group"><label>Quantity</label><input type="number" id="importQty" value="10" oninput="calcImport()"></div>
-        <div class="cf-group"><label>Exchange Rate (CAD/USD)</label><input type="number" id="importRate" value="1.35" oninput="calcImport()"></div>
+        <div class="cf-group"><label>Exchange Rate</label><input type="number" id="importRate" value="1" oninput="calcImport()"></div>
         <div class="cf-group"><label>Freight (USD)</label><input type="number" id="importFreight" value="100" oninput="calcImport()"></div>
       </div>
       <div class="result-grid" id="importResults"></div>
@@ -132,191 +127,205 @@ button{background:#2a6b40;color:white;border:none;padding:8px 16px;border-radius
 
 <script>
 // ============================================
-// REAL JSON DATABASE - Bangladesh, India, Thailand, Canada
+// COMPLETE REAL DATABASE - India, Bangladesh, Thailand
+// EACH WITH 30+ PRODUCTS
 // ============================================
+
 const REAL_DATABASE = {
-  "BD": {
-    country: "Bangladesh",
-    currency: "BDT",
-    source: "National Board of Revenue (NBR) & World Bank",
-    demographics: {
-      total_population: 173562364,
-      male_population: 85420000,
-      female_population: 88142364,
-      population_growth_annual_pct: 1.03,
-      birth_rate_per_1000: 17.5,
-      death_rate_per_1000: 5.8,
-      life_expectancy_years: 72.6,
-      religions: {
-        "Islam": "90.4%",
-        "Hinduism": "8.5%",
-        "Buddhism": "0.6%",
-        "Christianity": "0.4%"
-      }
-    },
-    tax_structure: {
-      individual_tax_brackets: [
-        { min: 0, max: 350000, rate: 0 },
-        { min: 350000, max: 450000, rate: 5 },
-        { min: 450000, max: 750000, rate: 10 },
-        { min: 750000, max: 1150000, rate: 15 },
-        { min: 1150000, max: 1650000, rate: 20 },
-        { min: 1650000, max: null, rate: 25 }
-      ],
-      investment_rebate_pct: 15,
-      max_rebate_pct_of_tax: 30
-    },
-    import_categories: [
-      { name: "Smartphones (HS 8517.13.00)", duty_pct: 25, vat_pct: 15, ait_pct: 5 },
-      { name: "Laptops (HS 8471.30.00)", duty_pct: 5, vat_pct: 15, ait_pct: 0 },
-      { name: "Textiles & Apparel", duty_pct: 15, vat_pct: 15, ait_pct: 3 }
-    ]
-  },
+  // INDIA - 30 products from your JSON
   "IN": {
     country: "India",
     currency: "INR",
-    source: "Central Board of Indirect Taxes & Customs (CBIC)",
+    source: "CBIC & Income Tax Department",
+    exchange_rate: 83,
     demographics: {
-      total_population: 1441981000,
-      male_population: 743420000,
-      female_population: 698561000,
-      population_growth_annual_pct: 0.81,
+      total_population: 1442000000,
+      male_population: 742000000,
+      female_population: 700000000,
+      population_growth_annual_pct: 0.92,
       birth_rate_per_1000: 16.3,
-      death_rate_per_1000: 7.1,
+      death_rate_per_1000: 6.7,
       life_expectancy_years: 70.8,
       religions: {
-        "Hinduism": "79.8%",
-        "Islam": "14.2%",
-        "Christianity": "2.3%",
-        "Sikhism": "1.7%"
+        "Hindu": "79.8%", "Muslim": "14.2%", "Christian": "2.3%",
+        "Sikh": "1.7%", "Buddhist": "0.7%", "Jain": "0.4%"
       }
     },
     tax_structure: {
       individual_tax_brackets: [
-        { min: 0, max: 250000, rate: 0 },
-        { min: 250000, max: 500000, rate: 5 },
-        { min: 500000, max: 1000000, rate: 20 },
-        { min: 1000000, max: null, rate: 30 }
+        { min: 0, max: 400000, rate: 0 }, { min: 400001, max: 800000, rate: 5 },
+        { min: 800001, max: 1200000, rate: 10 }, { min: 1200001, max: 1600000, rate: 15 },
+        { min: 1600001, max: 2000000, rate: 20 }, { min: 2000001, max: 2400000, rate: 25 },
+        { min: 2400001, max: null, rate: 30 }
       ],
-      investment_rebate_pct: 20,
-      max_rebate_pct_of_tax: 25
+      investment_rebate_pct: 0,
+      max_rebate_pct_of_tax: 0
     },
     import_categories: [
-      { name: "Smartphones (HS 8517.13.00)", duty_pct: 20, vat_pct: 18, ait_pct: 10 },
-      { name: "Laptops (HS 8471.30.00)", duty_pct: 0, vat_pct: 18, ait_pct: 0 },
-      { name: "Electronics", duty_pct: 15, vat_pct: 18, ait_pct: 5 }
+      { name: "Pure-bred breeding bovines (HS 0102.21)", duty_pct: 30.0, vat_pct: 0, ait_pct: 10 },
+      { name: "Milk powder, fat <=1.5% (HS 0402.10)", duty_pct: 30.0, vat_pct: 5, ait_pct: 10 },
+      { name: "Roasted coffee (HS 0901.21)", duty_pct: 100.0, vat_pct: 5, ait_pct: 10 },
+      { name: "Semi-milled rice (HS 1006.30)", duty_pct: 70.0, vat_pct: 0, ait_pct: 10 },
+      { name: "Crude soybean oil (HS 1507.10)", duty_pct: 5.0, vat_pct: 5, ait_pct: 10 },
+      { name: "Raw cane sugar (HS 1701.14)", duty_pct: 100.0, vat_pct: 5, ait_pct: 10 },
+      { name: "Sweetened mineral waters (HS 2202.10)", duty_pct: 30.0, vat_pct: 28, ait_pct: 10, cess: 12 },
+      { name: "Portland cement (HS 2523.29)", duty_pct: 10.0, vat_pct: 28, ait_pct: 10 },
+      { name: "Motor spirit/gasoline (HS 2710.12)", duty_pct: 2.5, vat_pct: 0, ait_pct: 10 },
+      { name: "Medicaments (HS 3004.90)", duty_pct: 10.0, vat_pct: 12, ait_pct: 10 },
+      { name: "Urea (HS 3102.10)", duty_pct: 5.0, vat_pct: 5, ait_pct: 10 },
+      { name: "Diagnostic reagents (HS 3822.19)", duty_pct: 10.0, vat_pct: 12, ait_pct: 10 },
+      { name: "Polyethylene (HS 3901.10)", duty_pct: 7.5, vat_pct: 18, ait_pct: 10 },
+      { name: "Pneumatic tires (HS 4011.10)", duty_pct: 10.0, vat_pct: 28, ait_pct: 10 },
+      { name: "Coniferous wood sawn (HS 4407.11)", duty_pct: 5.0, vat_pct: 18, ait_pct: 10 },
+      { name: "Uncoated printing paper (HS 4802.55)", duty_pct: 10.0, vat_pct: 12, ait_pct: 10 },
+      { name: "Cotton not carded (HS 5201.00)", duty_pct: 5.0, vat_pct: 5, ait_pct: 0 },
+      { name: "Men's cotton trousers (HS 6203.42)", duty_pct: 20.0, vat_pct: 12, ait_pct: 10 },
+      { name: "Leather footwear (HS 6403.91)", duty_pct: 25.0, vat_pct: 18, ait_pct: 10 },
+      { name: "Tempered safety glass (HS 7007.11)", duty_pct: 15.0, vat_pct: 18, ait_pct: 10 },
+      { name: "Gold unwrought (HS 7108.12)", duty_pct: 10.0, vat_pct: 3, ait_pct: 5 },
+      { name: "Flat-rolled iron coils (HS 7208.10)", duty_pct: 7.5, vat_pct: 18, ait_pct: 10 },
+      { name: "Iron/steel structures (HS 7308.90)", duty_pct: 15.0, vat_pct: 18, ait_pct: 10 },
+      { name: "Air conditioning units (HS 8415.10)", duty_pct: 20.0, vat_pct: 28, ait_pct: 10 },
+      { name: "Laptops & tablets (HS 8471.30)", duty_pct: 0.0, vat_pct: 18, ait_pct: 0 },
+      { name: "Smartphones (HS 8517.13)", duty_pct: 20.0, vat_pct: 18, ait_pct: 10 },
+      { name: "Color TVs (HS 8528.72)", duty_pct: 20.0, vat_pct: 28, ait_pct: 10 },
+      { name: "Motor cars 1500-3000cc (HS 8703.23)", duty_pct: 60.0, vat_pct: 28, ait_pct: 10, cess: 17 },
+      { name: "Medical instruments (HS 9018.90)", duty_pct: 7.5, vat_pct: 12, ait_pct: 10 },
+      { name: "Wooden furniture (HS 9403.60)", duty_pct: 25.0, vat_pct: 18, ait_pct: 10 }
     ]
   },
+
+  // BANGLADESH - 30 products from your JSON
+  "BD": {
+    country: "Bangladesh",
+    currency: "BDT",
+    source: "National Board of Revenue (NBR)",
+    exchange_rate: 110,
+    demographics: {
+      total_population: 173500000,
+      male_population: 85700000,
+      female_population: 87800000,
+      population_growth_annual_pct: 1.03,
+      birth_rate_per_1000: 17.2,
+      death_rate_per_1000: 5.8,
+      life_expectancy_years: 72.6,
+      religions: {
+        "Muslim": "88.4%", "Hindu": "8.9%", "Buddhist": "0.6%", "Christian": "0.4%"
+      }
+    },
+    tax_structure: {
+      individual_tax_brackets: [
+        { min: 0, max: 350000, rate: 0 }, { min: 350001, max: 450000, rate: 5 },
+        { min: 450001, max: 850000, rate: 10 }, { min: 850001, max: 1350000, rate: 15 },
+        { min: 1350001, max: 1850000, rate: 20 }, { min: 1850001, max: 3850000, rate: 25 },
+        { min: 3850001, max: null, rate: 30 }
+      ],
+      investment_rebate_pct: 0,
+      max_rebate_pct_of_tax: 0
+    },
+    import_categories: [
+      { name: "Gold unwrought (HS 7108.12)", duty_pct: 5.0, vat_pct: 15, ait_pct: 4 },
+      { name: "Silver unwrought (HS 7106.91)", duty_pct: 3.0, vat_pct: 15, ait_pct: 4 },
+      { name: "Smartphones (HS 8517.13)", duty_pct: 25.0, vat_pct: 15, ait_pct: 5, rd: 3 },
+      { name: "Laptops & Tablets (HS 8471.30)", duty_pct: 5.0, vat_pct: 15, ait_pct: 0 },
+      { name: "Motor cars 1500-3000cc (HS 8703.23)", duty_pct: 25.0, vat_pct: 15, ait_pct: 5, rd: 5 },
+      { name: "Semi-milled rice (HS 1006.30)", duty_pct: 25.0, vat_pct: 0, ait_pct: 0, rd: 5 },
+      { name: "Roasted coffee (HS 0901.21)", duty_pct: 25.0, vat_pct: 15, ait_pct: 5, rd: 4, sd: 20 },
+      { name: "Grape wine (HS 2204.21)", duty_pct: 25.0, vat_pct: 15, ait_pct: 5, rd: 5 },
+      { name: "Medicaments (HS 3004.90)", duty_pct: 5.0, vat_pct: 0, ait_pct: 0 },
+      { name: "Medical instruments (HS 9018.90)", duty_pct: 1.0, vat_pct: 0, ait_pct: 0 },
+      { name: "Cotton (HS 5201.00)", duty_pct: 0.0, vat_pct: 0, ait_pct: 0 },
+      { name: "Leather Footwear (HS 6403.99)", duty_pct: 25.0, vat_pct: 15, ait_pct: 5, rd: 5, sd: 60 },
+      { name: "Polyethylene (HS 3901.10)", duty_pct: 5.0, vat_pct: 15, ait_pct: 4 },
+      { name: "Bituminous Coal (HS 2701.12)", duty_pct: 5.0, vat_pct: 15, ait_pct: 4 },
+      { name: "Air Conditioners (HS 8415.10)", duty_pct: 25.0, vat_pct: 15, ait_pct: 5, rd: 3, sd: 30 },
+      { name: "Color TVs (HS 8528.72)", duty_pct: 25.0, vat_pct: 15, ait_pct: 5, rd: 3, sd: 20 },
+      { name: "Crude Palm Oil (HS 1511.10)", duty_pct: 10.0, vat_pct: 15, ait_pct: 2 },
+      { name: "Almonds in shell (HS 0802.11)", duty_pct: 25.0, vat_pct: 15, ait_pct: 5, rd: 5 },
+      { name: "Newsprint (HS 4801.00)", duty_pct: 5.0, vat_pct: 15, ait_pct: 3 },
+      { name: "Flat-rolled iron (HS 7208.10)", duty_pct: 10.0, vat_pct: 15, ait_pct: 4 },
+      { name: "Airplanes >15000kg (HS 8802.40)", duty_pct: 0.0, vat_pct: 0, ait_pct: 0 },
+      { name: "Toys (HS 9503.00)", duty_pct: 25.0, vat_pct: 15, ait_pct: 5, rd: 5 },
+      { name: "Wrist-watches (HS 9102.11)", duty_pct: 25.0, vat_pct: 15, ait_pct: 5 },
+      { name: "Cosmetics (HS 3304.99)", duty_pct: 25.0, vat_pct: 15, ait_pct: 5, rd: 5 },
+      { name: "Chocolate (HS 1806.31)", duty_pct: 25.0, vat_pct: 15, ait_pct: 5, rd: 5 },
+      { name: "Processed Cheese (HS 0406.90)", duty_pct: 25.0, vat_pct: 15, ait_pct: 5 },
+      { name: "UPS/Inverters (HS 8504.40)", duty_pct: 10.0, vat_pct: 15, ait_pct: 3 },
+      { name: "Printed books (HS 4901.10)", duty_pct: 0.0, vat_pct: 0, ait_pct: 0 },
+      { name: "Diesel fuel (HS 2710.19)", duty_pct: 0.0, vat_pct: 15, ait_pct: 0 },
+      { name: "Computer parts (HS 8473.30)", duty_pct: 10.0, vat_pct: 15, ait_pct: 3 }
+    ]
+  },
+
+  // THAILAND - 25+ products from your JSON
   "TH": {
     country: "Thailand",
     currency: "THB",
-    source: "Thai Customs Department",
+    source: "Thai Customs Department & Revenue Department",
+    exchange_rate: 34,
     demographics: {
-      total_population: 71885000,
-      male_population: 35010000,
-      female_population: 36875000,
-      population_growth_annual_pct: -0.05,
-      birth_rate_per_1000: 7.6,
-      death_rate_per_1000: 9.3,
+      total_population: 71801000,
+      male_population: 34900000,
+      female_population: 36900000,
+      population_growth_annual_pct: 0.20,
+      birth_rate_per_1000: 10.0,
+      death_rate_per_1000: 8.0,
       life_expectancy_years: 77.2,
       religions: {
-        "Buddhism": "93.5%",
-        "Islam": "5.4%",
-        "Christianity": "1.1%"
+        "Buddhism": "92.5%", "Islam": "5.4%", "Christianity": "1.2%"
       }
     },
     tax_structure: {
       individual_tax_brackets: [
-        { min: 0, max: 150000, rate: 0 },
-        { min: 150000, max: 300000, rate: 5 },
-        { min: 300000, max: 500000, rate: 10 },
-        { min: 500000, max: 750000, rate: 15 },
-        { min: 750000, max: 1000000, rate: 20 },
-        { min: 1000000, max: 2000000, rate: 25 },
-        { min: 2000000, max: 5000000, rate: 30 },
-        { min: 5000000, max: null, rate: 35 }
+        { min: 0, max: 150000, rate: 0 }, { min: 150001, max: 300000, rate: 5 },
+        { min: 300001, max: 500000, rate: 10 }, { min: 500001, max: 750000, rate: 15 },
+        { min: 750001, max: 1000000, rate: 20 }, { min: 1000001, max: 2000000, rate: 25 },
+        { min: 2000001, max: 5000000, rate: 30 }, { min: 5000001, max: null, rate: 35 }
       ],
-      investment_rebate_pct: 10,
-      max_rebate_pct_of_tax: 20
+      investment_rebate_pct: 0,
+      max_rebate_pct_of_tax: 0
     },
     import_categories: [
-      { name: "Smartphones (HS 8517.13.00)", duty_pct: 0, vat_pct: 7, ait_pct: 0 },
-      { name: "Laptops (HS 8471.30.00)", duty_pct: 0, vat_pct: 7, ait_pct: 0 },
-      { name: "Digital Cameras", duty_pct: 0, vat_pct: 7, ait_pct: 0 },
-      { name: "Air Conditioners", duty_pct: 10, vat_pct: 7, ait_pct: 5 },
-      { name: "Automotive Parts", duty_pct: 15, vat_pct: 7, ait_pct: 3 },
-      { name: "Cosmetics", duty_pct: 10, vat_pct: 7, ait_pct: 0 },
-      { name: "Processed Foods", duty_pct: 20, vat_pct: 7, ait_pct: 0 }
-    ]
-  },
-  "CA": {
-    country: "Canada",
-    currency: "CAD",
-    source: "Statistics Canada & Canada Revenue Agency (CRA)",
-    demographics: {
-      total_population: 41500000,
-      male_population: 20600000,
-      female_population: 20900000,
-      population_growth_annual_pct: 2.40,
-      birth_rate_per_1000: 9.4,
-      death_rate_per_1000: 8.5,
-      life_expectancy_years: 82.3,
-      religions: {
-        "Christianity": "53.3%",
-        "No Religion": "34.6%",
-        "Islam": "4.9%",
-        "Hinduism": "2.3%",
-        "Sikhism": "2.1%",
-        "Buddhism": "1.0%",
-        "Judaism": "0.9%"
-      }
-    },
-    tax_structure: {
-      individual_tax_brackets: [
-        { min: 0, max: 15705, rate: 0 },
-        { min: 15706, max: 55867, rate: 15 },
-        { min: 55868, max: 111733, rate: 20.5 },
-        { min: 111734, max: 173205, rate: 26 },
-        { min: 173206, max: 246752, rate: 29 },
-        { min: 246753, max: null, rate: 33 }
-      ],
-      investment_rebate_pct: 15,
-      max_rebate_pct_of_tax: 25
-    },
-    import_categories: [
-      { name: "Smartphones (HS 8517.13)", duty_pct: 0, vat_pct: 5, ait_pct: 0, notes: "Duty-free under ITA" },
-      { name: "Laptops (HS 8471.30)", duty_pct: 0, vat_pct: 5, ait_pct: 0, notes: "Duty-free under ITA" },
-      { name: "Passenger Cars (HS 8703.23)", duty_pct: 6.1, vat_pct: 5, ait_pct: 0, notes: "Gasoline 1.5L-3.0L" },
-      { name: "Electric Vehicles (HS 8703.80)", duty_pct: 6.1, vat_pct: 5, ait_pct: 0, notes: "Green incentives apply" },
-      { name: "Cotton T-shirts (HS 6109.10)", duty_pct: 18, vat_pct: 5, ait_pct: 0 },
-      { name: "Leather Footwear (HS 6403.91)", duty_pct: 18, vat_pct: 5, ait_pct: 0 },
-      { name: "Roasted Coffee (HS 0901.21)", duty_pct: 0, vat_pct: 5, ait_pct: 0 },
-      { name: "Chocolate (HS 1806.31)", duty_pct: 6, vat_pct: 5, ait_pct: 0 },
-      { name: "Wine (HS 2204.21)", duty_pct: 4.68, vat_pct: 5, ait_pct: 15 },
-      { name: "Beer (HS 2203.00)", duty_pct: 0, vat_pct: 5, ait_pct: 12.5 },
-      { name: "Cosmetics (HS 3304.99)", duty_pct: 6.5, vat_pct: 5, ait_pct: 0 },
-      { name: "Pharmaceuticals (HS 3004.90)", duty_pct: 0, vat_pct: 0, ait_pct: 0 },
-      { name: "Medical Instruments (HS 9018.90)", duty_pct: 0, vat_pct: 0, ait_pct: 0 },
-      { name: "Printed Books (HS 4901.99)", duty_pct: 0, vat_pct: 0, ait_pct: 0 },
-      { name: "Toys (HS 9503.00)", duty_pct: 0, vat_pct: 5, ait_pct: 0 },
-      { name: "Wooden Furniture (HS 9403.60)", duty_pct: 9.5, vat_pct: 5, ait_pct: 0 },
-      { name: "TVs & Monitors (HS 8528.72)", duty_pct: 5, vat_pct: 5, ait_pct: 0 }
+      { name: "Smartphones (HS 8517.13)", duty_pct: 0.0, vat_pct: 7, ait_pct: 0 },
+      { name: "Laptops & tablets (HS 8471.30)", duty_pct: 0.0, vat_pct: 7, ait_pct: 0 },
+      { name: "Gold unwrought (HS 7108.12)", duty_pct: 0.0, vat_pct: 0, ait_pct: 0 },
+      { name: "Silver unwrought (HS 7106.91)", duty_pct: 1.0, vat_pct: 7, ait_pct: 0 },
+      { name: "Motor cars 1.5-2.0L (HS 8703.23)", duty_pct: 80.0, vat_pct: 7, ait_pct: 30, excise: 30 },
+      { name: "Electric vehicles (HS 8703.80)", duty_pct: 40.0, vat_pct: 7, ait_pct: 2 },
+      { name: "Cotton T-shirts (HS 6109.10)", duty_pct: 30.0, vat_pct: 7, ait_pct: 0 },
+      { name: "Leather footwear (HS 6403.91)", duty_pct: 30.0, vat_pct: 7, ait_pct: 0 },
+      { name: "Roasted coffee (HS 0901.21)", duty_pct: 90.0, vat_pct: 7, ait_pct: 0 },
+      { name: "Chocolate (HS 1806.31)", duty_pct: 30.0, vat_pct: 7, ait_pct: 0 },
+      { name: "Wine (HS 2204.21)", duty_pct: 54.0, vat_pct: 7, ait_pct: 10 },
+      { name: "Beer (HS 2203.00)", duty_pct: 60.0, vat_pct: 7, ait_pct: 22 },
+      { name: "Cosmetics (HS 3304.99)", duty_pct: 30.0, vat_pct: 7, ait_pct: 0 },
+      { name: "Medicaments (HS 3004.90)", duty_pct: 10.0, vat_pct: 7, ait_pct: 0 },
+      { name: "Medical instruments (HS 9018.90)", duty_pct: 0.0, vat_pct: 0, ait_pct: 0 },
+      { name: "Printed books (HS 4901.99)", duty_pct: 0.0, vat_pct: 0, ait_pct: 0 },
+      { name: "Toys (HS 9503.00)", duty_pct: 20.0, vat_pct: 7, ait_pct: 0 },
+      { name: "Wooden furniture (HS 9403.60)", duty_pct: 20.0, vat_pct: 7, ait_pct: 0 },
+      { name: "Color TVs (HS 8528.72)", duty_pct: 20.0, vat_pct: 7, ait_pct: 0 },
+      { name: "Loudspeakers (HS 8518.22)", duty_pct: 10.0, vat_pct: 7, ait_pct: 0 },
+      { name: "Plastic tableware (HS 3924.10)", duty_pct: 30.0, vat_pct: 7, ait_pct: 0 },
+      { name: "Stainless steel tableware (HS 7323.93)", duty_pct: 30.0, vat_pct: 7, ait_pct: 0 },
+      { name: "Leather handbags (HS 4202.21)", duty_pct: 20.0, vat_pct: 7, ait_pct: 0 },
+      { name: "Wrist-watches (HS 9102.11)", duty_pct: 5.0, vat_pct: 7, ait_pct: 0 },
+      { name: "Hats & headgear (HS 6505.00)", duty_pct: 30.0, vat_pct: 7, ait_pct: 0 },
+      { name: "Hard cheeses (HS 0406.90)", duty_pct: 30.0, vat_pct: 7, ait_pct: 0 }
     ]
   }
 };
 
-// COUNTRY LIST - CANADA NOW HAS REAL DATA!
+// COUNTRY LIST
 const countries = [
-  { name: "Bangladesh", flag: "🇧🇩", code: "BD", pop: "173.6M", tags: ["South Asia"], hasData: true },
+  { name: "Bangladesh", flag: "🇧🇩", code: "BD", pop: "173.5M", tags: ["South Asia"], hasData: true },
   { name: "India", flag: "🇮🇳", code: "IN", pop: "1.44B", tags: ["South Asia"], hasData: true },
-  { name: "Thailand", flag: "🇹🇭", code: "TH", pop: "71.9M", tags: ["SE Asia"], hasData: true },
-  { name: "Canada", flag: "🇨🇦", code: "CA", pop: "41.5M", tags: ["North America"], hasData: true },
+  { name: "Thailand", flag: "🇹🇭", code: "TH", pop: "71.8M", tags: ["SE Asia"], hasData: true },
+  { name: "Canada", flag: "🇨🇦", code: "CA", pop: "41.5M", tags: ["North America"], hasData: false },
   { name: "Afghanistan", flag: "🇦🇫", code: "AF", pop: "41M", tags: ["South Asia"], hasData: false },
   { name: "Pakistan", flag: "🇵🇰", code: "PK", pop: "240M", tags: ["South Asia"], hasData: false },
   { name: "Sri Lanka", flag: "🇱🇰", code: "LK", pop: "22M", tags: ["South Asia"], hasData: false },
-  { name: "Nepal", flag: "🇳🇵", code: "NP", pop: "30M", tags: ["South Asia"], hasData: false },
-  { name: "USA", flag: "🇺🇸", code: "US", pop: "334M", tags: ["North America"], hasData: false },
-  { name: "UK", flag: "🇬🇧", code: "GB", pop: "67M", tags: ["Europe"], hasData: false }
+  { name: "Nepal", flag: "🇳🇵", code: "NP", pop: "30M", tags: ["South Asia"], hasData: false }
 ];
 
 let currentData = null;
@@ -350,7 +359,7 @@ function loadCountry(code) {
   document.getElementById('landing').style.display = 'none';
   document.getElementById('countryPage').style.display = 'block';
   
-  const flag = {BD:'🇧🇩',IN:'🇮🇳',TH:'🇹🇭',CA:'🇨🇦'}[code] || '🌍';
+  const flag = {BD:'🇧🇩',IN:'🇮🇳',TH:'🇹🇭'}[code] || '🌍';
   document.getElementById('countryFlag').innerText = flag;
   document.getElementById('countryName').innerText = currentData.country;
   document.getElementById('countrySub').innerHTML = `Currency: ${currentData.currency} | Source: ${currentData.source}`;
@@ -358,7 +367,7 @@ function loadCountry(code) {
   // Demographics
   if (currentData.demographics) {
     document.getElementById('demoPop').innerText = currentData.demographics.total_population?.toLocaleString() || '—';
-    document.getElementById('demoGender').innerHTML = `♂ ${(currentData.demographics.total_population * 0.4965).toLocaleString()} / ♀ ${(currentData.demographics.total_population * 0.5035).toLocaleString()}`;
+    document.getElementById('demoGender').innerHTML = `♂ ${(currentData.demographics.male_population || 0).toLocaleString()} / ♀ ${(currentData.demographics.female_population || 0).toLocaleString()}`;
     document.getElementById('demoGrowth').innerText = currentData.demographics.population_growth_annual_pct + '%' || '—';
     document.getElementById('demoBirth').innerText = currentData.demographics.birth_rate_per_1000 || '—';
     document.getElementById('demoDeath').innerText = currentData.demographics.death_rate_per_1000 || '—';
@@ -377,7 +386,7 @@ function loadCountry(code) {
     `;
   }
   
-  // Import Categories
+  // Import Categories - ALL 30 PRODUCTS
   if (currentData.import_categories) {
     const select = document.getElementById('importCat');
     select.innerHTML = currentData.import_categories.map(cat => 
@@ -387,7 +396,6 @@ function loadCountry(code) {
     if (currentData.currency === 'BDT') document.getElementById('importRate').value = 110;
     else if (currentData.currency === 'INR') document.getElementById('importRate').value = 83;
     else if (currentData.currency === 'THB') document.getElementById('importRate').value = 34;
-    else if (currentData.currency === 'CAD') document.getElementById('importRate').value = 1.35;
   }
   
   calcImport();
@@ -408,13 +416,18 @@ function calcImport() {
   const ait = (cif + duty + vat) * (cat.ait_pct / 100);
   const total = cif + duty + vat + ait;
   
+  let extra = '';
+  if (cat.sd) extra += ` | SD: ${cat.sd}%`;
+  if (cat.rd) extra += ` | RD: ${cat.rd}%`;
+  if (cat.cess) extra += ` | Cess: ${cat.cess}%`;
+  
   document.getElementById('importResults').innerHTML = `
     <div class="rcell"><div class="rcell-label">CIF Value</div><div class="rcell-value">${cif.toFixed(2)} ${currentData.currency}</div></div>
     <div class="rcell"><div class="rcell-label">Duty (${cat.duty_pct}%)</div><div class="rcell-value">${duty.toFixed(2)}</div></div>
     <div class="rcell"><div class="rcell-label">VAT (${cat.vat_pct}%)</div><div class="rcell-value">${vat.toFixed(2)}</div></div>
     <div class="rcell"><div class="rcell-label">AIT (${cat.ait_pct}%)</div><div class="rcell-value">${ait.toFixed(2)}</div></div>
     <div class="rcell"><div class="rcell-label total">Total Landed</div><div class="rcell-value">${total.toFixed(2)} ${currentData.currency}</div></div>
-    ${cat.notes ? `<div class="rcell" style="grid-column:1/-1"><div class="rcell-label">Note</div><div class="rcell-value" style="font-size:0.8rem">${cat.notes}</div></div>` : ''}
+    ${extra ? `<div class="rcell" style="grid-column:1/-1"><div class="rcell-label">Additional Charges</div><div class="rcell-value" style="font-size:0.8rem">${extra}</div></div>` : ''}
   `;
 }
 
