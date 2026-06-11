@@ -1,0 +1,19 @@
+// Replace the fetchWorldBankData function with this:
+async function fetchWorldBankData(countryCode, indicator) {
+  // Use CORS proxy to bypass restrictions
+  const proxyUrl = 'https://api.allorigins.win/raw?url=';
+  const targetUrl = `https://api.worldbank.org/v2/country/${countryCode}/indicator/${indicator}?format=json`;
+  const url = proxyUrl + encodeURIComponent(targetUrl);
+  
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+    if (data && data[1] && data[1][0] && data[1][0].value) {
+      return parseFloat(data[1][0].value);
+    }
+    return null;
+  } catch (error) {
+    console.warn(`API error for ${indicator}:`, error);
+    return null;
+  }
+}
