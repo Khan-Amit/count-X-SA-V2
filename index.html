@@ -1,1 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Count It — World Demographics & Tax Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0d1f17;font-family:'Outfit',sans-serif;color:#f4f7f4}
+nav{position:fixed;top:0;left:0;right:0;height:64px;background:rgba(13,31,23,0.92);backdrop-filter:blur(16px);border-bottom:1px solid rgba(94,207,130,0.18);display:flex;align-items:center;justify-content:space-between;padding:0 2rem;z-index:100}
+.nav-logo{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:700}
+.nav-logo span{color:#5ecf82;font-size:0.7rem}
+.country-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;padding:1rem 0}
+.country-card{background:#122318;border:1px solid rgba(94,207,130,0.18);border-radius:14px;padding:1rem;cursor:pointer;transition:0.2s}
+.country-card:hover{border-color:#5ecf82;transform:translateY(-3px)}
+.country-flag{font-size:2rem}
+.country-name{font-weight:600;font-size:1.1rem}
+.country-pop{font-size:0.7rem;color:#aaa;margin-top:4px}
+.ctag{font-size:0.6rem;padding:2px 6px;border-radius:99px;background:rgba(94,207,130,0.1);color:#5ecf82;display:inline-block;margin-right:4px}
+.search{width:100%;max-width:400px;padding:12px;background:rgba(255,255,255,0.05);border:1px solid rgba(94,207,130,0.18);border-radius:12px;color:white;margin:20px auto;display:block}
+.hero{text-align:center;padding:120px 20px 60px}
+h1{font-family:'Cormorant Garamond',serif;font-size:4rem}
+.accent{color:#5ecf82}
+button{background:#2a6b40;color:white;border:none;padding:8px 16px;border-radius:8px;cursor:pointer}
+.page-tabs{display:flex;gap:0;background:#122318;border-bottom:1px solid rgba(94,207,130,0.18)}
+.ptab{padding:12px 20px;background:none;border:none;color:#aaa;cursor:pointer}
+.ptab.active{color:#5ecf82;border-bottom:2px solid #5ecf82}
+.tab-panel{display:none;padding:20px}
+.tab-panel.active{display:block}
+.calc-card{background:#122318;border-radius:14px;padding:20px;margin-top:20px}
+.calc-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:15px}
+.cf-group label{font-size:0.7rem;text-transform:uppercase;color:#aaa}
+.cf-group input,.cf-group select{width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(94,207,130,0.18);border-radius:8px;padding:10px;color:white}
+.result-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-top:20px}
+.rcell{background:#0d1f17;padding:12px;border-radius:10px;text-align:center}
+.rcell-label{font-size:0.65rem;color:#aaa;text-transform:uppercase}
+.rcell-value{font-size:1.1rem;font-weight:600;margin-top:5px}
+.sheet{width:100%;border-collapse:collapse}
+.sheet td,.sheet th{padding:10px;border-bottom:1px solid #2a3a30;text-align:left}
+.live-badge{background:#5ecf82;color:#0d1f17;font-size:0.65rem;padding:2px 8px;border-radius:20px;margin-left:10px}
+.loading{text-align:center;padding:40px;color:#5ecf82}
+.highlight{color:#5ecf82;font-weight:bold}
+</style>
+</head>
+<body>
 
+<nav>
+  <div class="nav-logo">Count It <span>Global</span></div>
+</nav>
+
+<div id="landing">
+  <div class="hero">
+    <h1>Count <span class="accent">It.</span></h1>
+    <p>GDP • Income • Living Cost • Demographics • Trade Intelligence</p>
+  </div>
+  <section style="padding:0 2rem 4rem">
+    <h2 style="font-family:'Cormorant Garamond',serif;font-size:2rem">Pick a country.</h2>
+    <input type="text" id="searchInput" class="search" placeholder="🔍 Search country..." onkeyup="filterCountries()">
+    <div id="countryGrid" class="country-grid"><div class="loading">Loading database...</div></div>
+  </section>
+</div>
+
+<div id="countryPage" style="display:none">
+  <div style="background:#122318;padding:1.5rem">
+    <button onclick="goBack()">← Back</button>
+    <div style="display:flex;align-items:center;gap:1rem;margin-top:1rem">
+      <span id="countryFlag" style="font-size:3rem">🌍</span>
+      <div>
+        <h1 id="countryName" style="font-size:2rem">Country</h1>
+        <p id="countrySub">Currency: —</p>
+      </div>
+    </div>
+    <button onclick="downloadCurrent()" style="margin-top:1rem">📄 Download Report (HTML)</button>
+  </div>
+
+  <div class="page-tabs">
+    <button class="ptab active" onclick="switchTab('demographics')">👥 Demographics</button>
+    <button class="ptab" onclick="switchTab('economy')">💰 Economy & Income</button>
+    <button class="ptab" onclick="switchTab('tax')">📊 Income Tax</button>
+    <button class="ptab" onclick="switchTab('import')">📦 Import Calculator</button>
+  </div>
+
+  <!-- Demographics Tab -->
+  <div id="demographicsTab" class="tab-panel active">
+    <div class="calc-card">
+      <h3>Demographics <span class="live-badge">World Bank Data</span></h3>
+      <table class="sheet">
+        <tr><td style="width:45%">📊 Total Population</td><td id="demoPop">—</td></tr>
+        <tr><td>👥 Male / Female Split</td><td id="demoGender">—</td></tr>
+        <tr><td>📈 Population Growth (Annual)</td><td id="demoGrowth">—</td></tr>
+        <tr><td>👶 Birth Rate (per 1,000)</td><td id="demoBirth">—</td></tr>
+        <tr><td>⚰️ Death Rate (per 1,000)</td><td id="demoDeath">—</td></tr>
+        <tr><td>🕊️ Life Expectancy</td><td id="demoLife">—</td></tr>
+        <tr><td>🕌 Religions</td><td id="demoReligion">—</td></tr>
+      </table>
+      <p id="lastUpdatedInfo" style="font-size:0.7rem; color:#5ecf82; margin-top:10px"></p>
+    </div>
+  </div>
+
+  <!-- Economy & Income Tab -->
+  <div id="economyTab" class="tab-panel">
+    <div class="calc-card">
+      <h3>Economy & Household <span class="live-badge">World Bank / Statista</span></h3>
+      <table class="sheet">
+        <tr><td style="width:45%">💰 GDP (Total USD)</td><td id="gdpTotal">—</td></tr>
+        <tr><td>💵 GDP per Capita (USD)</td><td id="gdpPerCapita">—</td></tr>
+        <tr><td>📈 GDP Growth Rate</td><td id="gdpGrowth">—</td></tr>
+        <tr><td>📊 Inflation Rate</td><td id="inflation">—</td></tr>
+        <tr><td>👔 Unemployment Rate</td><td id="unemployment">—</td></tr>
+        <tr style="background:rgba(94,207,130,0.1)"><td colspan="2"><strong>🏠 Household Income</strong></td></tr>
+        <tr><td>💰 Avg Monthly Income (USD)</td><td id="avgIncome">—</td></tr>
+        <tr><td>📊 Median Monthly Income (USD)</td><td id="medianIncome">—</td></tr>
+        <tr><td>⚡ Minimum Wage (USD)</td><td id="minWage">—</td></tr>
+        <tr style="background:rgba(94,207,130,0.1)"><td colspan="2"><strong>🏡 Living Cost</strong></td></tr>
+        <tr><td>🏠 Rent (1BR City Center, Monthly)</td><td id="rentCity">—</td></tr>
+        <tr><td>🏠 Rent (1BR Outside, Monthly)</td><td id="rentOutside">—</td></tr>
+        <tr><td>💡 Utilities (Monthly)</td><td id="utilities">—</td></tr>
+        <tr><td>🌐 Internet (Monthly)</td><td id="internet">—</td></tr>
+        <tr><td>🍽️ Meal (Inexpensive Restaurant)</td><td id="mealCost">—</td></tr>
+       </table>
+    </div>
+  </div>
+
+  <!-- Income Tax Tab -->
+  <div id="taxTab" class="tab-panel">
+    <div class="calc-card">
+      <h3>Income Tax Calculator</h3>
+      <div class="calc-form">
+        <div class="cf-group"><label>Annual Income</label><input type="number" id="taxIncome" value="500000" oninput="calcTax()"></div>
+        <div class="cf-group"><label>Investment (Tax Saving)</label><input type="number" id="taxInvestment" value="50000" oninput="calcTax()"></div>
+      </div>
+      <div class="result-grid" id="taxResults"></div>
+      <h3 style="margin-top:20px">Tax Brackets</h3>
+      <table class="sheet" id="bracketsTable"></table>
+    </div>
+  </div>
+
+  <!-- Import Tab -->
+  <div id="importTab" class="tab-panel">
+    <div class="calc-card">
+      <h3>Import Cost Calculator</h3>
+      <div class="calc-form">
+        <div class="cf-group"><label>Product</label><select id="importCat" onchange="calcImport()"></select></div>
+        <div class="cf-group"><label>Unit Price (USD)</label><input type="number" id="importPrice" value="500" oninput="calcImport()"></div>
+        <div class="cf-group"><label>Quantity</label><input type="number" id="importQty" value="10" oninput="calcImport()"></div>
+        <div class="cf-group"><label>Exchange Rate</label><input type="number" id="importRate" value="1" oninput="calcImport()"></div>
+        <div class="cf-group"><label>Freight (USD)</label><input type="number" id="importFreight" value="100" oninput="calcImport()"></div>
+      </div>
+      <div class="result-grid" id="importResults"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+let DB = null;
+let currentCode = null;
+
+async function loadDatabase() {
+  try {
+    const res = await fetch('database.json');
+    DB = await res.json();
+    console.log('✅ Database loaded:', Object.keys(DB));
+    renderCountries();
+  } catch(e) {
+    console.error('Failed to load database.json', e);
+    document.getElementById('countryGrid').innerHTML = '<div class="loading" style="color:#ff6b6b">❌ database.json not found. Make sure the file exists in the same folder.</div>';
+  }
+}
+
+function renderCountries() {
+  const search = document.getElementById('searchInput')?.value.toLowerCase() || '';
+  const filtered = Object.keys(DB).filter(code => DB[code].country.toLowerCase().includes(search));
+  const grid = document.getElementById('countryGrid');
+  
+  if (filtered.length === 0) {
+    grid.innerHTML = '<div class="loading">No countries match your search</div>';
+    return;
+  }
+  
+  const flags = {BD:'🇧🇩',IN:'🇮🇳',TH:'🇹🇭',CA:'🇨🇦'};
+  
+  grid.innerHTML = filtered.map(code => {
+    const c = DB[code];
+    const pop = c.demographics.total_population;
+    const popDisplay = pop ? (pop >= 1e9 ? (pop/1e9).toFixed(2)+'B' : (pop/1e6).toFixed(1)+'M') : '?';
+    return `
+      <div class="country-card" onclick="loadCountry('${code}')">
+        <div class="country-flag">${flags[code] || '🌍'}</div>
+        <div class="country-name">${c.country}</div>
+        <div class="country-pop">Population: ${popDisplay}</div>
+        <div class="country-pop">GDP per Capita: $${c.economy?.gdp_per_capita_usd?.toLocaleString() || '?'}</div>
+        <div><span class="ctag">${c.currency}</span><span class="ctag">Live Data</span></div>
+      </div>
+    `;
+  }).join('');
+}
+
+function loadCountry(code) {
+  currentCode = code;
+  const c = DB[code];
+  
+  document.getElementById('landing').style.display = 'none';
+  document.getElementById('countryPage').style.display = 'block';
+  
+  const flags = {BD:'🇧🇩',IN:'🇮🇳',TH:'🇹🇭',CA:'🇨🇦'};
+  document.getElementById('countryFlag').innerText = flags[code] || '🌍';
+  document.getElementById('countryName').innerText = c.country;
+  document.getElementById('countrySub').innerHTML = `Currency: ${c.currency} | Exchange Rate: ${c.exchange_rate} ${c.currency}/USD | Last Updated: ${c.last_updated?.slice(0,10)}`;
+  document.getElementById('lastUpdatedInfo').innerHTML = `📡 Source: World Bank API | Last sync: ${c.last_updated?.slice(0,10)}`;
+  
+  // Demographics
+  const demo = c.demographics;
+  document.getElementById('demoPop').innerText = demo.total_population?.toLocaleString() || '—';
+  document.getElementById('demoGender').innerHTML = `♂ ${demo.male_percent}% / ♀ ${demo.female_percent}%`;
+  document.getElementById('demoGrowth').innerHTML = `<span class="${demo.population_growth_annual_pct > 0 ? 'highlight' : ''}">${demo.population_growth_annual_pct}%</span> (${demo.population_growth_annual_pct > 0 ? 'Growing' : 'Shrinking'})`;
+  document.getElementById('demoBirth').innerText = demo.birth_rate_per_1000 || '—';
+  document.getElementById('demoDeath').innerText = demo.death_rate_per_1000 || '—';
+  document.getElementById('demoLife').innerText = demo.life_expectancy_years || '—';
+  if (demo.religions) {
+    document.getElementById('demoReligion').innerHTML = Object.entries(demo.religions).map(([k,v]) => `${k}: ${v}`).join(' | ');
+  }
+  
+  // Economy
+  const eco = c.economy;
+  if (eco) {
+    document.getElementById('gdpTotal').innerText = `$${(eco.gdp_total_usd / 1e9).toFixed(0)} Billion`;
+    document.getElementById('gdpPerCapita').innerText = `$${eco.gdp_per_capita_usd.toLocaleString()}`;
+    document.getElementById('gdpGrowth').innerHTML = `<span class="${eco.gdp_growth_percent > 5 ? 'highlight' : ''}">${eco.gdp_growth_percent}%</span>`;
+    document.getElementById('inflation').innerText = `${eco.inflation_rate_percent}%`;
+    document.getElementById('unemployment').innerText = `${eco.unemployment_rate_percent}%`;
+  }
+  
+  // Household Income
+  const income = c.household_income;
+  if (income) {
+    document.getElementById('avgIncome').innerText = `$${income.average_monthly_income_usd?.toLocaleString()} (${income.average_monthly_income_local?.toLocaleString()} ${c.currency})`;
+    document.getElementById('medianIncome').innerText = `$${income.median_monthly_income_usd?.toLocaleString()}`;
+    document.getElementById('minWage').innerText = `$${income.minimum_wage_usd?.toLocaleString()}/month (${income.minimum_wage_local?.toLocaleString()} ${c.currency})`;
+  }
+  
+  // Living Cost
+  const cost = c.living_cost;
+  if (cost) {
+    document.getElementById('rentCity').innerText = `$${cost.average_monthly_rent_1br_city_usd?.toLocaleString()}`;
+    document.getElementById('rentOutside').innerText = `$${cost.average_monthly_rent_1br_outside_usd?.toLocaleString()}`;
+    document.getElementById('utilities').innerText = `$${cost.utilities_monthly_usd?.toLocaleString()}`;
+    document.getElementById('internet').innerText = `$${cost.internet_monthly_usd?.toLocaleString()}`;
+    document.getElementById('mealCost').innerText = `$${cost.meal_inexpensive_restaurant_usd?.toLocaleString()}`;
+  }
+  
+  // Tax Brackets
+  if (c.tax_brackets) {
+    document.getElementById('bracketsTable').innerHTML = `
+      <tr><th>Income Range (${c.currency})</th><th>Rate</th></tr>
+      ${c.tax_brackets.map(b => `<tr><td>${b.min.toLocaleString()} - ${b.max === null ? '∞' : b.max.toLocaleString()}</td><td>${b.rate}%</td></tr>`).join('')}
+    `;
+  }
+  
+  // Import Products
+  if (c.products && c.products.length > 0) {
+    const select = document.getElementById('importCat');
+    select.innerHTML = c.products.map(p => 
+      `<option value='${JSON.stringify(p)}'>${p.name} (Duty: ${p.duty}%, VAT: ${p.vat}%, AIT: ${p.ait}%)</option>`
+    ).join('');
+    document.getElementById('importRate').value = c.exchange_rate;
+  }
+  
+  calcImport();
+  calcTax();
+}
+
+function calcImport() {
+  if (!currentCode) return;
+  const c = DB[currentCode];
+  const product = JSON.parse(document.getElementById('importCat').value);
+  const price = parseFloat(document.getElementById('importPrice').value) || 0;
+  const qty = parseFloat(document.getElementById('importQty').value) || 1;
+  const rate = parseFloat(document.getElementById('importRate').value) || 1;
+  const freight = parseFloat(document.getElementById('importFreight').value) || 0;
+  
+  const cif = (price * qty + freight) * rate;
+  const duty = cif * (product.duty / 100);
+  const vat = (cif + duty) * (product.vat / 100);
+  const ait = (cif + duty + vat) * (product.ait / 100);
+  const total = cif + duty + vat + ait;
+  
+  document.getElementById('importResults').innerHTML = `
+    <div class="rcell"><div class="rcell-label">CIF Value</div><div class="rcell-value">${cif.toFixed(2)} ${c.currency}</div></div>
+    <div class="rcell"><div class="rcell-label">Duty (${product.duty}%)</div><div class="rcell-value">${duty.toFixed(2)}</div></div>
+    <div class="rcell"><div class="rcell-label">VAT (${product.vat}%)</div><div class="rcell-value">${vat.toFixed(2)}</div></div>
+    <div class="rcell"><div class="rcell-label">AIT (${product.ait}%)</div><div class="rcell-value">${ait.toFixed(2)}</div></div>
+    <div class="rcell"><div class="rcell-label total">Total Landed</div><div class="rcell-value">${total.toFixed(2)} ${c.currency}</div></div>
+  `;
+}
+
+function calcTax() {
+  if (!currentCode) return;
+  const c = DB[currentCode];
+  const income = parseFloat(document.getElementById('taxIncome').value) || 0;
+  const investment = parseFloat(document.getElementById('taxInvestment').value) || 0;
+  const brackets = c.tax_brackets;
+  
+  let tax = 0;
+  let remaining = income;
+  for (let i = 0; i < brackets.length; i++) {
+    const b = brackets[i];
+    if (remaining <= 0) break;
+    const prevMax = i > 0 ? brackets[i-1].max : 0;
+    const taxable = Math.min(remaining, b.max === null ? remaining : b.max - prevMax);
+    tax += taxable * (b.rate / 100);
+    remaining -= taxable;
+  }
+  
+  const rebatePct = 15;
+  const maxRebate = tax * 0.30;
+  const rebate = Math.min(investment * rebatePct / 100, maxRebate);
+  const finalTax = Math.max(0, tax - rebate);
+  
+  document.getElementById('taxResults').innerHTML = `
+    <div class="rcell"><div class="rcell-label">Gross Tax</div><div class="rcell-value">${tax.toFixed(2)} ${c.currency}</div></div>
+    <div class="rcell"><div class="rcell-label">Rebate</div><div class="rcell-value">${rebate.toFixed(2)}</div></div>
+    <div class="rcell"><div class="rcell-label">Net Tax</div><div class="rcell-value">${finalTax.toFixed(2)} ${c.currency}</div></div>
+    <div class="rcell"><div class="rcell-label">Effective Rate</div><div class="rcell-value">${income > 0 ? ((finalTax/income)*100).toFixed(1) : 0}%</div></div>
+  `;
+}
+
+function switchTab(tab) {
+  document.querySelectorAll('.tab-panel').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.ptab').forEach(b => b.classList.remove('active'));
+  document.getElementById(tab + 'Tab').classList.add('active');
+  event.target.classList.add('active');
+}
+
+function goBack() {
+  document.getElementById('landing').style.display = 'block';
+  document.getElementById('countryPage').style.display = 'none';
+  renderCountries();
+}
+
+function downloadCurrent() {
+  if (!currentCode) return;
+  const c = DB[currentCode];
+  const activeTab = document.querySelector('.tab-panel.active').id;
+  const timestamp = new Date().toLocaleString();
+  const dateStr = new Date().toISOString().slice(0,19).replace(/:/g, '-');
+  
+  let title = "";
+  let content = "";
+  
+  if (activeTab === 'demographicsTab') {
+    title = "Demographics Report";
+    content = `
+      <h2>📊 Demographics</h2>
+      <table border="1" cellpadding="8" style="border-collapse:collapse; width:100%">
+        <tr><th style="text-align:left">Metric</th><th style="text-align:left">Value</th></tr>
+        <tr><td>Total Population</td><td>${c.demographics.total_population?.toLocaleString()}</td></tr>
+        <tr><td>Male / Female Split</td><td>♂ ${c.demographics.male_percent}% / ♀ ${c.demographics.female_percent}%</td></tr>
+        <tr><td>Population Growth (Annual)</td><td>${c.demographics.population_growth_annual_pct}%</td></tr>
+        <tr><td>Birth Rate (per 1,000)</td><td>${c.demographics.birth_rate_per_1000}</td></tr>
+        <tr><td>Death Rate (per 1,000)</td><td>${c.demographics.death_rate_per_1000}</td></tr>
+        <tr><td>Life Expectancy</td><td>${c.demographics.life_expectancy_years} years</td></tr>
+        <tr><td>Religions</td><td>${Object.entries(c.demographics.religions || {}).map(([k,v]) => `${k}: ${v}`).join(' | ')}</td></tr>
+      </table>
+    `;
+  } 
+  else if (activeTab === 'economyTab') {
+    title = "Economy & Household Report";
+    content = `
+      <h2>💰 Economy</h2>
+      <table border="1" cellpadding="8" style="border-collapse:collapse; width:100%">
+        <tr><th style="text-align:left">Metric</th><th style="text-align:left">Value</th></tr>
+        <tr><td>GDP Total (USD)</td><td>$${(c.economy.gdp_total_usd / 1e9).toFixed(0)} Billion</td></tr>
+        <tr><td>GDP per Capita (USD)</td><td>$${c.economy.gdp_per_capita_usd?.toLocaleString()}</td></tr>
+        <tr><td>GDP Growth Rate</td><td>${c.economy.gdp_growth_percent}%</td></tr>
+        <tr><td>Inflation Rate</td><td>${c.economy.inflation_rate_percent}%</td></tr>
+        <tr><td>Unemployment Rate</td><td>${c.economy.unemployment_rate_percent}%</td></tr>
+      </table>
+      
+      <h2>🏠 Household Income</h2>
+      <table border="1" cellpadding="8" style="border-collapse:collapse; width:100%">
+        <tr><th style="text-align:left">Metric</th><th style="text-align:left">Value</th></tr>
+        <tr><td>Average Monthly Income (USD)</td><td>$${c.household_income.average_monthly_income_usd?.toLocaleString()}</td></tr>
+        <tr><td>Median Monthly Income (USD)</td><td>$${c.household_income.median_monthly_income_usd?.toLocaleString()}</td></tr>
+        <tr><td>Minimum Wage (USD/month)</td><td>$${c.household_income.minimum_wage_usd?.toLocaleString()}</td></tr>
+      </table>
+      
+      <h2>🏡 Living Cost</h2>
+      <table border="1" cellpadding="8" style="border-collapse:collapse; width:100%">
+        <tr><th style="text-align:left">Metric</th><th style="text-align:left">Value</th></tr>
+        <tr><td>Rent (1BR City Center)</td><td>$${c.living_cost.average_monthly_rent_1br_city_usd?.toLocaleString()}/month</td></tr>
+        <tr><td>Rent (1BR Outside)</td><td>$${c.living_cost.average_monthly_rent_1br_outside_usd?.toLocaleString()}/month</td></tr>
+        <tr><td>Utilities (Monthly)</td><td>$${c.living_cost.utilities_monthly_usd?.toLocaleString()}</td></tr>
+        <tr><td>Internet (Monthly)</td><td>$${c.living_cost.internet_monthly_usd?.toLocaleString()}</td></tr>
+        <tr><td>Inexpensive Restaurant Meal</td><td>$${c.living_cost.meal_inexpensive_restaurant_usd?.toLocaleString()}</td></tr>
+      </table>
+    `;
+  }
+  else if (activeTab === 'taxTab') {
+    const income = document.getElementById('taxIncome').value;
+    const finalTax = document.querySelector('#taxResults .rcell:nth-child(3) .rcell-value')?.innerText || '0';
+    const effectiveRate = document.querySelector('#taxResults .rcell:nth-child(4) .rcell-value')?.innerText || '0';
+    
+    title = "Income Tax Report";
+    content = `
+      <h2>📊 Income Tax Calculation</h2>
+      <table border="1" cellpadding="8" style="border-collapse:collapse; width:100%">
+        <tr><th style="text-align:left">Metric</th><th style="text-align:left">Value</th></tr>
+        <tr><td>Annual Income</td><td>${parseInt(income).toLocaleString()} ${c.currency}</td></tr>
+        <tr><td>Net Tax Payable</td><td>${finalTax}</td></tr>
+        <tr><td>Effective Tax Rate</td><td>${effectiveRate}</td></tr>
+      </table>
+      
+      <h2>📋 Tax Brackets (${c.currency})</h2>
+      <table border="1" cellpadding="8" style="border-collapse:collapse; width:100%">
+        <tr><th>Income Range</th><th>Rate</th></tr>
+        ${c.tax_brackets.map(b => `<tr><td>${b.min.toLocaleString()} - ${b.max === null ? '∞' : b.max.toLocaleString()}</td><td>${b.rate}%</td></tr>`).join('')}
+      </table>
+    `;
+  }
+  else if (activeTab === 'importTab') {
+    const product = document.getElementById('importCat').selectedOptions[0]?.text || '—';
+    const price = document.getElementById('importPrice').value;
+    const qty = document.getElementById('importQty').value;
+    const cif = document.querySelector('#importResults .rcell:first-child .rcell-value')?.innerText || '0';
+    const total = document.querySelector('#importResults .rcell:last-child .rcell-value')?.innerText || '0';
+    
+    title = "Import Calculator Report";
+    content = `
+      <h2>📦 Import Calculation</h2>
+      <table border="1" cellpadding="8" style="border-collapse:collapse; width:100%">
+        <tr><th style="text-align:left">Metric</th><th style="text-align:left">Value</th></tr>
+        <tr><td>Product</td><td>${product}</td></tr>
+        <tr><td>Unit Price (USD)</td><td>$${price}</td></tr>
+        <tr><td>Quantity</td><td>${qty}</td></tr>
+        <tr><td>CIF Value</td><td>${cif}</td></tr>
+        <tr><td>Total Landed Cost</td><td>${total}</td></tr>
+      </table>
+    `;
+  }
+  
+  const html = `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Count It Report - ${c.country} - ${title}</title>
+  <style>
+    body { font-family: 'Segoe UI', Arial, sans-serif; padding: 30px; max-width: 1000px; margin: 0 auto; background: #f5f5f5; }
+    .header { background: #0d1f17; color: white; padding: 20px; border-radius: 10px; margin-bottom: 20px; }
+    .header h1 { margin: 0; color: #5ecf82; }
+    .content { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    h2 { color: #0d1f17; border-left: 4px solid #5ecf82; padding-left: 15px; margin-top: 25px; }
+    table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+    th, td { padding: 10px; text-align: left; border: 1px solid #ddd; }
+    th { background: #0d1f17; color: white; border: 1px solid #2a3a30; }
+    .footer { text-align: center; margin-top: 30px; padding: 15px; color: #666; font-size: 12px; border-top: 1px solid #ddd; }
+  </style>
+</head>
+<body>
+<div class="header">
+  <h1>Count It Global</h1>
+  <p>${c.country} - ${title}</p>
+  <p>Generated: ${timestamp}</p>
+</div>
+<div class="content">
+  ${content}
+  <div class="footer">
+    <p>Data sources: World Bank API | Statistics Canada | CBIC India | NBR Bangladesh | Thai Customs</p>
+    <p>© Count It Global - Trade Intelligence Platform</p>
+  </div>
+</div>
+</body>
+</html>`;
+  
+  const blob = new Blob([html], {type: 'text/html'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `${currentCode}_${activeTab.replace('Tab', '')}_${dateStr}.html`;
+  a.click();
+}
+
+function filterCountries() { renderCountries(); }
+
+loadDatabase();
+</script>
+</body>
+</html>
