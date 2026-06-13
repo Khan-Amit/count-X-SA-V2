@@ -2,8 +2,8 @@ name: Update Database
 
 on:
   schedule:
-    - cron: '0 0 1 */3 *'   # Runs at midnight on the 1st day of every 3rd month
-  workflow_dispatch:         # Allows you to manually trigger from GitHub website (phone)
+    - cron: '0 0 1 */3 *'   # Every 3 months on day 1 at midnight
+  workflow_dispatch:         # Manual trigger from phone
 
 jobs:
   update:
