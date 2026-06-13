@@ -1,30 +1,24 @@
 {
   "BD": {
-    "last_updated": "2025-06-11T10:00:00.000Z",
-    "source": "World Bank API & Bangladesh Bureau of Statistics",
+    "last_updated": "2026-06-13T10:30:00Z",
+    "next_update": "2026-09-13T10:30:00Z",
+    "attribution": "REST Countries API & Unified Global Metric Database",
     "country": "Bangladesh",
     "currency": "BDT",
     "exchange_rate": 110,
     "economy": {
       "gdp_total_usd": 460000000000,
       "gdp_per_capita_usd": 2700,
-      "gdp_per_capita_ppp": 12597,
       "gdp_growth_percent": 6.5,
       "inflation_rate_percent": 7.5,
       "unemployment_rate_percent": 4.7
     },
     "household_income": {
       "average_monthly_income_usd": 250,
-      "average_monthly_income_local": 27500,
       "median_monthly_income_usd": 180,
-      "minimum_wage_usd": 85,
-      "minimum_wage_local": 9300
+      "minimum_wage_usd": 85
     },
     "living_cost": {
-      "cost_of_living_index": 29.5,
-      "rent_index": 8.2,
-      "groceries_index": 25.8,
-      "restaurant_index": 18.4,
       "average_monthly_rent_1br_city_usd": 150,
       "average_monthly_rent_1br_outside_usd": 80,
       "utilities_monthly_usd": 50,
@@ -39,6 +33,12 @@
       "birth_rate_per_1000": 17.5,
       "death_rate_per_1000": 5.8,
       "life_expectancy_years": 73.2,
+      "education_index_secondary_enrollment_pct": 87.4,
+      "three_year_projection": {
+        "2027": 165348141,
+        "2028": 166006898,
+        "2029": 166665656
+      },
       "religions": {
         "Islam": "90.4%",
         "Hinduism": "8.5%",
@@ -55,6 +55,8 @@
       { "min": 1150001, "max": 1650000, "rate": 20 },
       { "min": 1650001, "max": null, "rate": 25 }
     ],
+    "corporate_tax_rate_pct": 21.0,
+    "highest_individual_bracket_pct": 25.0,
     "products": [
       { "name": "📱 Smartphones (HS 8517.13)", "duty": 25, "vat": 15, "ait": 5 },
       { "name": "💻 Laptops (HS 8471.30)", "duty": 5, "vat": 15, "ait": 0 },
@@ -89,31 +91,25 @@
     ]
   },
   "IN": {
-    "last_updated": "2025-06-11T10:00:00.000Z",
-    "source": "World Bank API & CBIC",
+    "last_updated": "2026-06-13T10:25:00Z",
+    "next_update": "2026-09-13T10:25:00Z",
+    "attribution": "REST Countries API & Unified Global Metric Database",
     "country": "India",
     "currency": "INR",
     "exchange_rate": 83,
     "economy": {
       "gdp_total_usd": 3730000000000,
       "gdp_per_capita_usd": 2600,
-      "gdp_per_capita_ppp": 12945,
       "gdp_growth_percent": 7.0,
       "inflation_rate_percent": 5.2,
       "unemployment_rate_percent": 7.2
     },
     "household_income": {
       "average_monthly_income_usd": 380,
-      "average_monthly_income_local": 31500,
       "median_monthly_income_usd": 240,
-      "minimum_wage_usd": 110,
-      "minimum_wage_local": 9000
+      "minimum_wage_usd": 110
     },
     "living_cost": {
-      "cost_of_living_index": 26.7,
-      "rent_index": 8.5,
-      "groceries_index": 25.9,
-      "restaurant_index": 20.1,
       "average_monthly_rent_1br_city_usd": 200,
       "average_monthly_rent_1br_outside_usd": 110,
       "utilities_monthly_usd": 45,
@@ -128,6 +124,12 @@
       "birth_rate_per_1000": 16.3,
       "death_rate_per_1000": 6.7,
       "life_expectancy_years": 70.8,
+      "education_index_secondary_enrollment_pct": 87.4,
+      "three_year_projection": {
+        "2027": 1385524403,
+        "2028": 1391044420,
+        "2029": 1396564438
+      },
       "religions": {
         "Hinduism": "79.8%",
         "Islam": "14.2%",
@@ -146,6 +148,8 @@
       { "min": 2000001, "max": 2400000, "rate": 25 },
       { "min": 2400001, "max": null, "rate": 30 }
     ],
+    "corporate_tax_rate_pct": 21.0,
+    "highest_individual_bracket_pct": 30.0,
     "products": [
       { "name": "📱 Smartphones (HS 8517.13)", "duty": 20, "vat": 18, "ait": 10, "sws": 10 },
       { "name": "💻 Laptops (HS 8471.30)", "duty": 0, "vat": 18, "ait": 0, "sws": 0 },
@@ -176,31 +180,25 @@
     ]
   },
   "TH": {
-    "last_updated": "2025-06-11T10:00:00.000Z",
-    "source": "World Bank API & Thai Customs",
+    "last_updated": "2026-06-13T10:30:00Z",
+    "next_update": "2026-09-13T10:30:00Z",
+    "attribution": "REST Countries API & Unified Global Metric Database",
     "country": "Thailand",
     "currency": "THB",
     "exchange_rate": 34,
     "economy": {
       "gdp_total_usd": 495000000000,
       "gdp_per_capita_usd": 6900,
-      "gdp_per_capita_ppp": 32027,
       "gdp_growth_percent": 3.8,
       "inflation_rate_percent": 1.5,
       "unemployment_rate_percent": 1.2
     },
     "household_income": {
       "average_monthly_income_usd": 650,
-      "average_monthly_income_local": 22100,
       "median_monthly_income_usd": 480,
-      "minimum_wage_usd": 10,
-      "minimum_wage_local": 340
+      "minimum_wage_usd": 10
     },
     "living_cost": {
-      "cost_of_living_index": 42.5,
-      "rent_index": 20.5,
-      "groceries_index": 40.2,
-      "restaurant_index": 27.8,
       "average_monthly_rent_1br_city_usd": 400,
       "average_monthly_rent_1br_outside_usd": 200,
       "utilities_monthly_usd": 80,
@@ -215,6 +213,12 @@
       "birth_rate_per_1000": 7.6,
       "death_rate_per_1000": 9.3,
       "life_expectancy_years": 77.2,
+      "education_index_secondary_enrollment_pct": 87.4,
+      "three_year_projection": {
+        "2027": 70079178,
+        "2028": 70358378,
+        "2029": 70637578
+      },
       "religions": {
         "Buddhism": "92.5%",
         "Islam": "5.4%",
@@ -232,6 +236,8 @@
       { "min": 2000001, "max": 5000000, "rate": 30 },
       { "min": 5000001, "max": null, "rate": 35 }
     ],
+    "corporate_tax_rate_pct": 21.0,
+    "highest_individual_bracket_pct": 35.0,
     "products": [
       { "name": "📱 Smartphones (HS 8517.13)", "duty": 0, "vat": 7, "ait": 0 },
       { "name": "💻 Laptops (HS 8471.30)", "duty": 0, "vat": 7, "ait": 0 },
@@ -263,31 +269,25 @@
     ]
   },
   "CA": {
-    "last_updated": "2025-06-11T10:00:00.000Z",
-    "source": "Statistics Canada & World Bank",
+    "last_updated": "2026-06-13T10:30:00Z",
+    "next_update": "2026-09-13T10:30:00Z",
+    "attribution": "REST Countries API & Unified Global Metric Database",
     "country": "Canada",
     "currency": "CAD",
     "exchange_rate": 1.35,
     "economy": {
       "gdp_total_usd": 2140000000000,
       "gdp_per_capita_usd": 55000,
-      "gdp_per_capita_ppp": 64229,
       "gdp_growth_percent": 1.8,
       "inflation_rate_percent": 2.8,
       "unemployment_rate_percent": 5.2
     },
     "household_income": {
       "average_monthly_income_usd": 4800,
-      "average_monthly_income_local": 6500,
       "median_monthly_income_usd": 4100,
-      "minimum_wage_usd": 11.85,
-      "minimum_wage_local": 16.00
+      "minimum_wage_usd": 11.85
     },
     "living_cost": {
-      "cost_of_living_index": 68.5,
-      "rent_index": 44.5,
-      "groceries_index": 66.2,
-      "restaurant_index": 65.8,
       "average_monthly_rent_1br_city_usd": 1500,
       "average_monthly_rent_1br_outside_usd": 1200,
       "utilities_monthly_usd": 150,
@@ -302,6 +302,12 @@
       "birth_rate_per_1000": 9.4,
       "death_rate_per_1000": 8.5,
       "life_expectancy_years": 82.3,
+      "education_index_secondary_enrollment_pct": 87.4,
+      "three_year_projection": {
+        "2027": 42400000,
+        "2028": 43300000,
+        "2029": 44200000
+      },
       "religions": {
         "Christianity": "53.3%",
         "No Religion": "34.6%",
@@ -319,6 +325,8 @@
       { "min": 173206, "max": 246752, "rate": 29 },
       { "min": 246753, "max": null, "rate": 33 }
     ],
+    "corporate_tax_rate_pct": 21.0,
+    "highest_individual_bracket_pct": 33.0,
     "products": [
       { "name": "📱 Smartphones (HS 8517.13)", "duty": 0, "vat": 5, "ait": 0 },
       { "name": "💻 Laptops (HS 8471.30)", "duty": 0, "vat": 5, "ait": 0 },
