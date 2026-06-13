@@ -1,6 +1,6 @@
 {
   "BD": {
-    "last_updated": "2026-06-13T10:30:00Z",
+    "last_updated": "2026-06-13T08:09:45.410Z",
     "next_update": "2026-09-13T10:30:00Z",
     "attribution": "REST Countries API & Unified Global Metric Database",
     "country": "Bangladesh",
@@ -23,7 +23,7 @@
       "average_monthly_rent_1br_outside_usd": 80,
       "utilities_monthly_usd": 50,
       "internet_monthly_usd": 30,
-      "meal_inexpensive_restaurant_usd": 2.50
+      "meal_inexpensive_restaurant_usd": 2.5
     },
     "demographics": {
       "total_population": 175420000,
@@ -48,59 +48,278 @@
       }
     },
     "tax_brackets": [
-      { "min": 0, "max": 350000, "rate": 0 },
-      { "min": 350001, "max": 450000, "rate": 5 },
-      { "min": 450001, "max": 750000, "rate": 10 },
-      { "min": 750001, "max": 1150000, "rate": 15 },
-      { "min": 1150001, "max": 1650000, "rate": 20 },
-      { "min": 1650001, "max": null, "rate": 25 }
+      {
+        "min": 0,
+        "max": 350000,
+        "rate": 0
+      },
+      {
+        "min": 350001,
+        "max": 450000,
+        "rate": 5
+      },
+      {
+        "min": 450001,
+        "max": 750000,
+        "rate": 10
+      },
+      {
+        "min": 750001,
+        "max": 1150000,
+        "rate": 15
+      },
+      {
+        "min": 1150001,
+        "max": 1650000,
+        "rate": 20
+      },
+      {
+        "min": 1650001,
+        "max": null,
+        "rate": 25
+      }
     ],
-    "corporate_tax_rate_pct": 21.0,
-    "highest_individual_bracket_pct": 25.0,
+    "corporate_tax_rate_pct": 21,
+    "highest_individual_bracket_pct": 25,
     "products": [
-      { "name": "Raw Cotton", "duty": 0, "vat": 15, "ait": 5 },
-      { "name": "Refined Petroleum", "duty": 10, "vat": 15, "ait": 5 },
-      { "name": "Woven Fabrics", "duty": 25, "vat": 15, "ait": 5 },
-      { "name": "Machinery Components", "duty": 1, "vat": 15, "ait": 5 },
-      { "name": "Iron and Steel Bars", "duty": 15, "vat": 15, "ait": 5 },
-      { "name": "Plastics in Primary Forms", "duty": 5, "vat": 15, "ait": 5 },
-      { "name": "Electronic Integrated Circuits", "duty": 1, "vat": 15, "ait": 5 },
-      { "name": "Chemical Fertilizers", "duty": 0, "vat": 0, "ait": 2 },
-      { "name": "Wheat", "duty": 0, "vat": 0, "ait": 2 },
-      { "name": "Soybean Oil", "duty": 15, "vat": 15, "ait": 5 },
-      { "name": "Milk Powder", "duty": 25, "vat": 15, "ait": 5 },
-      { "name": "Pharmaceutical Raw Materials", "duty": 1, "vat": 5, "ait": 3 },
-      { "name": "Commercial Vehicles", "duty": 25, "vat": 15, "ait": 5 },
-      { "name": "Sedan Cars", "duty": 25, "vat": 15, "ait": 5 },
-      { "name": "Cement Clinker", "duty": 15, "vat": 15, "ait": 5 },
-      { "name": "Coal", "duty": 5, "vat": 15, "ait": 5 },
-      { "name": "Mobile Phones", "duty": 25, "vat": 15, "ait": 5 },
-      { "name": "Laptops & Computers", "duty": 5, "vat": 15, "ait": 5 },
-      { "name": "Medical Equipments", "duty": 1, "vat": 0, "ait": 2 },
-      { "name": "Solar Panels", "duty": 0, "vat": 0, "ait": 0 },
-      { "name": "Scrap Vessel for Breaking", "duty": 10, "vat": 15, "ait": 5 },
-      { "name": "Yarn", "duty": 10, "vat": 15, "ait": 5 },
-      { "name": "Dyes and Tannins", "duty": 5, "vat": 15, "ait": 5 },
-      { "name": "Crude Palm Oil", "duty": 15, "vat": 15, "ait": 5 },
-      { "name": "Pulses and Lentils", "duty": 0, "vat": 0, "ait": 2 },
-      { "name": "Rice", "duty": 25, "vat": 0, "ait": 5 },
-      { "name": "Sugar", "duty": 25, "vat": 15, "ait": 5 },
-      { "name": "Rubber and Tires", "duty": 25, "vat": 15, "ait": 5 },
-      { "name": "Paper and Paperboard", "duty": 25, "vat": 15, "ait": 5 },
-      { "name": "Air Conditioners", "duty": 25, "vat": 15, "ait": 5 },
-      { "name": "Refrigerators", "duty": 25, "vat": 15, "ait": 5 },
-      { "name": "Glass Sheets", "duty": 25, "vat": 15, "ait": 5 },
-      { "name": "Aluminium Ingots", "duty": 5, "vat": 15, "ait": 5 },
-      { "name": "Copper Wire", "duty": 10, "vat": 15, "ait": 5 },
-      { "name": "Organic Chemicals", "duty": 5, "vat": 15, "ait": 5 },
-      { "name": "Lubricating Oils", "duty": 15, "vat": 15, "ait": 5 },
-      { "name": "Footwear Materials", "duty": 25, "vat": 15, "ait": 5 },
-      { "name": "Petroleum Gas (LPG)", "duty": 5, "vat": 5, "ait": 2 },
-      { "name": "Spices (Cumin/Fennel)", "duty": 25, "vat": 15, "ait": 5 }
+      {
+        "name": "Raw Cotton",
+        "duty": 0,
+        "vat": 15,
+        "ait": 5
+      },
+      {
+        "name": "Refined Petroleum",
+        "duty": 10,
+        "vat": 15,
+        "ait": 5
+      },
+      {
+        "name": "Woven Fabrics",
+        "duty": 25,
+        "vat": 15,
+        "ait": 5
+      },
+      {
+        "name": "Machinery Components",
+        "duty": 1,
+        "vat": 15,
+        "ait": 5
+      },
+      {
+        "name": "Iron and Steel Bars",
+        "duty": 15,
+        "vat": 15,
+        "ait": 5
+      },
+      {
+        "name": "Plastics in Primary Forms",
+        "duty": 5,
+        "vat": 15,
+        "ait": 5
+      },
+      {
+        "name": "Electronic Integrated Circuits",
+        "duty": 1,
+        "vat": 15,
+        "ait": 5
+      },
+      {
+        "name": "Chemical Fertilizers",
+        "duty": 0,
+        "vat": 0,
+        "ait": 2
+      },
+      {
+        "name": "Wheat",
+        "duty": 0,
+        "vat": 0,
+        "ait": 2
+      },
+      {
+        "name": "Soybean Oil",
+        "duty": 15,
+        "vat": 15,
+        "ait": 5
+      },
+      {
+        "name": "Milk Powder",
+        "duty": 25,
+        "vat": 15,
+        "ait": 5
+      },
+      {
+        "name": "Pharmaceutical Raw Materials",
+        "duty": 1,
+        "vat": 5,
+        "ait": 3
+      },
+      {
+        "name": "Commercial Vehicles",
+        "duty": 25,
+        "vat": 15,
+        "ait": 5
+      },
+      {
+        "name": "Sedan Cars",
+        "duty": 25,
+        "vat": 15,
+        "ait": 5
+      },
+      {
+        "name": "Cement Clinker",
+        "duty": 15,
+        "vat": 15,
+        "ait": 5
+      },
+      {
+        "name": "Coal",
+        "duty": 5,
+        "vat": 15,
+        "ait": 5
+      },
+      {
+        "name": "Mobile Phones",
+        "duty": 25,
+        "vat": 15,
+        "ait": 5
+      },
+      {
+        "name": "Laptops & Computers",
+        "duty": 5,
+        "vat": 15,
+        "ait": 5
+      },
+      {
+        "name": "Medical Equipments",
+        "duty": 1,
+        "vat": 0,
+        "ait": 2
+      },
+      {
+        "name": "Solar Panels",
+        "duty": 0,
+        "vat": 0,
+        "ait": 0
+      },
+      {
+        "name": "Scrap Vessel for Breaking",
+        "duty": 10,
+        "vat": 15,
+        "ait": 5
+      },
+      {
+        "name": "Yarn",
+        "duty": 10,
+        "vat": 15,
+        "ait": 5
+      },
+      {
+        "name": "Dyes and Tannins",
+        "duty": 5,
+        "vat": 15,
+        "ait": 5
+      },
+      {
+        "name": "Crude Palm Oil",
+        "duty": 15,
+        "vat": 15,
+        "ait": 5
+      },
+      {
+        "name": "Pulses and Lentils",
+        "duty": 0,
+        "vat": 0,
+        "ait": 2
+      },
+      {
+        "name": "Rice",
+        "duty": 25,
+        "vat": 0,
+        "ait": 5
+      },
+      {
+        "name": "Sugar",
+        "duty": 25,
+        "vat": 15,
+        "ait": 5
+      },
+      {
+        "name": "Rubber and Tires",
+        "duty": 25,
+        "vat": 15,
+        "ait": 5
+      },
+      {
+        "name": "Paper and Paperboard",
+        "duty": 25,
+        "vat": 15,
+        "ait": 5
+      },
+      {
+        "name": "Air Conditioners",
+        "duty": 25,
+        "vat": 15,
+        "ait": 5
+      },
+      {
+        "name": "Refrigerators",
+        "duty": 25,
+        "vat": 15,
+        "ait": 5
+      },
+      {
+        "name": "Glass Sheets",
+        "duty": 25,
+        "vat": 15,
+        "ait": 5
+      },
+      {
+        "name": "Aluminium Ingots",
+        "duty": 5,
+        "vat": 15,
+        "ait": 5
+      },
+      {
+        "name": "Copper Wire",
+        "duty": 10,
+        "vat": 15,
+        "ait": 5
+      },
+      {
+        "name": "Organic Chemicals",
+        "duty": 5,
+        "vat": 15,
+        "ait": 5
+      },
+      {
+        "name": "Lubricating Oils",
+        "duty": 15,
+        "vat": 15,
+        "ait": 5
+      },
+      {
+        "name": "Footwear Materials",
+        "duty": 25,
+        "vat": 15,
+        "ait": 5
+      },
+      {
+        "name": "Petroleum Gas (LPG)",
+        "duty": 5,
+        "vat": 5,
+        "ait": 2
+      },
+      {
+        "name": "Spices (Cumin/Fennel)",
+        "duty": 25,
+        "vat": 15,
+        "ait": 5
+      }
     ]
   },
   "IN": {
-    "last_updated": "2026-06-13T10:25:00Z",
+    "last_updated": "2026-06-13T08:09:45.738Z",
     "next_update": "2026-09-13T10:25:00Z",
     "attribution": "REST Countries API & Unified Global Metric Database",
     "country": "India",
@@ -123,7 +342,7 @@
       "average_monthly_rent_1br_outside_usd": 110,
       "utilities_monthly_usd": 45,
       "internet_monthly_usd": 10,
-      "meal_inexpensive_restaurant_usd": 3.50
+      "meal_inexpensive_restaurant_usd": 3.5
     },
     "demographics": {
       "total_population": 1441981000,
@@ -149,57 +368,265 @@
       }
     },
     "tax_brackets": [
-      { "min": 0, "max": 400000, "rate": 0 },
-      { "min": 400001, "max": 800000, "rate": 5 },
-      { "min": 800001, "max": 1200000, "rate": 10 },
-      { "min": 1200001, "max": 1600000, "rate": 15 },
-      { "min": 1600001, "max": 2000000, "rate": 20 },
-      { "min": 2000001, "max": 2400000, "rate": 25 },
-      { "min": 2400001, "max": null, "rate": 30 }
+      {
+        "min": 0,
+        "max": 400000,
+        "rate": 0
+      },
+      {
+        "min": 400001,
+        "max": 800000,
+        "rate": 5
+      },
+      {
+        "min": 800001,
+        "max": 1200000,
+        "rate": 10
+      },
+      {
+        "min": 1200001,
+        "max": 1600000,
+        "rate": 15
+      },
+      {
+        "min": 1600001,
+        "max": 2000000,
+        "rate": 20
+      },
+      {
+        "min": 2000001,
+        "max": 2400000,
+        "rate": 25
+      },
+      {
+        "min": 2400001,
+        "max": null,
+        "rate": 30
+      }
     ],
-    "corporate_tax_rate_pct": 21.0,
-    "highest_individual_bracket_pct": 30.0,
+    "corporate_tax_rate_pct": 21,
+    "highest_individual_bracket_pct": 30,
     "products": [
-      { "name": "Crude Petroleum", "duty": 2.5, "vat": 18, "ait": 0 },
-      { "name": "Refined Petroleum", "duty": 5.0, "vat": 18, "ait": 0 },
-      { "name": "Petroleum Gas / LNG", "duty": 1.5, "vat": 18, "ait": 0 },
-      { "name": "Coal & Solid Fuels", "duty": 4.0, "vat": 18, "ait": 0 },
-      { "name": "Integrated Circuits / Chips", "duty": 0.0, "vat": 18, "ait": 0 },
-      { "name": "Smartphones & Mobile Devices", "duty": 10.0, "vat": 18, "ait": 0 },
-      { "name": "Computers & Laptops", "duty": 2.0, "vat": 18, "ait": 0 },
-      { "name": "Telecommunication Hardware", "duty": 7.5, "vat": 18, "ait": 0 },
-      { "name": "Lithium-ion Batteries", "duty": 8.0, "vat": 18, "ait": 0 },
-      { "name": "Medical Imaging Systems", "duty": 2.5, "vat": 18, "ait": 0 },
-      { "name": "Passenger Cars (ICE)", "duty": 25.0, "vat": 18, "ait": 0 },
-      { "name": "Electric Vehicles (EV)", "duty": 15.0, "vat": 18, "ait": 0 },
-      { "name": "Automotive Parts & Components", "duty": 10.0, "vat": 18, "ait": 0 },
-      { "name": "Aircraft Assemblies", "duty": 1.0, "vat": 18, "ait": 0 },
-      { "name": "Heavy Freight Trucks", "duty": 12.5, "vat": 18, "ait": 0 },
-      { "name": "Agricultural Tractors", "duty": 5.0, "vat": 18, "ait": 0 },
-      { "name": "Packaged Antibiotics", "duty": 4.5, "vat": 18, "ait": 0 },
-      { "name": "Human Vaccines & Biologics", "duty": 0.0, "vat": 18, "ait": 0 },
-      { "name": "Surgical Instruments", "duty": 3.5, "vat": 18, "ait": 0 },
-      { "name": "Iron Ore Agglomerates", "duty": 3.0, "vat": 18, "ait": 0 },
-      { "name": "Refined Copper Cathodes", "duty": 4.0, "vat": 18, "ait": 0 },
-      { "name": "Unwrought Aluminum Alloys", "duty": 5.5, "vat": 18, "ait": 0 },
-      { "name": "Gold Bars & Bullion", "duty": 12.5, "vat": 18, "ait": 0 },
-      { "name": "Scrap Ferrous Metals", "duty": 2.0, "vat": 18, "ait": 0 },
-      { "name": "Flat-Rolled Structural Steel", "duty": 10.0, "vat": 18, "ait": 0 },
-      { "name": "Soybeans & Oil-seeds", "duty": 3.0, "vat": 18, "ait": 0 },
-      { "name": "Yellow Maize / Corn", "duty": 15.0, "vat": 18, "ait": 0 },
-      { "name": "Milling Wheat", "duty": 10.0, "vat": 18, "ait": 0 },
-      { "name": "Frozen Bovine Meat", "duty": 20.0, "vat": 18, "ait": 0 },
-      { "name": "Green Coffee Beans", "duty": 12.0, "vat": 18, "ait": 0 },
-      { "name": "Plastics (Primary Polymers)", "duty": 6.5, "vat": 18, "ait": 0 },
-      { "name": "Nitrogenous Fertilizers", "duty": 2.5, "vat": 18, "ait": 0 },
-      { "name": "Pneumatic Rubber Tires", "duty": 12.5, "vat": 18, "ait": 0 },
-      { "name": "Woven Apparel & Garments", "duty": 20.0, "vat": 18, "ait": 0 },
-      { "name": "Upholstered Home Furniture", "duty": 15.0, "vat": 18, "ait": 0 },
-      { "name": "Leather Footwear", "duty": 18.0, "vat": 18, "ait": 0 }
+      {
+        "name": "Crude Petroleum",
+        "duty": 2.5,
+        "vat": 18,
+        "ait": 0
+      },
+      {
+        "name": "Refined Petroleum",
+        "duty": 5,
+        "vat": 18,
+        "ait": 0
+      },
+      {
+        "name": "Petroleum Gas / LNG",
+        "duty": 1.5,
+        "vat": 18,
+        "ait": 0
+      },
+      {
+        "name": "Coal & Solid Fuels",
+        "duty": 4,
+        "vat": 18,
+        "ait": 0
+      },
+      {
+        "name": "Integrated Circuits / Chips",
+        "duty": 0,
+        "vat": 18,
+        "ait": 0
+      },
+      {
+        "name": "Smartphones & Mobile Devices",
+        "duty": 10,
+        "vat": 18,
+        "ait": 0
+      },
+      {
+        "name": "Computers & Laptops",
+        "duty": 2,
+        "vat": 18,
+        "ait": 0
+      },
+      {
+        "name": "Telecommunication Hardware",
+        "duty": 7.5,
+        "vat": 18,
+        "ait": 0
+      },
+      {
+        "name": "Lithium-ion Batteries",
+        "duty": 8,
+        "vat": 18,
+        "ait": 0
+      },
+      {
+        "name": "Medical Imaging Systems",
+        "duty": 2.5,
+        "vat": 18,
+        "ait": 0
+      },
+      {
+        "name": "Passenger Cars (ICE)",
+        "duty": 25,
+        "vat": 18,
+        "ait": 0
+      },
+      {
+        "name": "Electric Vehicles (EV)",
+        "duty": 15,
+        "vat": 18,
+        "ait": 0
+      },
+      {
+        "name": "Automotive Parts & Components",
+        "duty": 10,
+        "vat": 18,
+        "ait": 0
+      },
+      {
+        "name": "Aircraft Assemblies",
+        "duty": 1,
+        "vat": 18,
+        "ait": 0
+      },
+      {
+        "name": "Heavy Freight Trucks",
+        "duty": 12.5,
+        "vat": 18,
+        "ait": 0
+      },
+      {
+        "name": "Agricultural Tractors",
+        "duty": 5,
+        "vat": 18,
+        "ait": 0
+      },
+      {
+        "name": "Packaged Antibiotics",
+        "duty": 4.5,
+        "vat": 18,
+        "ait": 0
+      },
+      {
+        "name": "Human Vaccines & Biologics",
+        "duty": 0,
+        "vat": 18,
+        "ait": 0
+      },
+      {
+        "name": "Surgical Instruments",
+        "duty": 3.5,
+        "vat": 18,
+        "ait": 0
+      },
+      {
+        "name": "Iron Ore Agglomerates",
+        "duty": 3,
+        "vat": 18,
+        "ait": 0
+      },
+      {
+        "name": "Refined Copper Cathodes",
+        "duty": 4,
+        "vat": 18,
+        "ait": 0
+      },
+      {
+        "name": "Unwrought Aluminum Alloys",
+        "duty": 5.5,
+        "vat": 18,
+        "ait": 0
+      },
+      {
+        "name": "Gold Bars & Bullion",
+        "duty": 12.5,
+        "vat": 18,
+        "ait": 0
+      },
+      {
+        "name": "Scrap Ferrous Metals",
+        "duty": 2,
+        "vat": 18,
+        "ait": 0
+      },
+      {
+        "name": "Flat-Rolled Structural Steel",
+        "duty": 10,
+        "vat": 18,
+        "ait": 0
+      },
+      {
+        "name": "Soybeans & Oil-seeds",
+        "duty": 3,
+        "vat": 18,
+        "ait": 0
+      },
+      {
+        "name": "Yellow Maize / Corn",
+        "duty": 15,
+        "vat": 18,
+        "ait": 0
+      },
+      {
+        "name": "Milling Wheat",
+        "duty": 10,
+        "vat": 18,
+        "ait": 0
+      },
+      {
+        "name": "Frozen Bovine Meat",
+        "duty": 20,
+        "vat": 18,
+        "ait": 0
+      },
+      {
+        "name": "Green Coffee Beans",
+        "duty": 12,
+        "vat": 18,
+        "ait": 0
+      },
+      {
+        "name": "Plastics (Primary Polymers)",
+        "duty": 6.5,
+        "vat": 18,
+        "ait": 0
+      },
+      {
+        "name": "Nitrogenous Fertilizers",
+        "duty": 2.5,
+        "vat": 18,
+        "ait": 0
+      },
+      {
+        "name": "Pneumatic Rubber Tires",
+        "duty": 12.5,
+        "vat": 18,
+        "ait": 0
+      },
+      {
+        "name": "Woven Apparel & Garments",
+        "duty": 20,
+        "vat": 18,
+        "ait": 0
+      },
+      {
+        "name": "Upholstered Home Furniture",
+        "duty": 15,
+        "vat": 18,
+        "ait": 0
+      },
+      {
+        "name": "Leather Footwear",
+        "duty": 18,
+        "vat": 18,
+        "ait": 0
+      }
     ]
   },
   "TH": {
-    "last_updated": "2026-06-13T10:30:00Z",
+    "last_updated": "2026-06-13T08:09:46.631Z",
     "next_update": "2026-09-13T10:30:00Z",
     "attribution": "REST Countries API & Unified Global Metric Database",
     "country": "Thailand",
@@ -222,7 +649,7 @@
       "average_monthly_rent_1br_outside_usd": 200,
       "utilities_monthly_usd": 80,
       "internet_monthly_usd": 20,
-      "meal_inexpensive_restaurant_usd": 2.00
+      "meal_inexpensive_restaurant_usd": 2
     },
     "demographics": {
       "total_population": 71560000,
@@ -246,58 +673,270 @@
       }
     },
     "tax_brackets": [
-      { "min": 0, "max": 150000, "rate": 0 },
-      { "min": 150001, "max": 300000, "rate": 5 },
-      { "min": 300001, "max": 500000, "rate": 10 },
-      { "min": 500001, "max": 750000, "rate": 15 },
-      { "min": 750001, "max": 1000000, "rate": 20 },
-      { "min": 1000001, "max": 2000000, "rate": 25 },
-      { "min": 2000001, "max": 5000000, "rate": 30 },
-      { "min": 5000001, "max": null, "rate": 35 }
+      {
+        "min": 0,
+        "max": 150000,
+        "rate": 0
+      },
+      {
+        "min": 150001,
+        "max": 300000,
+        "rate": 5
+      },
+      {
+        "min": 300001,
+        "max": 500000,
+        "rate": 10
+      },
+      {
+        "min": 500001,
+        "max": 750000,
+        "rate": 15
+      },
+      {
+        "min": 750001,
+        "max": 1000000,
+        "rate": 20
+      },
+      {
+        "min": 1000001,
+        "max": 2000000,
+        "rate": 25
+      },
+      {
+        "min": 2000001,
+        "max": 5000000,
+        "rate": 30
+      },
+      {
+        "min": 5000001,
+        "max": null,
+        "rate": 35
+      }
     ],
-    "corporate_tax_rate_pct": 21.0,
-    "highest_individual_bracket_pct": 35.0,
+    "corporate_tax_rate_pct": 21,
+    "highest_individual_bracket_pct": 35,
     "products": [
-      { "name": "Crude Petroleum", "duty": 2.5, "vat": 7, "ait": 0 },
-      { "name": "Refined Petroleum", "duty": 5.0, "vat": 7, "ait": 0 },
-      { "name": "Petroleum Gas / LNG", "duty": 1.5, "vat": 7, "ait": 0 },
-      { "name": "Coal & Solid Fuels", "duty": 4.0, "vat": 7, "ait": 0 },
-      { "name": "Integrated Circuits / Chips", "duty": 0.0, "vat": 7, "ait": 0 },
-      { "name": "Smartphones & Mobile Devices", "duty": 10.0, "vat": 7, "ait": 0 },
-      { "name": "Computers & Laptops", "duty": 2.0, "vat": 7, "ait": 0 },
-      { "name": "Telecommunication Hardware", "duty": 7.5, "vat": 7, "ait": 0 },
-      { "name": "Lithium-ion Batteries", "duty": 8.0, "vat": 7, "ait": 0 },
-      { "name": "Medical Imaging Systems", "duty": 2.5, "vat": 7, "ait": 0 },
-      { "name": "Passenger Cars (ICE)", "duty": 25.0, "vat": 7, "ait": 0 },
-      { "name": "Electric Vehicles (EV)", "duty": 15.0, "vat": 7, "ait": 0 },
-      { "name": "Automotive Parts & Components", "duty": 10.0, "vat": 7, "ait": 0 },
-      { "name": "Aircraft Assemblies", "duty": 1.0, "vat": 7, "ait": 0 },
-      { "name": "Heavy Freight Trucks", "duty": 12.5, "vat": 7, "ait": 0 },
-      { "name": "Agricultural Tractors", "duty": 5.0, "vat": 7, "ait": 0 },
-      { "name": "Packaged Antibiotics", "duty": 4.5, "vat": 7, "ait": 0 },
-      { "name": "Human Vaccines & Biologics", "duty": 0.0, "vat": 7, "ait": 0 },
-      { "name": "Surgical Instruments", "duty": 3.5, "vat": 7, "ait": 0 },
-      { "name": "Iron Ore Agglomerates", "duty": 3.0, "vat": 7, "ait": 0 },
-      { "name": "Refined Copper Cathodes", "duty": 4.0, "vat": 7, "ait": 0 },
-      { "name": "Unwrought Aluminum Alloys", "duty": 5.5, "vat": 7, "ait": 0 },
-      { "name": "Gold Bars & Bullion", "duty": 12.5, "vat": 7, "ait": 0 },
-      { "name": "Scrap Ferrous Metals", "duty": 2.0, "vat": 7, "ait": 0 },
-      { "name": "Flat-Rolled Structural Steel", "duty": 10.0, "vat": 7, "ait": 0 },
-      { "name": "Soybeans & Oil-seeds", "duty": 3.0, "vat": 7, "ait": 0 },
-      { "name": "Yellow Maize / Corn", "duty": 15.0, "vat": 7, "ait": 0 },
-      { "name": "Milling Wheat", "duty": 10.0, "vat": 7, "ait": 0 },
-      { "name": "Frozen Bovine Meat", "duty": 20.0, "vat": 7, "ait": 0 },
-      { "name": "Green Coffee Beans", "duty": 12.0, "vat": 7, "ait": 0 },
-      { "name": "Plastics (Primary Polymers)", "duty": 6.5, "vat": 7, "ait": 0 },
-      { "name": "Nitrogenous Fertilizers", "duty": 2.5, "vat": 7, "ait": 0 },
-      { "name": "Pneumatic Rubber Tires", "duty": 12.5, "vat": 7, "ait": 0 },
-      { "name": "Woven Apparel & Garments", "duty": 20.0, "vat": 7, "ait": 0 },
-      { "name": "Upholstered Home Furniture", "duty": 15.0, "vat": 7, "ait": 0 },
-      { "name": "Leather Footwear", "duty": 18.0, "vat": 7, "ait": 0 }
+      {
+        "name": "Crude Petroleum",
+        "duty": 2.5,
+        "vat": 7,
+        "ait": 0
+      },
+      {
+        "name": "Refined Petroleum",
+        "duty": 5,
+        "vat": 7,
+        "ait": 0
+      },
+      {
+        "name": "Petroleum Gas / LNG",
+        "duty": 1.5,
+        "vat": 7,
+        "ait": 0
+      },
+      {
+        "name": "Coal & Solid Fuels",
+        "duty": 4,
+        "vat": 7,
+        "ait": 0
+      },
+      {
+        "name": "Integrated Circuits / Chips",
+        "duty": 0,
+        "vat": 7,
+        "ait": 0
+      },
+      {
+        "name": "Smartphones & Mobile Devices",
+        "duty": 10,
+        "vat": 7,
+        "ait": 0
+      },
+      {
+        "name": "Computers & Laptops",
+        "duty": 2,
+        "vat": 7,
+        "ait": 0
+      },
+      {
+        "name": "Telecommunication Hardware",
+        "duty": 7.5,
+        "vat": 7,
+        "ait": 0
+      },
+      {
+        "name": "Lithium-ion Batteries",
+        "duty": 8,
+        "vat": 7,
+        "ait": 0
+      },
+      {
+        "name": "Medical Imaging Systems",
+        "duty": 2.5,
+        "vat": 7,
+        "ait": 0
+      },
+      {
+        "name": "Passenger Cars (ICE)",
+        "duty": 25,
+        "vat": 7,
+        "ait": 0
+      },
+      {
+        "name": "Electric Vehicles (EV)",
+        "duty": 15,
+        "vat": 7,
+        "ait": 0
+      },
+      {
+        "name": "Automotive Parts & Components",
+        "duty": 10,
+        "vat": 7,
+        "ait": 0
+      },
+      {
+        "name": "Aircraft Assemblies",
+        "duty": 1,
+        "vat": 7,
+        "ait": 0
+      },
+      {
+        "name": "Heavy Freight Trucks",
+        "duty": 12.5,
+        "vat": 7,
+        "ait": 0
+      },
+      {
+        "name": "Agricultural Tractors",
+        "duty": 5,
+        "vat": 7,
+        "ait": 0
+      },
+      {
+        "name": "Packaged Antibiotics",
+        "duty": 4.5,
+        "vat": 7,
+        "ait": 0
+      },
+      {
+        "name": "Human Vaccines & Biologics",
+        "duty": 0,
+        "vat": 7,
+        "ait": 0
+      },
+      {
+        "name": "Surgical Instruments",
+        "duty": 3.5,
+        "vat": 7,
+        "ait": 0
+      },
+      {
+        "name": "Iron Ore Agglomerates",
+        "duty": 3,
+        "vat": 7,
+        "ait": 0
+      },
+      {
+        "name": "Refined Copper Cathodes",
+        "duty": 4,
+        "vat": 7,
+        "ait": 0
+      },
+      {
+        "name": "Unwrought Aluminum Alloys",
+        "duty": 5.5,
+        "vat": 7,
+        "ait": 0
+      },
+      {
+        "name": "Gold Bars & Bullion",
+        "duty": 12.5,
+        "vat": 7,
+        "ait": 0
+      },
+      {
+        "name": "Scrap Ferrous Metals",
+        "duty": 2,
+        "vat": 7,
+        "ait": 0
+      },
+      {
+        "name": "Flat-Rolled Structural Steel",
+        "duty": 10,
+        "vat": 7,
+        "ait": 0
+      },
+      {
+        "name": "Soybeans & Oil-seeds",
+        "duty": 3,
+        "vat": 7,
+        "ait": 0
+      },
+      {
+        "name": "Yellow Maize / Corn",
+        "duty": 15,
+        "vat": 7,
+        "ait": 0
+      },
+      {
+        "name": "Milling Wheat",
+        "duty": 10,
+        "vat": 7,
+        "ait": 0
+      },
+      {
+        "name": "Frozen Bovine Meat",
+        "duty": 20,
+        "vat": 7,
+        "ait": 0
+      },
+      {
+        "name": "Green Coffee Beans",
+        "duty": 12,
+        "vat": 7,
+        "ait": 0
+      },
+      {
+        "name": "Plastics (Primary Polymers)",
+        "duty": 6.5,
+        "vat": 7,
+        "ait": 0
+      },
+      {
+        "name": "Nitrogenous Fertilizers",
+        "duty": 2.5,
+        "vat": 7,
+        "ait": 0
+      },
+      {
+        "name": "Pneumatic Rubber Tires",
+        "duty": 12.5,
+        "vat": 7,
+        "ait": 0
+      },
+      {
+        "name": "Woven Apparel & Garments",
+        "duty": 20,
+        "vat": 7,
+        "ait": 0
+      },
+      {
+        "name": "Upholstered Home Furniture",
+        "duty": 15,
+        "vat": 7,
+        "ait": 0
+      },
+      {
+        "name": "Leather Footwear",
+        "duty": 18,
+        "vat": 7,
+        "ait": 0
+      }
     ]
   },
   "CA": {
-    "last_updated": "2026-06-13T10:30:00Z",
+    "last_updated": "2026-06-13T08:09:47.926Z",
     "next_update": "2026-09-13T10:30:00Z",
     "attribution": "Statistics Canada & World Bank",
     "country": "Canada",
@@ -320,7 +959,7 @@
       "average_monthly_rent_1br_outside_usd": 1200,
       "utilities_monthly_usd": 150,
       "internet_monthly_usd": 70,
-      "meal_inexpensive_restaurant_usd": 20.00
+      "meal_inexpensive_restaurant_usd": 20
     },
     "demographics": {
       "total_population": 41580000,
@@ -330,7 +969,7 @@
       "birth_rate_per_1000": 9.4,
       "death_rate_per_1000": 7.9,
       "life_expectancy_years": 82.3,
-      "education_index_secondary_enrollment_pct": 99.0,
+      "education_index_secondary_enrollment_pct": 99,
       "three_year_projection": {
         "2027": 42400000,
         "2028": 43300000,
@@ -346,36 +985,160 @@
       }
     },
     "tax_brackets": [
-      { "min": 0, "max": 15705, "rate": 0 },
-      { "min": 15706, "max": 55867, "rate": 15 },
-      { "min": 55868, "max": 111733, "rate": 20.5 },
-      { "min": 111734, "max": 173205, "rate": 26 },
-      { "min": 173206, "max": 246752, "rate": 29 },
-      { "min": 246753, "max": null, "rate": 33 }
+      {
+        "min": 0,
+        "max": 15705,
+        "rate": 0
+      },
+      {
+        "min": 15706,
+        "max": 55867,
+        "rate": 15
+      },
+      {
+        "min": 55868,
+        "max": 111733,
+        "rate": 20.5
+      },
+      {
+        "min": 111734,
+        "max": 173205,
+        "rate": 26
+      },
+      {
+        "min": 173206,
+        "max": 246752,
+        "rate": 29
+      },
+      {
+        "min": 246753,
+        "max": null,
+        "rate": 33
+      }
     ],
-    "corporate_tax_rate_pct": 21.0,
-    "highest_individual_bracket_pct": 33.0,
+    "corporate_tax_rate_pct": 21,
+    "highest_individual_bracket_pct": 33,
     "products": [
-      { "name": "📱 Smartphones (HS 8517.13)", "duty": 0, "vat": 5, "ait": 0 },
-      { "name": "💻 Laptops (HS 8471.30)", "duty": 0, "vat": 5, "ait": 0 },
-      { "name": "🥇 Gold (HS 7108.12)", "duty": 0, "vat": 0, "ait": 0 },
-      { "name": "🥈 Silver (HS 7106.91)", "duty": 0, "vat": 0, "ait": 0 },
-      { "name": "🚗 Passenger cars (HS 8703.23)", "duty": 6.1, "vat": 5, "ait": 0 },
-      { "name": "⚡ Electric vehicles (HS 8703.80)", "duty": 6.1, "vat": 5, "ait": 0 },
-      { "name": "👕 Cotton T-shirts (HS 6109.10)", "duty": 18, "vat": 5, "ait": 0 },
-      { "name": "👞 Leather footwear (HS 6403.91)", "duty": 18, "vat": 5, "ait": 0 },
-      { "name": "☕ Roasted coffee (HS 0901.21)", "duty": 0, "vat": 5, "ait": 0 },
-      { "name": "🍫 Chocolate (HS 1806.31)", "duty": 6, "vat": 5, "ait": 0 },
-      { "name": "🍷 Wine (HS 2204.21)", "duty": 4.68, "vat": 5, "ait": 15 },
-      { "name": "🍺 Beer (HS 2203.00)", "duty": 0, "vat": 5, "ait": 12.5 },
-      { "name": "💄 Cosmetics (HS 3304.99)", "duty": 6.5, "vat": 5, "ait": 0 },
-      { "name": "💊 Pharmaceuticals (HS 3004.90)", "duty": 0, "vat": 0, "ait": 0 },
-      { "name": "🏥 Medical instruments (HS 9018.90)", "duty": 0, "vat": 0, "ait": 0 },
-      { "name": "📚 Printed books (HS 4901.99)", "duty": 0, "vat": 0, "ait": 0 },
-      { "name": "🧸 Toys (HS 9503.00)", "duty": 0, "vat": 5, "ait": 0 },
-      { "name": "🪑 Wooden furniture (HS 9403.60)", "duty": 9.5, "vat": 5, "ait": 0 },
-      { "name": "📺 TVs & Monitors (HS 8528.72)", "duty": 5, "vat": 5, "ait": 0 },
-      { "name": "🔊 Loudspeakers (HS 8518.22)", "duty": 6.5, "vat": 5, "ait": 0 }
+      {
+        "name": "📱 Smartphones (HS 8517.13)",
+        "duty": 0,
+        "vat": 5,
+        "ait": 0
+      },
+      {
+        "name": "💻 Laptops (HS 8471.30)",
+        "duty": 0,
+        "vat": 5,
+        "ait": 0
+      },
+      {
+        "name": "🥇 Gold (HS 7108.12)",
+        "duty": 0,
+        "vat": 0,
+        "ait": 0
+      },
+      {
+        "name": "🥈 Silver (HS 7106.91)",
+        "duty": 0,
+        "vat": 0,
+        "ait": 0
+      },
+      {
+        "name": "🚗 Passenger cars (HS 8703.23)",
+        "duty": 6.1,
+        "vat": 5,
+        "ait": 0
+      },
+      {
+        "name": "⚡ Electric vehicles (HS 8703.80)",
+        "duty": 6.1,
+        "vat": 5,
+        "ait": 0
+      },
+      {
+        "name": "👕 Cotton T-shirts (HS 6109.10)",
+        "duty": 18,
+        "vat": 5,
+        "ait": 0
+      },
+      {
+        "name": "👞 Leather footwear (HS 6403.91)",
+        "duty": 18,
+        "vat": 5,
+        "ait": 0
+      },
+      {
+        "name": "☕ Roasted coffee (HS 0901.21)",
+        "duty": 0,
+        "vat": 5,
+        "ait": 0
+      },
+      {
+        "name": "🍫 Chocolate (HS 1806.31)",
+        "duty": 6,
+        "vat": 5,
+        "ait": 0
+      },
+      {
+        "name": "🍷 Wine (HS 2204.21)",
+        "duty": 4.68,
+        "vat": 5,
+        "ait": 15
+      },
+      {
+        "name": "🍺 Beer (HS 2203.00)",
+        "duty": 0,
+        "vat": 5,
+        "ait": 12.5
+      },
+      {
+        "name": "💄 Cosmetics (HS 3304.99)",
+        "duty": 6.5,
+        "vat": 5,
+        "ait": 0
+      },
+      {
+        "name": "💊 Pharmaceuticals (HS 3004.90)",
+        "duty": 0,
+        "vat": 0,
+        "ait": 0
+      },
+      {
+        "name": "🏥 Medical instruments (HS 9018.90)",
+        "duty": 0,
+        "vat": 0,
+        "ait": 0
+      },
+      {
+        "name": "📚 Printed books (HS 4901.99)",
+        "duty": 0,
+        "vat": 0,
+        "ait": 0
+      },
+      {
+        "name": "🧸 Toys (HS 9503.00)",
+        "duty": 0,
+        "vat": 5,
+        "ait": 0
+      },
+      {
+        "name": "🪑 Wooden furniture (HS 9403.60)",
+        "duty": 9.5,
+        "vat": 5,
+        "ait": 0
+      },
+      {
+        "name": "📺 TVs & Monitors (HS 8528.72)",
+        "duty": 5,
+        "vat": 5,
+        "ait": 0
+      },
+      {
+        "name": "🔊 Loudspeakers (HS 8518.22)",
+        "duty": 6.5,
+        "vat": 5,
+        "ait": 0
+      }
     ]
   }
 }
